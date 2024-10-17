@@ -1,0 +1,13 @@
+.profile__page {
+    width: 70%;
+    height: 100%;
+    border: 2px solid green;
+    display: flex; 
+    flex-direction: column;
+    align-items: center;
+
+    .user-profile__details {
+        display: flex;
+        flex-direction: column;
+    }
+}
