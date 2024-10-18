@@ -7,12 +7,14 @@ import PrivateRoute from './components/PrivateRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
+
   return (
     <div className="home">
 
       <>
       <Router>
       <AuthProvider>
+ 
         <Routes> 
           <Route path="/" element={<ProtectedRoute>
             <Login/>

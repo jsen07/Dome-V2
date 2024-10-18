@@ -189,21 +189,38 @@
   outline: 2px solid black;
   display: flex;
   flex-direction: row;
+  border-radius: 20px;
+  background-color: #494848;
 }
 .home__container .main__menu .side-menu__bar {
   width: 10%;
   height: 100%;
-  border: 2px solid red;
+  border-right: 2px solid black;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.home__container .main__menu .side-menu__bar .profile__icon {
+.home__container .main__menu .side-menu__bar .side-bar__icon {
   width: 50px;
   height: 50px;
   margin-block: 10px;
-  outline: 2px solid blue;
-  border-radius: 50%;
+  outline: 2px solid black;
+  border-radius: 20px;
+  transition: all 0.2s ease-in-out;
+}
+.home__container .main__menu .side-menu__bar .side-bar__icon:hover {
+  cursor: pointer;
+  transform: scale(0.95);
+}
+.home__container .main__menu .side-menu__bar #profile__icon {
+  background-image: url("../components/images/user-profile-svgrepo-com.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+.home__container .main__menu .side-menu__bar #add-friend__icon {
+  background-image: url("../components/images/add-friend-svgrepo-com.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 .home__container .main__menu .side-menu__bar button {
   width: 50px;
@@ -213,12 +230,10 @@
 .home__container .main__menu .chat-list__container {
   width: 70%;
   height: 100%;
-  border: 2px solid blue;
 }
 .home__container .main__menu .chat__container {
   width: 100%;
   height: 100%;
-  border: 2px solid pink;
 }
 
 .profile__page {
@@ -232,4 +247,13 @@
 .profile__page .user-profile__details {
   display: flex;
   flex-direction: column;
+}
+
+.search-user__container {
+  width: 70%;
+  height: 100%;
+  border: 2px solid black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }/*# sourceMappingURL=style.css.map */

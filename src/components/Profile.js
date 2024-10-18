@@ -8,6 +8,7 @@ import { updateProfile } from 'firebase/auth';
 import { useStateValue } from './contexts/StateProvider';
 import { actionTypes } from '../reducers/userReducer';
 
+
 const Profile = () => {
 
   const [userDetails, setUserDetails] = useState(null);
@@ -21,6 +22,7 @@ const Profile = () => {
 
   const { currentUser } = useAuth();
   const storage = getStorage();
+
 
   useEffect(() =>{
 
@@ -48,6 +50,8 @@ const Profile = () => {
   });
 
   useEffect(() =>{
+
+  
 
 
 },[]);
@@ -84,6 +88,10 @@ const Profile = () => {
 
         
       })
+      set(ref(db, `users/${currentUser.uid}`), {
+        ...userDetails,
+        photoUrl: photoLink
+      })
     updateProfile(currentUser, {photoURL: photoLink });
     setPhotoURL(currentUser.photoURL);
     setCheckPhoto(true);
@@ -95,6 +103,10 @@ const Profile = () => {
   
   const removeProfilePicture = () => {
     updateProfile(currentUser, {photoURL: "" });
+    set(ref(db, `users/${currentUser.uid}`), {
+      ...userDetails,
+      photoUrl: ""
+    })
   
   }
 
@@ -137,13 +149,13 @@ const Profile = () => {
         </div>
 
         <div className='user-profile__details'>
-            <p> Unique ID: {user?.uid} </p>
+            <p> Unique ID: {userDetails?.uid} </p>
             <p> Bio: {userDetails?.Bio}</p>
             <p> Gender: {userDetails?.Gender}</p>
-            <p> Display name: {user?.displayName} </p>
+            <p> Display name: {userDetails?.displayName} </p>
             
             <button onClick={editProfileToggle}> Edit Profile </button>
-            <p> Email: {user?.email} </p>
+            <p> Email: {userDetails?.email} </p>
 
         </div>
         </div>
@@ -164,7 +176,7 @@ const Profile = () => {
             <textarea id="edit-bio" rows="4" cols="50" defaultValue={userDetails?.Bio}></textarea>
             <p> Gender: </p>
             <select id="edit-gender" name="gender">
-              <option value="Prefer not to say" selected={userDetails?.Gender}></option>
+              <option defaultValue={userDetails?.Gender} selected={userDetails?.Gender}></option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Prefer not to say"> Prefer not to say</option>
@@ -186,7 +198,7 @@ const Profile = () => {
 
 <button onClick={changeAvatarToggle}> Close </button>
 
-<button> Upload </button>
+<button onClick={handleFileUpload} > Upload </button>
 <button onClick={removeProfilePicture}>  Remove current Photo </button>
 </div>
 
