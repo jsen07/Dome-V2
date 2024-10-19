@@ -8,55 +8,37 @@ import { child, get } from "firebase/database";
 import Placeholder from './images/avatar_placeholder.png';
 import AddFriend from './images/add-friend-svgrepo-com.svg';
 import { useStateValue } from './contexts/StateProvider';
+import { actionTypes } from '../reducers/userReducer';
 
 const Home = () => {
 
 const { logout, currentUser } = useAuth();
 const navigate = useNavigate();
-const [photoURL, setPhotoURL] = useState();
 const [profileToggle, setProfileToggle] = useState(false);
 const [addFriendToggle, setAddFriendToggle] = useState(false);
 const [toggle, setToggle] = useState();
 const [{user}, dispatch] = useStateValue();
 
 useEffect(() =>{
-  if(!user?.photoURL) {
-    setPhotoURL(Placeholder);
-  } else {
-    setPhotoURL(user?.photoURL);
-  }
-
-  writeUserData(user?.uid, user?.displayName, user?.email);
-  // console.log(user);
-  // console.log({user});
-
-},[currentUser]);
-
-useEffect(() =>{
-  if(!user?.photoURL) {
-    setPhotoURL(Placeholder);
-  } else {
-    setPhotoURL(user?.photoURL);
-  }
-},[user?.photoURL]);
-
-function writeUserData(userId, displayName, email) {
-
+  
+if(user) {
+  
   const db_ref = db.ref();
-  get(child(db_ref, `users/${userId}`)).then((snapshot) => {
+  get(child(db_ref, `users/${user.uid}`)).then((snapshot) => {
     if (!snapshot.exists()) {
-      db_ref.child('users/' + userId).set({
+      db_ref.child('users/' + user.uid).set({
         photoUrl: "",
-        displayName: displayName,
+        displayName: user.displayName,
         Bio: "",
         Gender: "Prefer not to say",
-        email: email
+        email: user.email
       })
-    } 
-  }).catch((error) => {
-    console.error(error);
-  });
+    }
+  })
 }
+
+
+},[user]);
 
 function handleLogout() {
     alert('Youve been logged out');
@@ -94,7 +76,6 @@ useEffect(() =>{
   }
 },[profileToggle, addFriendToggle]);
   return (
-
     <div className='home__container'> 
         <h1> Homepage </h1>
         <div className='main__menu'>
@@ -103,7 +84,6 @@ useEffect(() =>{
 
 
             <div className='side-bar__icon' id="profile__icon" onClick={toggleProfileHandler}>
-        
             </div>
 
             <div className='side-bar__icon' id="add-friend__icon" onClick={toggleAddFriendHandler}>

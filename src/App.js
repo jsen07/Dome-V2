@@ -5,11 +5,18 @@ import { AuthProvider } from './components/contexts/AuthContext';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import ProtectedRoute from './components/ProtectedRoute';
+import { useStateValue } from './components/contexts/StateProvider';
 
 function App() {
 
+  const [{isLoading}] = useStateValue();
+
   return (
     <div className="home">
+
+{isLoading &&(
+      <div className='loading'> LOADING... </div>
+    )}
 
       <>
       <Router>

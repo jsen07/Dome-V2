@@ -97,6 +97,7 @@ const Profile = () => {
     setCheckPhoto(true);
     setUploadPhoto(false);
     setLoading(false);
+    // console.log(user);
 
 
   }
@@ -107,6 +108,12 @@ const Profile = () => {
       ...userDetails,
       photoUrl: ""
     })
+
+    // dispatch({
+    //   type: actionTypes.SET_PROFILE,
+    //     ...user, 
+    //     photoURL: 
+    // })
   
   }
 
@@ -176,7 +183,7 @@ const Profile = () => {
             <textarea id="edit-bio" rows="4" cols="50" defaultValue={userDetails?.Bio}></textarea>
             <p> Gender: </p>
             <select id="edit-gender" name="gender">
-              <option defaultValue={userDetails?.Gender} selected={userDetails?.Gender}></option>
+              <option value={userDetails?.Gender} selected={userDetails?.Gender}></option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Prefer not to say"> Prefer not to say</option>
@@ -198,7 +205,6 @@ const Profile = () => {
 
 <button onClick={changeAvatarToggle}> Close </button>
 
-<button onClick={handleFileUpload} > Upload </button>
 <button onClick={removeProfilePicture}>  Remove current Photo </button>
 </div>
 

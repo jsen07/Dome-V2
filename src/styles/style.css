@@ -112,6 +112,7 @@
 }
 .login-register .login-form__container .form__container form input {
   height: 35px;
+  border-radius: 8px;
 }
 .login-register .login-form__container .form__container form input[type=text], .login-register .login-form__container .form__container form input[type=email] {
   -webkit-transition: all 0.3s ease-in-out;

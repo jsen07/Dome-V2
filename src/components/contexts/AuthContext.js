@@ -29,10 +29,6 @@ export function AuthProvider({ children }) {
 
         return auth.signInWithEmailAndPassword(email, password).then((userCredential) => {
             const userDetails = userCredential.user;
-            dispatch({
-                type: actionTypes.SET_USER,
-                user: userDetails
-              })
             return userDetails;
         }).catch((error) => {
             alert(error.message)
@@ -47,6 +43,11 @@ export function AuthProvider({ children }) {
 useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged( user => {
         setCurrentUser(user)
+        dispatch({
+            type: actionTypes.SET_USER,
+            user: user,
+            isLoading: false
+          })
         setLoading(false);
     })
 

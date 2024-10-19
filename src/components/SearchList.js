@@ -1,4 +1,5 @@
 import React from 'react'
+import Placeholder from '../components/images/avatar_placeholder.png';
 
 const SearchList = (props) => {
 
@@ -8,6 +9,7 @@ const SearchList = (props) => {
     <div>
 
 
+<img src={props.results.photoUrl || Placeholder}></img>
         <p> {props.results.displayName} </p>
      
 

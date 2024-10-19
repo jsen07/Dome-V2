@@ -10,6 +10,7 @@ const SearchUser = () => {
     const searchUserRef = useRef();
     const { currentUser } = useAuth();
     const[userList, setUserList] = useState();
+    const [user, setUser] = useState();
 
 
     const searchUserByID = async () => {;
@@ -33,7 +34,7 @@ onValue(dbRef, (snapshot) => {
     onlyOnce: true
 })
 
-console.log(userList)
+console.log(user)
 }
 
   return (
