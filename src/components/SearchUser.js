@@ -11,13 +11,14 @@ const SearchUser = () => {
     const { currentUser } = useAuth();
     const[userList, setUserList] = useState();
     const [user, setUser] = useState();
+    const [error, setError] = useState();
 
 
     const searchUserByID = async () => {;
         const dbRef = ref(db, 'users');
         const arr = [];
         const searchValue = document.getElementById("search-user__box").value;
-        console.log(searchValue);
+        // console.log(searchValue);
 
 onValue(dbRef, (snapshot) => {
     snapshot.forEach((childSnapshot) => {
@@ -34,7 +35,7 @@ onValue(dbRef, (snapshot) => {
     onlyOnce: true
 })
 
-console.log(user)
+// console.log(user)
 }
 
   return (

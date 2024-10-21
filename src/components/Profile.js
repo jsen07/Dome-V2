@@ -73,7 +73,6 @@ const Profile = () => {
   }
 
   const handleFileUpload = async () => {
-    console.log("file Upload");
 
     const fileRef = sRef(storage, currentUser.uid + '.png');
 
@@ -97,6 +96,7 @@ const Profile = () => {
     setCheckPhoto(true);
     setUploadPhoto(false);
     setLoading(false);
+
     // console.log(user);
 
 
@@ -142,7 +142,7 @@ const Profile = () => {
 
 
       }
-
+if (loading) return <div className='loading'> LOADING... </div>
   return (
     <div className='profile__page'>
 

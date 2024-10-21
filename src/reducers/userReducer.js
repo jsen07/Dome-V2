@@ -1,10 +1,17 @@
+
+
 export const initialState = {
     user: null,
-    isLoading: true
+    isLoading: true,
+    chat: {
+        chatId: null,
+        chatName: null
+    }
 };
 
 export const actionTypes = {
     SET_USER: "SET_USER",
+    SET_CHAT: "SET_CHAT"
 };
 
 const reducer = (state, action) => {
@@ -22,6 +29,12 @@ const reducer = (state, action) => {
                 ...state,
                 photoURL: action.photoURL,
                 isLoading: false
+            }
+            case actionTypes.SET_CHAT:
+            return {
+                ...state,
+                isLoading: false,
+                chat: action.chat
             }
             default:
                 return state;

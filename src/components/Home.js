@@ -7,8 +7,10 @@ import { db } from '../firebase';
 import { child, get } from "firebase/database";
 import Placeholder from './images/avatar_placeholder.png';
 import AddFriend from './images/add-friend-svgrepo-com.svg';
-import { useStateValue } from './contexts/StateProvider';
-import { actionTypes } from '../reducers/userReducer';
+import { useStateValue } from './contexts/StateProvider'
+import Chat from './Chat';
+import ChatList from './ChatList';
+
 
 const Home = () => {
 
@@ -22,6 +24,7 @@ const [{user}, dispatch] = useStateValue();
 useEffect(() =>{
   
 if(user) {
+  
   
   const db_ref = db.ref();
   get(child(db_ref, `users/${user.uid}`)).then((snapshot) => {
@@ -115,10 +118,10 @@ useEffect(() =>{
 
 {/* </div> */}
 {toggle &&(
-<div className='chat__container'>
+<div className='chat-list__container'>
 
-  <h1> FRIENDS CONTAINER </h1>
-
+  <h1> {user.displayName}</h1>
+<ChatList />
   
 
 </div>
@@ -126,8 +129,8 @@ useEffect(() =>{
 )}    
 <div className='chat__container'>
 
-  <h1> Chat container </h1>
 
+<Chat />
   
 
 </div>

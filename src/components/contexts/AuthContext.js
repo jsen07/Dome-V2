@@ -2,7 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { auth } from '../../firebase';
 import { actionTypes } from '../../reducers/userReducer';
 import { useStateValue } from "./StateProvider";
-
+import { db } from '../../firebase';
+import { child, get } from "firebase/database";
 
 const AuthContext = React.createContext();
 
@@ -16,9 +17,24 @@ export function AuthProvider({ children }) {
 
     function signUp( email, password, displayname) {
         
-        auth.createUserWithEmailAndPassword(email, password).then(function(result) {
+        auth.createUserWithEmailAndPassword(email, password).then((result) => {
 
-            logout();
+            auth.signOut().then(() => {
+                const db_ref = db.ref();
+                get(child(db_ref, `users/${result.user.uid}`)).then((snapshot) => {
+                  if (!snapshot.exists()) {
+                    db_ref.child('users/' + result.user.uid).set({
+                      photoUrl: "",
+                      displayName: displayname,
+                      Bio: "",
+                      Gender: "Prefer not to say",
+                      email: email,
+                      uid: result.user.uid
+                    })
+                  }
+                })
+            })
+
             return result.user.updateProfile({ displayName: displayname });
         }).catch(function(error) {console.log(error)});
 
