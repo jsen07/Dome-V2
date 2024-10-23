@@ -3,7 +3,6 @@ import { ref, child, get, getDatabase, onValue} from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
 import Placeholder from './images/avatar_placeholder.png';
 import { useNavigate } from 'react-router-dom';
-import Chat from './Chat';
 
 
 
@@ -61,19 +60,6 @@ useEffect(() => {
 
 },[chatList])
 
-const toggleChat = () => {
-setChatToggle(!chatToggle);
-}
-const redirectToChat = (e) => {
-    const roomid = e.target.getAttribute('data-chatid');
-    navigate(`/home/${roomid}`);
-
-}
-
-const handleChat = () => {
-    console.log(chatList);
-}
-
   return (
     <div className='chat-card__container'>
         <h1 id="chat-card__header"> Chat </h1>
@@ -86,8 +72,7 @@ const handleChat = () => {
             </div>
         <div className='details__card'>
             <h1> {chat.displayName} </h1>
-            <p> {chat.lastMessage} </p>
-            <p> lastMessage </p>
+            <p> {chat?.lastMessage || "start sending a message to this user"} </p>
         </div>
     </div>
 
@@ -95,19 +80,6 @@ const handleChat = () => {
 
      ))
     }
-{/* 
-    {chatToggle && (
-
-<div className='chat__container'>
-<Chat />
-<button onClick={handleChat}> get ChatList</button>
-
-
-
-</div>
-
-
-    )} */}
 
         </div>
   )
