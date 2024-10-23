@@ -23,8 +23,6 @@ const SearchList = (props) => {
 
     const createChat = () => {
       //create a chat collection for CURRENT user
-      const currentUser = user.uid;
-      const searched = searchedUser.uid;
       const dbRef = ref(getDatabase());
 
 //check if 
@@ -42,7 +40,9 @@ get(child(chatRef, `chatList/`)).then((snapshot) => {
 
     set(child(dbRef, "chat/"+ newChatKey), {
     createdAt: serverTimestamp(),
-    messages: {}
+    messages: "",
+    allowedUsers: [user.uid, searchedUser.uid
+    ]
   })   
     set(child(dbRef, "chatList/"+ searchedUser.uid+"/"+ user.uid), {
  
@@ -74,7 +74,9 @@ get(child(chatRef, `chatList/`)).then((snapshot) => {
       // const newChatKey = push(child(dbRef, 'chat')).key;
       set(child(dbRef, "chat/"+ newChatKey), {
         createdAt: serverTimestamp(),
-        messages: {}
+        messages: "",
+        allowedUsers: [user.uid, searchedUser.uid
+        ]
       })   
 
       set(child(dbRef, "chatList/"+ searchedUser.uid+"/"+ user.uid), {
@@ -101,7 +103,9 @@ get(child(chatRef, `chatList/`)).then((snapshot) => {
 
       set(child(dbRef, "chat/"+ newChatKey), {
         createdAt: serverTimestamp(),
-        messages: {}
+        messages: "",
+        allowedUsers: [user.uid, searchedUser.uid
+        ]
       })   
 
       set(child(dbRef, "chatList/"+ searchedUser.uid+"/"+ user.uid), {

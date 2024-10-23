@@ -9,6 +9,7 @@ import { useStateValue } from './components/contexts/StateProvider';
 import Chat from './components/Chat';
 import Sidebar from './components/Sidebar';
 import ChatList from './components/ChatList';
+import ChatRoute from './components/ChatRoute';
 
 function App() {
 
@@ -31,8 +32,10 @@ function App() {
             } />
             <Route path="/home/:chatId" element={
                 <PrivateRoute>
+                      <ChatRoute>
                   <Sidebar/>
                     <Chat />
+                    </ChatRoute>
                 </PrivateRoute>
             } />
             <Route path="/home" element={
