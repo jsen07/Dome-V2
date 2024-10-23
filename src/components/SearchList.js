@@ -3,7 +3,7 @@ import Placeholder from '../components/images/avatar_placeholder.png';
 import { useStateValue } from './contexts/StateProvider';
 import { db } from '../firebase';
 import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue } from "firebase/database";
-
+import { useNavigate } from "react-router-dom";
 const SearchList = (props) => {
 
     // console.log(props);
@@ -11,6 +11,9 @@ const SearchList = (props) => {
     const [chatId, setChatId] = useState();
     const [{user}, dispatch] = useStateValue();
     const [searchedUser, setSearchedUser] = useState();
+
+    
+  const navigate = useNavigate();
 
     const viewToggle = () => {
       setView(!view);
@@ -144,10 +147,19 @@ get(child(chatRef, `chatList/`)).then((snapshot) => {
 
 {!view && (
   <div className='searched-user__box'>
+    <div className='searched-user__profile'>
   <img src={props.results.photoUrl || Placeholder}></img>
-          <p> {props.results.displayName} </p>
-          <p> {props.results.uid} </p>
-          <button onClick={viewToggle}> View User </button>
+  </div>
+  <div className='searched-user__view'>
+
+<div className='searched-dp'>          
+<p> {props.results.displayName} </p>
+</div>
+    <div className='searched-view'>
+          {/* <p> {props.results.uid} </p> */}
+          <div id="view-user" onClick={viewToggle}> </div>
+          </div>
+          </div>
           </div>
         
 )}

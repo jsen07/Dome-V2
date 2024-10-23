@@ -42,8 +42,10 @@ onValue(dbRef, (snapshot) => {
     <div className='search-user__container'>
         <h1> SEARCH FOR  A USER </h1>
 
+    <div className='search-form__container'>
         <input id="search-user__box" type="text" ref={searchUserRef}name="search-bar" />
         <button onClick={searchUserByID}> Search </button>
+    </div>
 
 
      {userList && userList.map((data) => (
