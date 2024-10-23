@@ -1,60 +1,66 @@
 .home__container {
-    width: 100vw;
-    height: 100vh;
+    width: auto;
+    height: 100%;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content:flex-start;
     align-items: center;
+    // overflow: hidden;
     // #7e00e6
-    .main__menu {
-        width: 95%;
+
+    .side-menu__bar {
+        width: 100px;
         height: 90%;
-        outline: 2px solid black;
+        border: 2px solid rgb(109, 13, 109);
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
+        align-items: center;
+        margin-inline: 10px;
         border-radius: 20px;
         background-color: #121212;
-        color: #b0b0b0;
 
-        .side-menu__bar {
-            width: 10%;
-            height: 100%;
-            border-right: 2px solid black;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .side-bar__icon {
+            width: 50px;
+            height: 50px;
+            margin-top: 30px;
+            outline: 2px solid black;
+            border-radius: 20px;
+            transition: all .2s ease-in-out;
 
-            .side-bar__icon {
-                width: 50px;
-                height: 50px;
-                margin-block: 10px;
-                outline: 2px solid black;
-                border-radius: 20px;
-                transition: all .2s ease-in-out;
-
-                &:hover {
-                    cursor: pointer;
-                    transform: scale(0.95);
-                }
-            }
-
-            #profile__icon {
-                background-image: url("../components/images/user-profile-svgrepo-com.svg");
-                background-size: contain;
-                background-repeat: no-repeat;
-            }
-
-            #add-friend__icon {
-                background-image: url('../components/images/add-friend-svgrepo-com.svg');
-                background-size: contain;
-                background-repeat: no-repeat;
-            }
-            button {
-                width: 50px;
-                height: 50px;
-                margin-block: 10px;
+            &:hover {
+                cursor: pointer;
+                transform: scale(0.95);
             }
         }
+
+        #profile__icon {
+            background-image: url("../components/images/user-profile-svgrepo-com.svg");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        #add-friend__icon {
+            background-image: url('../components/images/add-friend-svgrepo-com.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+        button {
+            width: 50px;
+            height: 50px;
+            margin-block: 10px;
+        }
+    }
+    // .main__menu {
+    //     width: 500px;
+    //     height: 90%;
+    //     outline: 2px solid black;
+    //     display: flex;
+    //     flex-direction: row;
+    //     border-radius: 20px;
+    //     background-color: #121212;
+    //     color: #b0b0b0;
+    //     border: 2px solid rgb(109, 13, 109);
+
 
         .chat-list__container {
             width: 70%;
@@ -67,5 +73,5 @@
             height: 100%;
             // border: 2px solid pink;
         }
-    }
+    // }
 }

@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue} from "firebase/database";
-import { db } from '../firebase';
+import { ref, child, get, getDatabase, onValue} from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
 import Placeholder from './images/avatar_placeholder.png';
+import { useNavigate } from 'react-router-dom';
 
 
 
 const ChatList = () => {
 
     const [chatList, setChatList] = useState();
-    const [{user}, dispatch] = useStateValue();
-    const [loading, setLoading]=useState(true);
+    const [{user}] = useStateValue();
+    const navigate = useNavigate();
 
 useEffect(() => {
 
@@ -18,7 +18,7 @@ useEffect(() => {
     let allChat = []; // Initialize outside the callback
 
     const fetchChats = async () => {
-        allChat = []; // Clear previous chats
+        allChat = []; 
 
         const chatPromises = [];
         const userRef = ref(getDatabase());
@@ -56,20 +56,28 @@ useEffect(() => {
 
     fetchChats();
 
+    console.log(chatList)
+
 },[user])
 
+const redirectToChat = (e) => {
+    const roomid = e.target.getAttribute('data-chatId');
+    navigate(`/home/${roomid}`);
+
+}
 
   return (
     <div className='chat-card__container'>
+        <h1 id="chat-card__header"> Chat </h1>
 
         {chatList && chatList.map((chat, key) => (
-            <div className='card__container' key={key}>
+            <div className='card__container' key={key} data-chatId={chat.chatId} onClick={redirectToChat}>
                 <div className='profile__card'>
-                <img src={chat.photoUrl || Placeholder }/>
+                <img alt='user-avatar' src={chat.photoUrl || Placeholder }/>
             </div>
         <div className='details__card'>
             <h1> {chat.displayName} </h1>
-            {/* <p> {chat.lastMessage} </p> */}
+            <p> {chat.lastMessage} </p>
             <p> lastMessage </p>
         </div>
     </div>

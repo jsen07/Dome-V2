@@ -5,13 +5,13 @@
 }
 
 .home {
-  background-color: black;
   height: 100vh;
   width: 100vw;
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+  background-image: url("../components/images/gojo-bg.jpeg");
 }
 
 @font-face {
@@ -177,78 +177,103 @@
 }
 
 .home__container {
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-.home__container .main__menu {
-  width: 95%;
-  height: 90%;
-  outline: 2px solid black;
+  width: auto;
+  height: 100%;
   display: flex;
   flex-direction: row;
-  border-radius: 20px;
-  background-color: #121212;
-  color: #b0b0b0;
+  justify-content: flex-start;
+  align-items: center;
 }
-.home__container .main__menu .side-menu__bar {
-  width: 10%;
-  height: 100%;
-  border-right: 2px solid black;
+.home__container .side-menu__bar {
+  width: 100px;
+  height: 90%;
+  border: 2px solid rgb(109, 13, 109);
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-inline: 10px;
+  border-radius: 20px;
+  background-color: #121212;
 }
-.home__container .main__menu .side-menu__bar .side-bar__icon {
+.home__container .side-menu__bar .side-bar__icon {
   width: 50px;
   height: 50px;
-  margin-block: 10px;
+  margin-top: 30px;
   outline: 2px solid black;
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
 }
-.home__container .main__menu .side-menu__bar .side-bar__icon:hover {
+.home__container .side-menu__bar .side-bar__icon:hover {
   cursor: pointer;
   transform: scale(0.95);
 }
-.home__container .main__menu .side-menu__bar #profile__icon {
+.home__container .side-menu__bar #profile__icon {
   background-image: url("../components/images/user-profile-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
 }
-.home__container .main__menu .side-menu__bar #add-friend__icon {
+.home__container .side-menu__bar #add-friend__icon {
   background-image: url("../components/images/add-friend-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
 }
-.home__container .main__menu .side-menu__bar button {
+.home__container .side-menu__bar button {
   width: 50px;
   height: 50px;
   margin-block: 10px;
 }
-.home__container .main__menu .chat-list__container {
+.home__container .chat-list__container {
   width: 70%;
   height: 100%;
 }
-.home__container .main__menu .chat__container {
+.home__container .chat__container {
   width: 100%;
   height: 100%;
 }
 
 .profile__page {
-  width: 70%;
-  height: 100%;
-  border: 2px solid green;
+  width: auto;
+  height: 90%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #121212;
+  color: white;
+  border-radius: 20px;
 }
 .profile__page .user-profile__details {
   display: flex;
   flex-direction: column;
+}
+.profile__page .profile__view {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.profile__page .profile__view .avatar__container {
+  width: 350px;
+  height: 350px;
+  border: 2px solid rgb(255, 255, 255);
+  border-radius: 50%;
+}
+.profile__page .profile__view .avatar__container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 50%;
+}
+.profile__page .profile__view .user-profile__details {
+  width: 600px;
+  margin-inline: 20px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+.profile__page .profile__view .user-profile__details p {
+  font-size: 16px;
+  margin-block: 5px;
+}
+.profile__page .profile__view .user-profile__details .profile-details {
+  margin: 10px;
 }
 
 .search-user__container {
@@ -261,27 +286,37 @@
 }
 
 .chat-box__container {
-  border: 2px solid white;
   width: 100%;
-  height: 100%;
+  height: 90%;
+  border: 2px solid blue;
+  background-color: #121212;
+}
+.chat-box__container h1 {
+  color: white;
 }
 
 .chat-card__container {
-  width: 100%;
-  height: 100%;
+  width: 500px;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  border-radius: 20px;
+  background-color: #121212;
+}
+.chat-card__container #chat-card__header {
+  color: white;
+  margin-block: 12px;
 }
 .chat-card__container .card__container {
-  border-bottom: 2px solid rgba(176, 176, 176, 0.5);
+  border: 1px solid rgba(176, 176, 176, 0.5);
   width: 90%;
   height: auto;
   padding: 10px;
   display: flex;
   flex-direction: row;
-  margin-block: 10px;
-  padding-bottom: 20px;
+  margin-bottom: 22px;
 }
 .chat-card__container .card__container:hover {
   cursor: pointer;
@@ -289,8 +324,8 @@
 }
 .chat-card__container .card__container .profile__card {
   border: 1px solid white;
-  width: 100px;
-  height: 100px;
+  width: 70px;
+  height: 70px;
   border-radius: 50%;
   margin-left: 10px;
 }
@@ -304,12 +339,13 @@
   display: flex;
   margin-inline: 20px;
   flex-direction: column;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 .chat-card__container .card__container .details__card p {
-  margin-block: 20px;
+  margin-top: 5px;
   font-size: 16px;
+  color: white;
 }
 .chat-card__container .card__container .details__card h1 {
-  font-size: 24px;
+  font-size: 20px;
+  color: white;
 }/*# sourceMappingURL=style.css.map */

@@ -6,6 +6,6 @@ export default function ProtectedRoute ({ children }) {
 
     const { currentUser } = useAuth();
 
-  return !currentUser ? children : <Navigate replace to="/home" />;
+    return currentUser ? <Navigate replace to="/home" /> : children;
   
 }

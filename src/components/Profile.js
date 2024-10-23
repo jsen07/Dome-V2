@@ -148,7 +148,7 @@ if (loading) return <div className='loading'> LOADING... </div>
 
 {!editProfileToggled &&(
 <div className='profile__view'>
-        <p> {user?.displayName } </p>
+        <h1> {user?.displayName } </h1>
 
         <div className='avatar__container'>
         <img alt="avatar" src={user?.photoURL ? user?.photoURL : photoURL } className='profile__icon'/>
@@ -156,13 +156,18 @@ if (loading) return <div className='loading'> LOADING... </div>
         </div>
 
         <div className='user-profile__details'>
-            <p> Unique ID: {userDetails?.uid} </p>
-            <p> Bio: {userDetails?.Bio}</p>
-            <p> Gender: {userDetails?.Gender}</p>
-            <p> Display name: {userDetails?.displayName} </p>
-            
-            <button onClick={editProfileToggle}> Edit Profile </button>
+            <p> Unique ID: </p>
+            <div className='profile-details'>{userDetails?.uid}</div>
+            <p> Bio:</p>
+            <div className='profile-details'>{userDetails?.Bio}</div>
+            <p> Gender:</p>
+            <div className='profile-details'>{userDetails?.Gender}</div>
+            <p> Display name: </p>
+            <div className='profile-details'>{userDetails?.displayName}</div>
+
             <p> Email: {userDetails?.email} </p>
+
+            <button onClick={editProfileToggle}> Edit Profile </button>
 
         </div>
         </div>

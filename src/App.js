@@ -6,10 +6,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useStateValue } from './components/contexts/StateProvider';
+import Chat from './components/Chat';
+import Sidebar from './components/Sidebar';
+import ChatList from './components/ChatList';
 
 function App() {
 
-  const [{isLoading}] = useStateValue();
+  const [{isLoading, user}] = useStateValue();
 
   return (
     <div className="home">
@@ -18,30 +21,30 @@ function App() {
       <div className='loading'> LOADING... </div>
     )}
 
-      <>
-      <Router>
-      <AuthProvider>
- 
-        <Routes> 
-          <Route path="/" element={<ProtectedRoute>
-            <Login/>
-            
-            
-            </ProtectedRoute>} />
-          <Route path="/home" element={<PrivateRoute>
-
-            <Home />
-            
-            </PrivateRoute>}
-            />
+<Router>
+<AuthProvider>
+        <Routes>
+            <Route path="/" element={
+                <ProtectedRoute>
+                    <Login />
+                </ProtectedRoute>
+            } />
+            <Route path="/home/:chatId" element={
+                <PrivateRoute>
+                  <Sidebar/>
+                    <Chat />
+                </PrivateRoute>
+            } />
+            <Route path="/home" element={
+                <PrivateRoute>
+                    <Home />
+                </PrivateRoute>
+            } />
         </Routes>
-      </AuthProvider>
-      </Router>
-      </>
-      
-      
-    </div>
-  );
+        </AuthProvider>
+        </Router>
+        </div>
+    )
 }
 
 export default App;
