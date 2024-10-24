@@ -170,9 +170,15 @@ get(child(chatRef, `chatList/`)).then((snapshot) => {
     <h1> nice view</h1>
     <div className='profile-view__container'>
 
-    <div className='searched-user__profile'>
+    <div className='view-user__profile'>
   <img src={props.results.photoUrl || Placeholder}></img>
   </div>
+  <p>Display name:</p>
+  <p> {props.results.displayName} </p>
+  <p>Bio:</p>
+  <p> {props.results.Bio} </p>
+  <p>Gender:</p>
+  <p> {props.results.Gender} </p>
 
 
     <button onClick={createChat}> message</button>

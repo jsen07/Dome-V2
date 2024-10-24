@@ -366,6 +366,17 @@
   display: flex;
   flex-direction: column;
 }
+.search-user__container .searched-user__view .profile-view__container .view-user__profile {
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+}
+.search-user__container .searched-user__view .profile-view__container .view-user__profile img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
 .chat-box__container {
   width: 100%;
