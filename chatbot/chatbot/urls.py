@@ -17,10 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from . import views
-import sys
-sys.dont_write_bytecode = True
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('chatbot/', views.chatbot_response, name='chatbot_response')
 ]
