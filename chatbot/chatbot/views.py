@@ -2,6 +2,8 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 import torch
+import sys
+sys.dont_write_bytecode = True
 
 # Load GPT2 model and tokenizer
 model_name = "gpt2"

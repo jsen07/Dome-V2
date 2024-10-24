@@ -3,6 +3,9 @@
 import os
 import sys
 
+import sys
+sys.dont_write_bytecode = True
+
 
 def main():
     """Run administrative tasks."""
