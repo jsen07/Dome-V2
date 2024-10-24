@@ -1,196 +1,105 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import Placeholder from '../components/images/avatar_placeholder.png';
 import { useStateValue } from './contexts/StateProvider';
-import { db } from '../firebase';
-import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue } from "firebase/database";
+import { getDatabase, ref, child, get, set, push, serverTimestamp } from "firebase/database";
 import { useNavigate } from "react-router-dom";
-const SearchList = (props) => {
 
-    // console.log(props);
-    const [view, setView] = useState(false)
-    const [chatId, setChatId] = useState();
-    const [{user}, dispatch] = useStateValue();
-    const [searchedUser, setSearchedUser] = useState();
-
-    
-  const navigate = useNavigate();
+const SearchList = ({ results, key }) => {
+    const [view, setView] = useState(false);
+    const [{ user }] = useStateValue();
+    const navigate = useNavigate();
 
     const viewToggle = () => {
-      setView(!view);
-      setSearchedUser(props.results);
-    }
+        setView(!view);
+    };
 
-    const close = () => {
-      setView(!view);
-    }
+    const createChat = async () => {
+        const db = getDatabase();
+        const chatId = generateChatId(user.uid, results.uid);
 
-    const createChat = () => {
-      //create a chat collection for CURRENT user
-      const dbRef = ref(getDatabase());
+        try {
+            const chatSnapshot = await get(child(ref(db), `chat/${chatId}`));
 
-//check if 
+            // Check if chat already exists
+            if (!chatSnapshot.exists()) {
+                const chatData = {
+                    createdAt: serverTimestamp(),
+                    messages: {},
+                    allowedUsers: [user.uid, results.uid]
+                };
 
-//check if userid is in chatlist, IF user is not in chatList, create a new Chat, ADD user to chatList and UPDATE 
+          //create a new chat if a chat doesnt exist
+         await set(ref(db, `chat/${chatId}`), chatData);
 
-const chatRef = ref(getDatabase());
-get(child(chatRef, `chatList/`)).then((snapshot) => {
+                // Update chat lists for both users
+                    await Promise.all([
+                    set(child(ref(db), `chatList/${results.uid}/${user.uid}`), {
+                        chatId: chatId,
+                        lastMessage: "",
+                        receiverId: user.uid,
+                        updatedAt: serverTimestamp()
+                    }),
+                    set(child(ref(db), `chatList/${user.uid}/${results.uid}`), {
+                        chatId: chatId,
+                        lastMessage: "",
+                        receiverId: results.uid,
+                        updatedAt: serverTimestamp()
+                    })
+                ]);
 
-//     get(child(chatRef, `chatList/`+ user.uid)).then((snapshot) => {
-  //MAIN
-  const newChatKey = push(child(dbRef, 'chat')).key;
-
-  if (!snapshot.exists()) {
-
-    set(child(dbRef, "chat/"+ newChatKey), {
-    createdAt: serverTimestamp(),
-    messages: "",
-    allowedUsers: [user.uid, searchedUser.uid
-    ]
-  })   
-    set(child(dbRef, "chatList/"+ searchedUser.uid+"/"+ user.uid), {
- 
-                chatId: newChatKey,
-                lastMessage: "",
-                recieverId: user.uid,
-                updatedAt: serverTimestamp()
-            
-            })
-
-
-          set(child(dbRef, "chatList/"+ user.uid+"/"+ searchedUser.uid), {
-         
-          chatId: newChatKey,
-          lastMessage: "",
-          recieverId: searchedUser.uid,
-          updatedAt: serverTimestamp()
-        
-      })
-    
-  } 
-    //CHECK IF USER ID IS ALREADY IN LIST
-
-    if (snapshot.exists()) {
-         const chatListData = snapshot.val();
-
-         //MAIN
-          if(!chatListData.hasOwnProperty(user.uid)) {
-      // const newChatKey = push(child(dbRef, 'chat')).key;
-      set(child(dbRef, "chat/"+ newChatKey), {
-        createdAt: serverTimestamp(),
-        messages: "",
-        allowedUsers: [user.uid, searchedUser.uid
-        ]
-      })   
-
-      set(child(dbRef, "chatList/"+ searchedUser.uid+"/"+ user.uid), {
- 
-        chatId: newChatKey,
-        lastMessage: "",
-        recieverId: user.uid,
-        updatedAt: serverTimestamp()
-    
-    })
-
-
-  set(child(dbRef, "chatList/"+ user.uid+"/"+ searchedUser.uid), {
- 
-  chatId: newChatKey,
-  lastMessage: "",
-  recieverId: searchedUser.uid,
-  updatedAt: serverTimestamp()
-
-})
-
-    }
-    if(!chatListData.hasOwnProperty(searchedUser.uid)) {
-
-      set(child(dbRef, "chat/"+ newChatKey), {
-        createdAt: serverTimestamp(),
-        messages: "",
-        allowedUsers: [user.uid, searchedUser.uid
-        ]
-      })   
-
-      set(child(dbRef, "chatList/"+ searchedUser.uid+"/"+ user.uid), {
+                // navigate to the new chat
+                console.log("Chat created successfully!");
+                navigate(`/home/${chatId}`);
+            } else {
+                console.log("Chat already exists.");
+                navigate(`/home/${chatId}`);
      
-        chatId: newChatKey,
-        lastMessage: "",
-        recieverId: user.uid,
-        updatedAt: serverTimestamp()
-    
-    })
-    
-    
-    set(child(dbRef, "chatList/"+ user.uid+"/"+ searchedUser.uid), {
-    
-    chatId: newChatKey,
-    lastMessage: "",
-    recieverId: searchedUser.uid,
-    updatedAt: serverTimestamp()
-    
-    })
-    
-  }
-    }
+            }
+        } catch (error) {
+            console.error("Error creating chat:", error);
+            alert("Failed to create chat. Please try again.");
+        }
+    };
 
+    //function to generate a new chatId using our user and the opposite user
+    const generateChatId = (userId1, userId2) => {
+        return [userId1, userId2].sort().join('_'); // Unique id based on user ids
+    };
 
-})
+    return (
+        <div className='searched-user__container'>
+            {!view ? (
+                <div className='searched-user__box'>
+                    <div className='searched-user__profile'>
+                        <img src={results.photoUrl || Placeholder} alt="User Avatar" />
+                    </div>
+                    <div className='searched-user__view'>
+                        <div className='searched-dp'>          
+                            <p>{results.displayName}</p>
+                        </div>
+                        <div className='searched-view'>
+                            <div id="view-user" onClick={viewToggle}></div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div className='searched-user__view'>
+                    <h1>User Details</h1>
+                    <div className='profile-view__container'>
+                        <div className='view-user__profile' key={key}>
+                            <img src={results.photoUrl || Placeholder} alt="User Avatar" />
+                        </div>
+                        <p>Display Name: {results.displayName}</p>
+                        <p>Bio: {results.Bio}</p>
+                        <p>Gender: {results.Gender}</p>
 
-.catch((error) => {
-  console.error(error);
-});
-  
+                        <button onClick={createChat}>Message</button>
+                        <button onClick={viewToggle}>Close</button>
+                    </div>
+                </div>
+            )}
+        </div>
+    );
+};
 
-    }
-  return (
-    <div className='searched-user__container'>
-
-{!view && (
-  <div className='searched-user__box'>
-    <div className='searched-user__profile'>
-  <img src={props.results.photoUrl || Placeholder}></img>
-  </div>
-  <div className='searched-user__view'>
-
-<div className='searched-dp'>          
-<p> {props.results.displayName} </p>
-</div>
-    <div className='searched-view'>
-          {/* <p> {props.results.uid} </p> */}
-          <div id="view-user" onClick={viewToggle}> </div>
-          </div>
-          </div>
-          </div>
-        
-)}
-
-{view && (
-  <div className='searched-user__view'>
-
-    <h1> nice view</h1>
-    <div className='profile-view__container'>
-
-    <div className='view-user__profile'>
-  <img src={props.results.photoUrl || Placeholder}></img>
-  </div>
-  <p>Display name:</p>
-  <p> {props.results.displayName} </p>
-  <p>Bio:</p>
-  <p> {props.results.Bio} </p>
-  <p>Gender:</p>
-  <p> {props.results.Gender} </p>
-
-
-    <button onClick={createChat}> message</button>
-    <button onClick={close}> X </button>
-    </div>
-    {/* <h1> {searchedUser.uid}</h1> */}
-    </div>
-)}
-</div>
-  )
-}
-
-export default SearchList
-
-
+export default SearchList;

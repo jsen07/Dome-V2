@@ -3,6 +3,7 @@ import { ref, child, get, getDatabase, onValue} from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
 import Placeholder from './images/avatar_placeholder.png';
 import { useNavigate } from 'react-router-dom';
+import Chat from './Chat';
 
 
 
@@ -28,7 +29,7 @@ useEffect(() => {
         onValue(dbRef, async (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
-                const userPromise = get(child(userRef, `users/${childData.recieverId}`));
+                const userPromise = get(child(userRef, `users/${childData.receiverId}`));
 
                 chatPromises.push(userPromise.then((userSnapshot) => {
                     if (userSnapshot.exists()) {
@@ -38,7 +39,7 @@ useEffect(() => {
                             ...userData
                         };
                     } else {
-                        console.log("No data available for user:", childData.recieverId);
+                        console.log("No data available for user:", childData.receiverId);
                         return null; // Return null if no data
                     }
                 }));
@@ -58,7 +59,7 @@ useEffect(() => {
 
     fetchChats();
 
-},[chatList])
+},[user.uid])
 
   return (
     <div className='chat-card__container'>

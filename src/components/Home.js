@@ -31,7 +31,8 @@ if(user) {
         displayName: user.displayName,
         Bio: "",
         Gender: "Prefer not to say",
-        email: user.email
+        email: user.email,
+        uid: user.uid
       })
     }
   })

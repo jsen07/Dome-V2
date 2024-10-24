@@ -103,10 +103,6 @@ set(newPostRef, {
  
         }
 
-        // const closeChat = () => {
-        //   navigate("/home");
-        // }
-
         const handleMessage = (event) => {
           setText(event.target.value)
 

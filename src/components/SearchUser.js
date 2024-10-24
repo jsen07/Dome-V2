@@ -48,8 +48,8 @@ onValue(dbRef, (snapshot) => {
     </div>
 
 
-     {userList && userList.map((data) => (
-        <SearchList results={data}/>
+     {userList && userList.map((data, key) => (
+        <SearchList results={data} key={key}/>
      ))
     }
 
