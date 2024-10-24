@@ -87,7 +87,7 @@ set(newPostRef, {
  
             chatId: chatId,
             lastMessage: text,
-            recieverId: user.uid,
+            receiverId: user.uid,
             updatedAt: serverTimestamp()
         
         });
