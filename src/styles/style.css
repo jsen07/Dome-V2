@@ -362,6 +362,10 @@
   cursor: pointer;
   transform: scale(0.9);
 }
+.search-user__container .searched-user__view {
+  display: flex;
+  flex-direction: column;
+}
 
 .chat-box__container {
   width: 100%;

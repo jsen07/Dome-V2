@@ -165,11 +165,19 @@ get(child(chatRef, `chatList/`)).then((snapshot) => {
 )}
 
 {view && (
-  <div className='searched-user__box'>
+  <div className='searched-user__view'>
 
     <h1> nice view</h1>
+    <div className='profile-view__container'>
+
+    <div className='searched-user__profile'>
+  <img src={props.results.photoUrl || Placeholder}></img>
+  </div>
+
+
     <button onClick={createChat}> message</button>
     <button onClick={close}> X </button>
+    </div>
     {/* <h1> {searchedUser.uid}</h1> */}
     </div>
 )}
