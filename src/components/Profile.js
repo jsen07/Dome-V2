@@ -215,7 +215,7 @@ if (loading) return <div className='loading'> LOADING... </div>
 
     <div className='upload-avatar__container'>
 
-<button onClick={changeAvatarToggle}> Close </button>
+{/* <button onClick={changeAvatarToggle}> Close </button> */}
 
 <button onClick={removeProfilePicture}>  Remove current Photo </button>
 </div>

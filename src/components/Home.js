@@ -11,6 +11,7 @@ import { useStateValue } from './contexts/StateProvider'
 import Chat from './Chat';
 import Sidebar from './Sidebar';
 import ChatList from './ChatList';
+import Chatbot from './Chatbot';
 
 
 const Home = () => {
@@ -45,6 +46,8 @@ if(user) {
   return (
     <div className='home__container'> 
             <Sidebar />
+
+            <Chatbot />
     </div>
 
   )

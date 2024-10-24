@@ -29,7 +29,7 @@ useEffect(() => {
         onValue(dbRef, async (snapshot) => {
             snapshot.forEach((childSnapshot) => {
                 const childData = childSnapshot.val();
-                console.log(childData)
+                // console.log(childData)
                 const userPromise = get(child(userRef, `users/${childData.receiverId}`));
 
                 chatPromises.push(userPromise.then((userSnapshot) => {

@@ -8,30 +8,31 @@ model_name = "gpt2"
 model = GPT2LMHeadModel.from_pretrained(model_name)
 tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
-# Eval mode
+# Set model to evaluation mode
 model.eval()
 
-# Chatbot response generation
+def remove_repeats(text):
+    words = text.split()
+    unique_words = []
+    for word in words:
+        if word not in unique_words:
+            unique_words.append(word)
+    return ' '.join(unique_words)
+
 def gpt2_response(user_input):
-    # Encode user input and add token
-    input_ids = tokenizer.encode(
-        user_input + tokenizer.eos_token,
-        return_tensors = 'pt')
+    input_ids = tokenizer.encode(user_input + tokenizer.eos_token, return_tensors='pt')
     
-    # Generate responses
     output = model.generate(
-        input_ids, max_length = 100,
-        temperature = 0.7,
-        top_p = 0.9,
-        pad_token_id = tokenizer.eos_token_id
+        input_ids,
+        max_length=100,
+        temperature=0.7,  # Allow for some creativity
+        top_p=0.9,
+        num_return_sequences=1,  # Generate multiple responses if needed
+        pad_token_id=tokenizer.eos_token_id
     )
 
-    # Put it into text
-    response = tokenizer.decode(
-        output[:,
-               input_ids.shape[-1]:][0],
-               skip_special_tokens = True
-    )
+    response = tokenizer.decode(output[:, input_ids.shape[-1]:][0], skip_special_tokens=True)
+
     return response
 
 @api_view(['POST'])

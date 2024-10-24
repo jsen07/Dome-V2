@@ -18,6 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
+
 urlpatterns = [
-    path('chatbot/', views.chatbot_response, name='chatbot_response')
+    path('api/chatbot/', views.chatbot_response, name='chatbot_response'),  # Ensure this is the right endpoint
 ]

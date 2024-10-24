@@ -1,7 +1,6 @@
-from django.contrib import admin
-from django.urls import path, include  # include is used to reference the chatbot's URLs
+from django.urls import path
+from . import views
 
 urlpatterns = [
-    path('api/', include('chatbot.urls')),  # Include chatbot app URLs
-    path('admin/', admin.site.urls)
+    path('api/chatbot/', views.chatbot_response, name='chatbot_response'),  # Ensure this is the right endpoint
 ]
