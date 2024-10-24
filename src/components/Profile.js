@@ -176,9 +176,15 @@ if (loading) return <div className='loading'> LOADING... </div>
 
 {editProfileToggled &&(
   <div className='edit-profile__view'>
-
+    <div className='close-button'>
+    <button onClick={editProfileToggle}> Close </button>
+    </div>
+<div className='edit-avatar'>
+  <div className='avatar-container'>
 <img alt="avatar" src={photoURL} className='profile__icon'/>
+</div>
 <button onClick={changeAvatarToggle}> Change Photo </button>
+</div>
 
 <div className='user-profile__details'>
             <p> Unique ID: {currentUser.uid} </p>
@@ -198,8 +204,9 @@ if (loading) return <div className='loading'> LOADING... </div>
 
             <p> Email: {userDetails?.email} </p>
 </div>
+<div className='edit-buttons__container'>
 <button onClick={saveChanges}> Save </button>
-<button onClick={editProfileToggle}> Close </button>
+</div>
 
 {changeAvatarToggled &&(
   <div className='avatar-home'>

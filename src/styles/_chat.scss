@@ -5,6 +5,7 @@
     border: 1px solid rgba(205, 89, 255, 1);
     background-color: #121212;
     margin-inline: 10px;
+    background-color: rgba(18, 18, 18,0.6);
     // display: flex;
     // flex-direction: column;
 
@@ -26,12 +27,13 @@
             overflow-y: auto; /* Enable vertical scrolling */
             margin-bottom: 10px; /* Space between messages and input */
             padding: 10px; /* Optional: padding */
-            background-color: #121212;
+            // background-color: #121212;
             // display:flex; 
             /* Optional: background color */; /* Space between messages and input */
 
             .messages__inner {
                 display: flex;
+                height: 100%;
                 flex-direction: column; /* Stack messages vertically */
                 justify-content: flex-end; /* Keep the latest messages at the bottom */
             }

@@ -1,7 +1,7 @@
 .search-user__container {
-    width: 600px;
+    width: 650px;
     height: 90%;
-    border: 2px solid white;
+    border: 1px solid rgba(205, 89, 255, 0.8);
     display: flex; 
     flex-direction: column;
     align-items: center;
@@ -111,11 +111,16 @@
 .searched-user__view {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 .profile-view__container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     .view-user__profile {
         width: 350px;
         height: 350px;
-
         border-radius: 50%;
 
         img {
@@ -125,6 +130,18 @@
             object-fit: cover;
             
         }
+    }
+    .view-user__details {
+        width: 500px;
+        // border:2px solid green;
+    }
+
+    .search-buttons__container {
+        width: 100%;
+        // border: 2px solid pink;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
     }
 }
 

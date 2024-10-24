@@ -64,15 +64,21 @@ const [{user}, dispatch] = useStateValue();
      <div className='home__container'> 
               <div className='side-menu__bar'>
 
-
-            <div className='side-bar__icon' id="profile__icon" onClick={toggleProfileHandler}>
+                <div className='side-bar__top'>
+            <div className='side-bar__icon' title="Profile" id="profile__icon" onClick={toggleProfileHandler}>
             </div>
 
-            <div className='side-bar__icon' id="add-friend__icon" onClick={toggleAddFriendHandler}>
+            <div className='side-bar__icon' title="Search users" id="add-friend__icon" onClick={toggleAddFriendHandler}>
 
             </div>
 
-            <button onClick={handleLogout} type='submit'>Logout</button>
+            </div>
+
+            <div className='side-bar__icon' title="Logout" id="logout__icon" onClick={handleLogout}>
+
+            </div>
+
+            {/* <button onClick={handleLogout} type='submit'>Logout</button> */}
         
           </div>
         {/* <div className='main__menu'> */}

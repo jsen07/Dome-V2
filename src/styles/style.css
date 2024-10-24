@@ -194,28 +194,41 @@
   margin-inline: 10px;
   border-radius: 20px;
   background-color: #121212;
+  justify-content: space-between;
 }
-.home__container .side-menu__bar .side-bar__icon {
-  width: 50px;
-  height: 50px;
+.home__container .side-menu__bar .side-bar__top .side-bar__icon {
+  width: 60px;
+  height: 60px;
   margin-top: 30px;
-  background-color: rgb(37, 37, 37);
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
 }
-.home__container .side-menu__bar .side-bar__icon:hover {
+.home__container .side-menu__bar .side-bar__top .side-bar__icon:hover {
   cursor: pointer;
-  transform: scale(0.95);
+  transform: scale(0.9);
 }
-.home__container .side-menu__bar #profile__icon {
+.home__container .side-menu__bar .side-bar__top #profile__icon {
   background-image: url("../components/images/user-profile-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
 }
-.home__container .side-menu__bar #add-friend__icon {
+.home__container .side-menu__bar .side-bar__top #add-friend__icon {
   background-image: url("../components/images/add-friend-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
+}
+.home__container .side-menu__bar #logout__icon {
+  width: 50px;
+  height: 50px;
+  background-image: url("../components/svg/logout-svgrepo-com.svg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-bottom: 30px;
+  transition: all 0.2s ease-in-out;
+}
+.home__container .side-menu__bar #logout__icon:hover {
+  cursor: pointer;
+  transform: scale(0.9);
 }
 .home__container .side-menu__bar button {
   width: 50px;
@@ -228,29 +241,31 @@
 }
 
 .profile__page {
-  width: auto;
+  width: 650px;
   height: 90%;
+  border: 2px solid rgba(205, 89, 255, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #121212;
   color: white;
   border-radius: 20px;
-}
-.profile__page .user-profile__details {
-  display: flex;
-  flex-direction: column;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 .profile__page .profile__view {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  width: 100%;
+}
+.profile__page .profile__view h1 {
+  padding-block: 20px;
 }
 .profile__page .profile__view .avatar__container {
   width: 350px;
   height: 350px;
-  border: 2px solid rgb(255, 255, 255);
+  border: 2px solid rgba(205, 89, 255, 0.8);
   border-radius: 50%;
 }
 .profile__page .profile__view .avatar__container img {
@@ -260,9 +275,11 @@
   border-radius: 50%;
 }
 .profile__page .profile__view .user-profile__details {
+  display: flex;
+  flex-direction: column;
   width: 600px;
+  justify-content: center;
   margin-inline: 20px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 .profile__page .profile__view .user-profile__details p {
   font-size: 16px;
@@ -271,11 +288,66 @@
 .profile__page .profile__view .user-profile__details .profile-details {
   margin: 10px;
 }
+.profile__page .profile__view .user-profile__details button {
+  margin-top: 20px;
+  height: 35px;
+  transition: all 0.2s ease-in-out;
+  border-radius: 10px;
+}
+.profile__page .profile__view .user-profile__details button:hover {
+  transform: scale(0.98);
+  cursor: pointer;
+}
+.profile__page .edit-profile__view {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile__page .edit-profile__view .close-button {
+  width: 90%;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 15px;
+}
+.profile__page .edit-profile__view .edit-avatar {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.profile__page .edit-profile__view .edit-avatar .avatar-container {
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+}
+.profile__page .edit-profile__view .edit-avatar .avatar-container img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+.profile__page .edit-profile__view .user-profile__details {
+  width: 600px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-inline: 20px;
+}
+.profile__page .edit-profile__view .user-profile__details p {
+  margin-block: 8px;
+}
+.profile__page .edit-profile__view .edit-buttons__container {
+  width: 600px;
+  display: flex;
+  justify-content: flex-start;
+}
 
 .search-user__container {
-  width: 600px;
+  width: 650px;
   height: 90%;
-  border: 2px solid white;
+  border: 1px solid rgba(205, 89, 255, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -365,6 +437,14 @@
 .search-user__container .searched-user__view {
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.search-user__container .searched-user__view .profile-view__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 .search-user__container .searched-user__view .profile-view__container .view-user__profile {
   width: 350px;
@@ -377,6 +457,15 @@
   border-radius: 50%;
   object-fit: cover;
 }
+.search-user__container .searched-user__view .profile-view__container .view-user__details {
+  width: 500px;
+}
+.search-user__container .searched-user__view .profile-view__container .search-buttons__container {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
 
 .chat-box__container {
   width: 100%;
@@ -384,6 +473,7 @@
   border: 1px solid rgb(205, 89, 255);
   background-color: #121212;
   margin-inline: 10px;
+  background-color: rgba(18, 18, 18, 0.6);
 }
 .chat-box__container h1 {
   color: white;
@@ -398,11 +488,11 @@
   overflow-y: auto; /* Enable vertical scrolling */
   margin-bottom: 10px; /* Space between messages and input */
   padding: 10px; /* Optional: padding */
-  background-color: #121212;
   /* Optional: background color */ /* Space between messages and input */
 }
 .chat-box__container .chat__header .messages__container .messages__inner {
   display: flex;
+  height: 100%;
   flex-direction: column; /* Stack messages vertically */
   justify-content: flex-end; /* Keep the latest messages at the bottom */
 }
@@ -465,7 +555,7 @@
   pointer-events: none;
 }
 .chat-card__container .card__container .profile__card {
-  border: 1px solid white;
+  border: 1px solid rgba(158, 66, 197, 0.8);
   width: 70px;
   height: 70px;
   border-radius: 50%;
@@ -502,18 +592,22 @@
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   padding-right: 10px;
 }
+.user-message .message_header, .message .message_header {
+  margin-bottom: 5px;
+}
 .user-message .message_header #message__time-sent, .message .message_header #message__time-sent {
   font-size: 14px;
   margin-left: 5px;
 }
 .user-message .message-box p, .message .message-box p {
-  padding-block: 10px;
+  padding-block: 6px;
   padding-inline: 15px;
   border-radius: 10px;
   border: 1px solid rgb(205, 89, 255);
   font-size: 20px;
   margin-bottom: 15px;
   background-color: rgba(205, 89, 255, 0.7);
+  text-align: center;
 }
 .user-message .message-box .message-time, .message .message-box .message-time {
   display: flex;

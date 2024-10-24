@@ -84,17 +84,21 @@ const SearchList = ({ results, key }) => {
                 </div>
             ) : (
                 <div className='searched-user__view'>
-                    <h1>User Details</h1>
+                    <h1>{results.displayName}</h1>
                     <div className='profile-view__container'>
                         <div className='view-user__profile' key={key}>
                             <img src={results.photoUrl || Placeholder} alt="User Avatar" />
                         </div>
+
+                        <div className='view-user__details'>
                         <p>Display Name: {results.displayName}</p>
                         <p>Bio: {results.Bio}</p>
                         <p>Gender: {results.Gender}</p>
-
+                        </div>
+                        <div className='search-buttons__container'>
                         <button onClick={createChat}>Message</button>
                         <button onClick={viewToggle}>Close</button>
+                        </div>
                     </div>
                 </div>
             )}
