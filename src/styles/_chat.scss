@@ -1,5 +1,4 @@
 .chat-box__container {
-    // border:2px solid white;
     width: 100%;
     height: 90%;
     border: 1px solid rgba(205, 89, 255, 1);
@@ -30,12 +29,17 @@
             // background-color: #121212;
             // display:flex; 
             /* Optional: background color */; /* Space between messages and input */
+            // border: 1px solid rgba(205, 89, 255, 1);
 
             .messages__inner {
-                display: flex;
-                height: 100%;
-                flex-direction: column; /* Stack messages vertically */
-                justify-content: flex-end; /* Keep the latest messages at the bottom */
+                flex:1;
+                // height: 100%;
+                min-height: 100%;
+                // border: 1px solid rgba(205, 89, 255, 1);
+                align-content: flex-end;
+                // flex-direction: column; /* Stack messages vertically */
+                // justify-content: flex-end; /* Keep the latest messages at the bottom */
+                // border: 1px solid rgba(205, 89, 255, 1)
             }
          
         }

@@ -139,7 +139,11 @@ set(newPostRef, {
           };
       }, []); // Set up scroll listener on mount
   
-
+      const handleKeyPress = (event) => {
+        if( event.key === "Enter") {
+          sendMessage();
+        }
+    };
   
   return (
     <div className='chat-box__container'>
@@ -161,7 +165,7 @@ set(newPostRef, {
   </div>
   <div ref={messagesEndRef} /></div> 
   <div className='input__container'>
-        <input  id="send-message__input" type="text" onChange={handleMessage} />
+        <input  id="send-message__input" type="text" onChange={handleMessage} onKeyDown={handleKeyPress} />
         <div id="send-button" onClick={sendMessage}></div>
         </div>
   </div>

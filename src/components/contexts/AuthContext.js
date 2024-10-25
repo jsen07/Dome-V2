@@ -45,6 +45,11 @@ export function AuthProvider({ children }) {
 
         return auth.signInWithEmailAndPassword(email, password).then((userCredential) => {
             const userDetails = userCredential.user;
+
+            const userStatusRef = db.ref(`status/${userDetails.uid}`);
+            userStatusRef.onDisconnect().set('offline');
+            userStatusRef.set('online');
+
             return userDetails;
         }).catch((error) => {
             alert(error.message)
@@ -53,7 +58,11 @@ export function AuthProvider({ children }) {
     }
 
     function logout() {
-        return auth.signOut();
+        return auth.signOut().then(() => {
+            if(currentUser) {
+                db.ref(`status/${currentUser.uid}`).set('offline');
+            }
+        });
     }
 
 useEffect(() => {
@@ -65,7 +74,15 @@ useEffect(() => {
             isLoading: false
           })
         setLoading(false);
-    })
+
+        if (user) {
+            // Set the user's status to online when they re-enter the app
+            const userStatusRef = db.ref(`status/${user.uid}`);
+            userStatusRef.onDisconnect().set('offline');
+            userStatusRef.set('online');
+        }
+
+    });
 
     return unsubscribe
 }, [])

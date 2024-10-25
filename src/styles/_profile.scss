@@ -36,6 +36,31 @@
                 object-fit: cover;
                 border-radius: 50%
             }
+
+            .status {
+                width: 60px;
+                height: 60px;
+                // border: 2px solid red;
+                display: none;
+                position: relative;
+                left: 250px;
+                bottom: 70px;
+                border-radius: 50%;
+      
+                border: 10px solid #121212;
+            }
+
+            .status.online {
+                display: flex;
+                background-color: green;
+
+            }
+
+            .status.offline {
+                display: flex;
+                background-color: #121212;;
+
+            }
         }
 
         .user-profile__details {

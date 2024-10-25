@@ -19,6 +19,7 @@ const Profile = () => {
   const [uploadPhoto, setUploadPhoto] = useState();
   const [loading, setLoading] = useState();
   const [{user}, dispatch] = useStateValue();
+  const [status, setStatus] = useState('Offline');
 
   const { currentUser } = useAuth();
   const storage = getStorage();
@@ -49,12 +50,29 @@ const Profile = () => {
 
   });
 
-  useEffect(() =>{
+  useEffect(() => {
+    if (!currentUser) return;
 
-  
+    const statusRef = db.ref(`status/${currentUser.uid}`);
 
 
-},[]);
+    statusRef.once('value').then((snapshot) => {
+        if (snapshot.exists()) {
+            setStatus(snapshot.val());
+        }
+    });
+
+
+    const onStatusChange = statusRef.on('value', (snapshot) => {
+        if (snapshot.exists()) {
+            setStatus(snapshot.val());
+        }
+    });
+
+    return () => {
+        statusRef.off('value', onStatusChange);
+    };
+}, [currentUser]);
   
   const editProfileToggle = () => {
     seteditProfileToggled(!editProfileToggled);
@@ -152,6 +170,7 @@ if (loading) return <div className='loading'> LOADING... </div>
 
         <div className='avatar__container'>
         <img alt="avatar" src={user?.photoURL ? user?.photoURL : photoURL } className='profile__icon'/>
+        <div className={ status ? `status ${status}` : "status"} ></div>
 
         </div>
 

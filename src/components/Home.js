@@ -47,7 +47,7 @@ if(user) {
     <div className='home__container'> 
             <Sidebar />
 
-            <Chatbot />
+            {/* <Chatbot /> */}
     </div>
 
   )

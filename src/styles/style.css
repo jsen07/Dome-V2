@@ -274,6 +274,24 @@
   object-fit: cover;
   border-radius: 50%;
 }
+.profile__page .profile__view .avatar__container .status {
+  width: 60px;
+  height: 60px;
+  display: none;
+  position: relative;
+  left: 250px;
+  bottom: 70px;
+  border-radius: 50%;
+  border: 10px solid #121212;
+}
+.profile__page .profile__view .avatar__container .status.online {
+  display: flex;
+  background-color: green;
+}
+.profile__page .profile__view .avatar__container .status.offline {
+  display: flex;
+  background-color: #121212;
+}
 .profile__page .profile__view .user-profile__details {
   display: flex;
   flex-direction: column;
@@ -493,10 +511,9 @@
   /* Optional: background color */ /* Space between messages and input */
 }
 .chat-box__container .chat__header .messages__container .messages__inner {
-  display: flex;
-  height: 100%;
-  flex-direction: column; /* Stack messages vertically */
-  justify-content: flex-end; /* Keep the latest messages at the bottom */
+  flex: 1;
+  min-height: 100%;
+  align-content: flex-end;
 }
 .chat-box__container .chat__header .input__container {
   display: flex;
