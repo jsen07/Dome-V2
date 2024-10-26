@@ -156,7 +156,7 @@ const Profile = () => {
       .catch((error) => {
         console.log(error.message);
       });
-      // console.log({...userDetails})
+ 
 
 
       }
@@ -166,7 +166,7 @@ if (loading) return <div className='loading'> LOADING... </div>
 
 {!editProfileToggled &&(
 <div className='profile__view'>
-        <h1> {user?.displayName } </h1>
+        <h1> {userDetails?.displayName } </h1>
 
         <div className='avatar__container'>
         <img alt="avatar" src={user?.photoURL ? user?.photoURL : photoURL } className='profile__icon'/>

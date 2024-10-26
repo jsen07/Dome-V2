@@ -5,6 +5,8 @@ import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue } from "firebase/database";
 import ChatMessage from './ChatMessage';
+import sendSoundEffect from '../components/sound/sendingSound.mp3';
+import receivingSoundEffect from '../components/sound/receivingSound.mp3';
 
 
 const Chat = () => {
@@ -12,7 +14,7 @@ const Chat = () => {
     const [{user}, dispatch] = useStateValue();
     const [text, setText] =useState();
     const navigate = useNavigate();
-    const [reciever, setReciever] = useState();
+    const [reciever, setReceiver] = useState();
     const [chat, setChat] = useState([]);
     const [talkingTo, setTalkingTo] = useState();
 
@@ -21,37 +23,58 @@ const Chat = () => {
     const messagesContainerRef = useRef(null);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const { chatId } = useParams();
-    useEffect(() =>{
 
-      // const chatD = [];
+    const sendSound = new Audio(sendSoundEffect);
+    const receivingSound = new Audio(receivingSoundEffect);
+
+
+    useEffect(() => {
       const chatRef = ref(getDatabase());
-          
-      get(child(chatRef, `chat/${chatId}`)).then((snapshot) => {
 
-        const data = snapshot.val();
+      //Create an async function or promise to run and fetch the chat data as well as the reciever
 
-        if(data){
+      const fetchChatData = async () => {
 
-        const allowedUsersArray = data.allowedUsers
-        const index = allowedUsersArray.indexOf(user.uid);
-   
-          allowedUsersArray.splice(index, 1);
-        
-        setReciever(allowedUsersArray[0]);
+        try {
+      await get(child(chatRef, `chat/${chatId}`)).then((snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+           const allowedUsersArray = data.allowedUsers;
+           const index = allowedUsersArray.indexOf(user.uid);
+              allowedUsersArray.splice(index, 1);
+              setReceiver(allowedUsersArray[0]);
+              const messagesArray = Object.values(data.messages || {}).sort((a, b) => a.serverTime - b.serverTime);
+              setChat(messagesArray);
+          }
+      });
+    } catch (error) {
+      console.log(error);
+    }
+    }
 
-        const messagesArray = Object.values(data.messages || {}).sort((a, b) => {
-          return a.serverTime - b.serverTime; // Ascending order
-        })
-
-        setChat(messagesArray);
+    fetchChatData();
+// listener for new chat messages
+  const messagesRef = child(chatRef, `chat/${chatId}/messages`);
+      onValue(messagesRef, (snapshot) => {
+          const data = snapshot.val();
+          if (data) {
+      const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
+      //check for new messages
+      if(messagesArray.length > chat.length) {
+        const newMessage = messagesArray[messagesArray.length - 1];
+        // console.log(newMessage)
+        if(newMessage.uid !== user.uid) {
+          receivingSound.play()
+        }
       }
 
+          setChat(messagesArray);
 
+          }
       });
 
+  },[chatId, user.uid]);
 
-
-        },[chat]);
 
         const sendMessage = () => {
 
@@ -82,7 +105,6 @@ set(newPostRef, {
     // ...
 });
 
-
           set(child(chatRef, "chatList/"+ reciever +"/"+ user.uid), {
  
             chatId: chatId,
@@ -96,6 +118,7 @@ set(newPostRef, {
 
         setText("");
         input.value ="";
+        sendSound.play();
         scrollToBottom();
 
 
@@ -116,15 +139,13 @@ set(newPostRef, {
       const handleScroll = () => {
           const container = messagesContainerRef.current;
           if (!container) return;
-  
-          // Check if the user is scrolled close to the bottom
           const isAtBottom = container.scrollHeight - container.scrollTop === container.clientHeight;
           setIsAtBottom(isAtBottom);
       };
   
       useEffect(() => {
           scrollToBottom();
-      }, [chat]); // Runs every time the chat array updates
+      }, [chat]); 
   
       useEffect(() => {
           const container = messagesContainerRef.current;
@@ -137,7 +158,7 @@ set(newPostRef, {
                   container.removeEventListener('scroll', handleScroll);
               }
           };
-      }, []); // Set up scroll listener on mount
+      }, []); 
   
       const handleKeyPress = (event) => {
         if( event.key === "Enter") {
@@ -159,7 +180,7 @@ set(newPostRef, {
       <ChatMessage key={index} data={chatData} />
     ))
   ) : (
-    <p>No messages</p> // Optional: handle case with no messages
+    <p>No messages</p>
   )}
  
   </div>
