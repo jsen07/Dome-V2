@@ -61,9 +61,32 @@ const ChatList = () => {
 
         fetchChats();
 
-        const statusRef = ref(getDatabase(), `chatList/${user.uid}`);
+    }, [user]); 
 
-    }, [user.uid]); 
+    //Listener for updates on user status'
+
+    useEffect(() => {
+        const statusRef = ref(getDatabase(), 'status');
+        onValue(statusRef, (snapshot) => {
+            snapshot.forEach((childSnapshot) => {
+                //get user id and status 
+                const userId = childSnapshot.key;
+                const userStatus = childSnapshot.val()
+
+                //map through chatlist and update user status on change
+                setChatList((chatData) => {
+                    return chatData.map(chat => {
+                        if(chat.receiverId === userId) {
+                            return { ...chat,
+                                status: userStatus
+                            };
+                        }
+                        return chat;
+                    })
+                 })
+            })
+        })},[])
+
     return (
         <div className='chat-card__container'>
             <h1 id="chat-card__header">Chat</h1>
