@@ -12,7 +12,6 @@ const ChatList = () => {
     const [chatList, setChatList] = useState([]);
     const [{ user }] = useStateValue();
     const navigate = useNavigate();
-    const [status, setStatus] = useState('Offline');
 
     const { currentUser } = useAuth();
 
@@ -30,24 +29,29 @@ const ChatList = () => {
                 snapshot.forEach((childSnapshot) => {
                     const childData = childSnapshot.val();
                     const userPromise = get(child(ref(getDatabase()), `users/${childData.receiverId}`));
+                    const statusPromise = get(child(ref(getDatabase()), `status/${childData.receiverId}`));
 
-                    chatPromises.push(userPromise.then((userSnapshot) => {
+                    chatPromises.push(Promise.all([userPromise, statusPromise]).then(([userSnapshot, statusSnapshot]) => {
                         if (userSnapshot.exists()) {
                             const userData = userSnapshot.val();
+                            const status = statusSnapshot.val();
                             return {
                                 ...childData,
-                                ...userData
+                                ...userData,
+                                status
                             };
                         } else {
-                            console.log("No data available for user:", childData.receiverId);
-                            return null; // Return null if no data
+                            console.log("No data for user:", childData.receiverId);
+                            return null;
                         }
-                    }));
-                });
+                            }));
+                    });
+
+
 
                 try {
                     const chatObjects = await Promise.all(chatPromises);
-                    const filteredChats = chatObjects.filter(chat => chat !== null); // Filter out null values
+                    const filteredChats = chatObjects.filter(chat => chat !== null); 
                     setChatList(filteredChats.sort((a, b) => b.updatedAt - a.updatedAt));
                 } catch (error) {
                     console.error("Error fetching user data:", error);
@@ -56,6 +60,8 @@ const ChatList = () => {
         };
 
         fetchChats();
+
+        const statusRef = ref(getDatabase(), `chatList/${user.uid}`);
 
     }, [user.uid]); 
     return (
@@ -72,7 +78,9 @@ const ChatList = () => {
                     </div>
                     <div className='details__card'>
                         <h1>{chat.displayName}</h1>
-                        <p>{chat.lastMessage || "Start sending a message to this user"}</p>
+                        <p>{chat.lastMessage || "Start sending a message to this user"}
+                            <p>{chat.status}</p>
+                        </p>
                     </div>
                 </div>
             ))}

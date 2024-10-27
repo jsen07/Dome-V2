@@ -87,11 +87,22 @@ const Chat = () => {
 
 
 console.log(reciever)
-          const date = new Date();
-          const timeString = date.toLocaleTimeString(navigator.language, {
-            hour: "2-digit",
-            minute: "2-digit",
-          });
+
+const formatTimestamp = (timestamp) => {
+  const date = new Date(timestamp);
+  return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+  });
+};
+
+// Testing with current timestamp
+const currentTimestamp = Date.now();
+const timeString = formatTimestamp(currentTimestamp);
+         
+      
+
 const postMessagesRef = ref(db, `chat/${chatId}/messages`);
 const newPostRef = push(postMessagesRef);
 set(newPostRef, {
