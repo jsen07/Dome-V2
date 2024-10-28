@@ -87,6 +87,15 @@ const ChatList = () => {
             })
         })},[])
 
+        const formatTimestamp = (timestamp) => {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+            });
+          };
+
     return (
         <div className='chat-card__container'>
             <h1 id="chat-card__header">Chat</h1>
@@ -98,13 +107,24 @@ const ChatList = () => {
                     onClick={() => navigate(`/home/${chat.chatId}`)}>
                     <div className='profile__card'>
                         <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
+                        <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
+                       
+                            </div>
+                            </div>
                     </div>
+                    <div className='inner-card'>
+                    <h1>{chat.displayName}</h1>
                     <div className='details__card'>
-                        <h1>{chat.displayName}</h1>
+             
                         <p>{chat.lastMessage || "Start sending a message to this user"}
-                            <p>{chat.status}</p>
-                        </p>
+                            </p>
+                            <div className='time-bar'>
+                            
+                            <p>{formatTimestamp(chat?.updatedAt)}</p>
+                            </div>
+                
                     </div>
+                </div>
                 </div>
             ))}
         </div>

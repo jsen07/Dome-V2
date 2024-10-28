@@ -158,7 +158,6 @@ const Profile = () => {
       });
  
 
-
       }
 if (loading) return <div className='loading'> LOADING... </div>
   return (

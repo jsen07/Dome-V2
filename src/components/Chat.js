@@ -214,7 +214,6 @@ const formatTimestamp = (timestamp) => {
   });
 };
 
-// Testing with current timestamp
 const currentTimestamp = Date.now();
 const timeString = formatTimestamp(currentTimestamp);
          

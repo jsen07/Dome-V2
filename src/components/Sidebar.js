@@ -126,12 +126,12 @@ const [{user}, dispatch] = useStateValue();
 
 </div> */}
   {toggle &&(
-<div className='chat-list__container'>
+
 
 <ChatList />
   
 
-</div>
+
 
 )}    
         </div>

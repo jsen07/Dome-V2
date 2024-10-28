@@ -12,6 +12,8 @@
   justify-content: flex-start;
   align-items: center;
   background-image: url("../components/images/gojo-bg.jpeg");
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 @font-face {
@@ -182,17 +184,17 @@
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
 }
 .home__container .side-menu__bar {
-  width: 100px;
-  height: 90%;
-  border: 1px solid rgba(205, 89, 255, 0.8);
+  width: auto;
+  height: 100%;
+  border-left: 1px solid rgba(205, 89, 255, 0.8);
+  border-right: 1px solid rgba(205, 89, 255, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-inline: 10px;
-  border-radius: 20px;
+  margin-right: 10px;
   background-color: #121212;
   justify-content: space-between;
 }
@@ -200,6 +202,7 @@
   width: 60px;
   height: 60px;
   margin-top: 30px;
+  margin-inline: 1em;
   border-radius: 20px;
   transition: all 0.2s ease-in-out;
 }
@@ -241,9 +244,9 @@
 }
 
 .profile__page {
-  width: 650px;
-  height: 90%;
-  border: 2px solid rgba(205, 89, 255, 0.8);
+  width: auto;
+  height: 100%;
+  border: 1px solid rgba(205, 89, 255, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -544,14 +547,16 @@
 }
 
 .chat-card__container {
-  width: 500px;
+  width: auto;
   height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  border-radius: 20px;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
   background-color: #121212;
+  align-self: self-start;
 }
 .chat-card__container #chat-card__header {
   color: white;
@@ -565,6 +570,7 @@
   display: flex;
   flex-direction: row;
   margin-bottom: 22px;
+  align-content: center;
 }
 .chat-card__container .card__container:hover {
   cursor: pointer;
@@ -586,19 +592,82 @@
   width: 100%;
   border-radius: 50%;
 }
-.chat-card__container .card__container .details__card {
+.chat-card__container .card__container .profile__card .status {
+  width: 20px;
+  height: 20px;
+  display: none;
+  position: relative;
+  left: 45px;
+  bottom: 35px;
+  border-radius: 50%;
+  background-color: #121212;
+}
+.chat-card__container .card__container .profile__card .Offline, .chat-card__container .card__container .profile__card .Online {
   display: flex;
-  margin-inline: 20px;
-  flex-direction: column;
+  position: relative;
+  bottom: 25px;
+  left: 45px;
+  width: 25px;
+  height: 25px;
+  background-color: #121212;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
 }
-.chat-card__container .card__container .details__card p {
-  margin-top: 5px;
-  font-size: 16px;
-  color: white;
+.chat-card__container .card__container .profile__card .Offline .inner {
+  width: 40%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid grey;
 }
-.chat-card__container .card__container .details__card h1 {
+.chat-card__container .card__container .profile__card .Online .inner {
+  width: 40%;
+  height: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 2px solid green;
+  background-color: green;
+}
+.chat-card__container .card__container h1 {
   font-size: 20px;
   color: white;
+}
+.chat-card__container .card__container .inner-card {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+  margin-right: 10px;
+  width: 70%;
+  justify-content: center;
+}
+.chat-card__container .card__container .inner-card .details__card {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.chat-card__container .card__container .inner-card .details__card p {
+  font-size: 16px;
+  color: white;
+  width: 14em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.chat-card__container .card__container .inner-card .details__card .time-bar {
+  width: auto;
+  border-radius: 8px;
+}
+.chat-card__container .card__container .inner-card .details__card .time-bar p {
+  width: auto;
+  margin-right: 10px;
+  font-size: 14px;
 }
 
 .user-message, .message {

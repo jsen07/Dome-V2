@@ -4,19 +4,20 @@
     display: flex;
     flex-direction: row;
     justify-content:flex-start;
-    align-items: center;
-    // overflow: hidden;
+    align-items: flex-start;
+    // padding: 10px;
     // #7e00e6
 
     .side-menu__bar {
-        width: 100px;
-        height: 90%;
-        border: 1px solid rgba(205, 89, 255, 0.8);
+        width: auto;
+        height: 100%;
+        border-left: 1px solid rgba(205, 89, 255, 0.8);
+        border-right: 1px solid rgba(205, 89, 255, 0.8);
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-inline: 10px;
-        border-radius: 20px;
+        margin-right: 10px;
+        // border-radius: 20px;
         background-color: #121212;
         justify-content: space-between;
 
@@ -26,6 +27,7 @@
             width: 60px;
             height: 60px;
             margin-top: 30px;
+            margin-inline: 1em;
             // outline: 2px solid black;
             // background-color: rgb(39, 37, 37);
             border-radius: 20px;

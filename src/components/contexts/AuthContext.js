@@ -47,8 +47,8 @@ export function AuthProvider({ children }) {
             const userDetails = userCredential.user;
 
             const userStatusRef = db.ref(`status/${userDetails.uid}`);
-            userStatusRef.onDisconnect().set('offline');
-            userStatusRef.set('online');
+            userStatusRef.onDisconnect().set('Offline');
+            userStatusRef.set('Online');
 
             return userDetails;
         }).catch((error) => {
