@@ -60,7 +60,7 @@ export function AuthProvider({ children }) {
     function logout() {
         return auth.signOut().then(() => {
             if(currentUser) {
-                db.ref(`status/${currentUser.uid}`).set('offline');
+                db.ref(`status/${currentUser.uid}`).set('Offline');
             }
         });
     }

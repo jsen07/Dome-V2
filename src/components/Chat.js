@@ -8,6 +8,7 @@ import ChatMessage from './ChatMessage';
 import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from '../components/sound/receivingSound.mp3';
 import {Howl, Howler} from 'howler';
+import Placeholder from '../components/images/avatar_placeholder.png';
 
 
 const Chat = () => {
@@ -25,6 +26,8 @@ const Chat = () => {
     const [isAtBottom, setIsAtBottom] = useState(true);
     const { chatId } = useParams();
     const [loading, setLoading] = useState(true);
+    const [recieverData, setRecieverData] = useState();
+    const [status, setStatus] = useState("Offline");
 
     const sendSound = new Audio(sendSoundEffect);
     const receivingSound = new Audio(receivingSoundEffect);
@@ -52,6 +55,7 @@ const Chat = () => {
                   if (data) {
                       const allowedUsersArray = [...(data.allowedUsers || [])]; // 
                       const index = allowedUsersArray.indexOf(user.uid);
+                      // console.log(data)
   
                       if (index > -1) {
                           allowedUsersArray.splice(index, 1);
@@ -59,7 +63,6 @@ const Chat = () => {
                       } else {
                         setReceiver(null); 
                       }
-  
        
                       const messagesArray = Object.values(data.messages || {}).sort((a, b) => a.serverTime - b.serverTime);
   
@@ -72,19 +75,64 @@ const Chat = () => {
                   } else {
                       reject("No data found for the given chatId");
                   }
+
+              
               })
               .catch((error) => {
                   reject(`Error fetching chat data: ${error.message}`);
               });
       });
   }
-  
 
+  const fetchUserProfile = (reciever) => {
+    return new Promise((resolve, reject) => {
+        setLoading(true);
+        const dbRef = ref(getDatabase());
+        const profileRef = child(dbRef, `users/${reciever}`);
+
+         onValue(profileRef, (snapshot) => {
+            if (snapshot.exists()) {
+                const data = snapshot.val();
+                setRecieverData(data);
+                resolve(data); 
+            } 
+        }, (error) => {
+ 
+            reject(error);
+        });
+
+            setLoading(false);
+     
+    });
+};
+
+
+useEffect(() => {
+  setLoading(true);
+  const getUserProfile = () => {
+      const profilePromise = fetchUserProfile(reciever);
+      profilePromise.then(profileData => {
+              if (profileData) {
+                  setLoading(false);
+              }
+          })
+          .catch(error => {
+              console.log(error);
+          });
+  };
+
+  getUserProfile();
+
+}, [reciever]);
+
+ 
   useEffect(() => {
     setLoading(true); 
 //fetch chat data everytime user changes chat
+
     fetchChatData(chatId, user).then(result => {
           setChat(result.messages);
+
             setLoading(false);
 
              const chatRef = ref(getDatabase());
@@ -109,87 +157,57 @@ const Chat = () => {
                  }
                  });
 
+
             return () => getNewMessage();
         })
         .catch(error => {
             console.log(error);
             setLoading(false);
         });
+
 }, [chatId, user.uid]);
 
-  
+//get user Status
+
+useEffect(() => {
+  const fetchStatus = () => {
+      return new Promise((resolve, reject) => {;
+          const dbRef = ref(getDatabase()); 
+
+          get(child(dbRef, `status/${reciever}`)) 
+              .then((snapshot) => {
+                  if (snapshot.exists()) {
+                      const status = snapshot.val(); 
+                      setStatus(status); 
+                      resolve(status);
+                  } else {
+                      console.log("No data available for this receiver");
+                      resolve(null); // Resolve with null if no data
+                  }
+              })
+              .catch((error) => {
+          
+                  reject(error); 
+              });
+      });
+  };
+
+  fetchStatus()
+      .then(() => {
+
+          const statusRef = ref(getDatabase(), `status/${reciever}`);
+           onValue(statusRef, (snapshot) => {
+              const status = snapshot.val();
+              setStatus(status); 
+          });
+
  
-  
- 
- 
-// listener for new chat messages
-  // const messagesRef = child(chatRef, `chat/${chatId}/messages`);
-  //     const cleanUp = onValue(messagesRef, (snapshot) => {
-  //         const data = snapshot.val();
-  //         if (data) {
-  //     const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
-  //     //check for new messages
+      })
+      .catch((error) => {
+          console.error("Failed to fetch status:", error);
+      });
 
-  //     if(messagesArray.length > chat.length) {
-  //       const newMessage = messagesArray[messagesArray.length - 1];
-  //       // console.log(newMessage)
-  //       if(newMessage.uid !== user.uid && newMessage.chatId === chatId) {
-  //             console.log(chat.length)
-  //     console.log(messagesArray.length)
-  //         receiveSend.play();
-  //         // console.log(newMessage)
-  //         setChat(messagesArray);
-  //       }
-  //     }
-
-        
-    
-
-  //         }
-  //     });
-
-  //     return () => {
-  //       cleanUp(); 
-  //   };
-
-
-
-  // useEffect(() => {
-  //   const chatRef = ref(getDatabase());
-
-  //   const messagesRef = child(chatRef, `chat/${chatId}/messages`);
-  //     const cleanUp = onValue(messagesRef, (snapshot) => {
-  //         const data = snapshot.val();
-  //         if (data) {
-  //     const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
-  //     //check for new messages
-  //     setChat(messagesArray)
-
-  //     if(!loading && messagesArray.length > chat.length) {
-  //       const newMessage = messagesArray[messagesArray.length - 1];
-  //       // console.log(messagesArray.length)
-  //       // console.log(chat.length)
-  //       if(newMessage.uid !== user.uid) {
-  //             console.log(chat.length)
-  //     console.log(messagesArray.length)
-  //         receiveSend.play();
-  //         // console.log(newMessage)
-  //         setChat(messagesArray);
-  //       }
-  //     }
-
-        
-    
-
-  //         }
-  //     });
-
-  //     return () => {
-  //       cleanUp(); 
-  //   };
-
-
-  // },[])
+}, [reciever, chatId]);
 
 
 
@@ -300,8 +318,24 @@ set(newPostRef, {
         <div className='chat__header'>
         { loading ?  (
           <h1> LOADING</h1>
+
         ) : (
-          <h1> finished loading </h1>
+          <div className='chat__banner'>
+              <div className='profile__card'>
+                        <img alt='user-avatar' src={ recieverData?.photoUrl || Placeholder} />
+                        <div className={ status ? status : "status"} ><div className='inner'>
+                       
+                            </div>
+                            </div>
+                    </div>
+                    <div className='header-details'>
+                    <p> {recieverData?.displayName}</p>
+                    {status && (
+                           <p> {status} </p>
+                    )}
+               
+                    </div>
+          </div>
         )}
 
 
