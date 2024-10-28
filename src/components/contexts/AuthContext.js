@@ -78,8 +78,8 @@ useEffect(() => {
         if (user) {
             // Set the user's status to online when they re-enter the app
             const userStatusRef = db.ref(`status/${user.uid}`);
-            userStatusRef.onDisconnect().set('offline');
-            userStatusRef.set('online');
+            userStatusRef.onDisconnect().set('Offline');
+            userStatusRef.set('Online');
         }
 
     });

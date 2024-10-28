@@ -284,11 +284,11 @@
   border-radius: 50%;
   border: 10px solid #121212;
 }
-.profile__page .profile__view .avatar__container .status.online {
+.profile__page .profile__view .avatar__container .status.Online {
   display: flex;
   background-color: green;
 }
-.profile__page .profile__view .avatar__container .status.offline {
+.profile__page .profile__view .avatar__container .status.Offline {
   display: flex;
   background-color: #121212;
 }

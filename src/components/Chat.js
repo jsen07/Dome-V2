@@ -7,6 +7,7 @@ import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue } fro
 import ChatMessage from './ChatMessage';
 import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from '../components/sound/receivingSound.mp3';
+import {Howl, Howler} from 'howler';
 
 
 const Chat = () => {
@@ -23,57 +24,173 @@ const Chat = () => {
     const messagesContainerRef = useRef(null);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const { chatId } = useParams();
+    const [loading, setLoading] = useState(true);
 
     const sendSound = new Audio(sendSoundEffect);
     const receivingSound = new Audio(receivingSoundEffect);
 
+    var soundSend = new Howl({
+      src: [sendSoundEffect]
+    });
 
-    useEffect(() => {
-      const chatRef = ref(getDatabase());
+    var receiveSend = new Howl({
+      src: [receivingSoundEffect]
+    });
 
-      //Create an async function or promise to run and fetch the chat data as well as the reciever
+//create a promise to ensure that chatdata is fetched 
+    function fetchChatData(chatId, user) {
 
-      const fetchChatData = async () => {
 
-        try {
-      await get(child(chatRef, `chat/${chatId}`)).then((snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-           const allowedUsersArray = data.allowedUsers;
-           const index = allowedUsersArray.indexOf(user.uid);
-              allowedUsersArray.splice(index, 1);
-              setReceiver(allowedUsersArray[0]);
-              const messagesArray = Object.values(data.messages || {}).sort((a, b) => a.serverTime - b.serverTime);
-              setChat(messagesArray);
-          }
+      return new Promise((resolve, reject) => {
+          const chatRef = ref(getDatabase());
+          
+          get(child(chatRef, `chat/${chatId}`)).then((snapshot) => {
+                  
+            const data = snapshot.val();
+  
+
+                  if (data) {
+                      const allowedUsersArray = [...(data.allowedUsers || [])]; // 
+                      const index = allowedUsersArray.indexOf(user.uid);
+  
+                      if (index > -1) {
+                          allowedUsersArray.splice(index, 1);
+                          setReceiver(allowedUsersArray[0]); 
+                      } else {
+                        setReceiver(null); 
+                      }
+  
+       
+                      const messagesArray = Object.values(data.messages || {}).sort((a, b) => a.serverTime - b.serverTime);
+  
+                      setChat(messagesArray);
+
+                      resolve({
+                          allowedUsers: allowedUsersArray,
+                          messages: messagesArray,
+                      });
+                  } else {
+                      reject("No data found for the given chatId");
+                  }
+              })
+              .catch((error) => {
+                  reject(`Error fetching chat data: ${error.message}`);
+              });
       });
-    } catch (error) {
-      console.log(error);
-    }
-    }
+  }
+  
 
-    fetchChatData();
+  useEffect(() => {
+    setLoading(true); 
+//fetch chat data everytime user changes chat
+    fetchChatData(chatId, user).then(result => {
+          setChat(result.messages);
+            setLoading(false);
+
+             const chatRef = ref(getDatabase());
+            const messagesRef = child(chatRef, `chat/${chatId}/messages`);
+
+            //listen for new messages and update chat
+
+            const getNewMessage = onValue(messagesRef, (snapshot) => {
+                 const data = snapshot.val();
+                if (data) {
+                    const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
+                    setChat(messagesArray);
+
+                    // Check for new messages
+                    if (messagesArray.length > result.messages.length) {
+                      const newMessage = messagesArray[messagesArray.length - 1];
+                        if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
+                            console.log("New message detected:", newMessage);
+                            receiveSend.play();
+                        }
+                      }
+                 }
+                 });
+
+            return () => getNewMessage();
+        })
+        .catch(error => {
+            console.log(error);
+            setLoading(false);
+        });
+}, [chatId, user.uid]);
+
+  
+ 
+  
+ 
+ 
 // listener for new chat messages
-  const messagesRef = child(chatRef, `chat/${chatId}/messages`);
-      onValue(messagesRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-      const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
-      //check for new messages
-      if(messagesArray.length > chat.length) {
-        const newMessage = messagesArray[messagesArray.length - 1];
-        // console.log(newMessage)
-        if(newMessage.uid !== user.uid) {
-          receivingSound.play()
-        }
-      }
+  // const messagesRef = child(chatRef, `chat/${chatId}/messages`);
+  //     const cleanUp = onValue(messagesRef, (snapshot) => {
+  //         const data = snapshot.val();
+  //         if (data) {
+  //     const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
+  //     //check for new messages
 
-          setChat(messagesArray);
+  //     if(messagesArray.length > chat.length) {
+  //       const newMessage = messagesArray[messagesArray.length - 1];
+  //       // console.log(newMessage)
+  //       if(newMessage.uid !== user.uid && newMessage.chatId === chatId) {
+  //             console.log(chat.length)
+  //     console.log(messagesArray.length)
+  //         receiveSend.play();
+  //         // console.log(newMessage)
+  //         setChat(messagesArray);
+  //       }
+  //     }
 
-          }
-      });
+        
+    
 
-  },[chatId, user.uid]);
+  //         }
+  //     });
+
+  //     return () => {
+  //       cleanUp(); 
+  //   };
+
+
+
+  // useEffect(() => {
+  //   const chatRef = ref(getDatabase());
+
+  //   const messagesRef = child(chatRef, `chat/${chatId}/messages`);
+  //     const cleanUp = onValue(messagesRef, (snapshot) => {
+  //         const data = snapshot.val();
+  //         if (data) {
+  //     const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
+  //     //check for new messages
+  //     setChat(messagesArray)
+
+  //     if(!loading && messagesArray.length > chat.length) {
+  //       const newMessage = messagesArray[messagesArray.length - 1];
+  //       // console.log(messagesArray.length)
+  //       // console.log(chat.length)
+  //       if(newMessage.uid !== user.uid) {
+  //             console.log(chat.length)
+  //     console.log(messagesArray.length)
+  //         receiveSend.play();
+  //         // console.log(newMessage)
+  //         setChat(messagesArray);
+  //       }
+  //     }
+
+        
+    
+
+  //         }
+  //     });
+
+  //     return () => {
+  //       cleanUp(); 
+  //   };
+
+
+  // },[])
+
 
 
         const sendMessage = () => {
@@ -86,7 +203,7 @@ const Chat = () => {
           const db = getDatabase();
 
 
-console.log(reciever)
+// console.log(reciever)
 
 const formatTimestamp = (timestamp) => {
   const date = new Date(timestamp);
@@ -112,7 +229,8 @@ set(newPostRef, {
   message: text,
   displayName: user.displayName,
   photoUrl: user.photoURL,
-  uid: user.uid
+  uid: user.uid,
+  chatId: chatId
     // ...
 });
 
@@ -129,7 +247,7 @@ set(newPostRef, {
 
         setText("");
         input.value ="";
-        sendSound.play();
+        soundSend.play();
         scrollToBottom();
 
 
@@ -181,11 +299,17 @@ set(newPostRef, {
     <div className='chat-box__container'>
               {/* <button onClick={closeChat}> Close Chat</button> */}
         <div className='chat__header'>
+        { loading ?  (
+          <h1> LOADING</h1>
+        ) : (
+          <h1> finished loading </h1>
+        )}
+
 
         <div className='messages__container'ref={messagesContainerRef}>
 
         <div className='messages__inner'>
-
+     
         {chat && chat.length > 0 ? (
     chat.map((chatData, index) => (
       <ChatMessage key={index} data={chatData} />
