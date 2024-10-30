@@ -415,7 +415,7 @@ useEffect(() => {
   <div ref={messagesEndRef} /></div> 
   <div className='input__container'>
   <div className='emoji-button' onClick={emojiToggleHandler}> </div>
-  {/* <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/> */}
+  <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
         <input  id="send-message__input" type="text" value={text} onChange={handleMessage} onKeyDown={handleKeyPress} />
         <div id="send-button" onClick={sendMessage}></div>
         </div>
