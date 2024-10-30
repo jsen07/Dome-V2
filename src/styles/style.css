@@ -485,10 +485,24 @@
   margin-top: 20px;
 }
 
+*::-webkit-scrollbar {
+  width: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: #242424;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba(205, 87, 255, 0.6);
+  border-radius: 5px;
+  border: 0px solid #ffffff;
+}
+
 .chat-box__container {
   width: 100%;
   height: 95%;
-  border: 1px solid rgba(205, 89, 255, 0.6);
+  border: 1px solid rgba(205, 87, 255, 0.6);
   background-color: #121212;
   margin-inline: 10px;
   background-color: rgba(18, 18, 18, 0.6);
@@ -576,16 +590,23 @@
   margin-right: 30px;
 }
 .chat-box__container .chat__header .messages__container {
-  flex: 1; /* Allow messages container to take available height */
-  overflow-y: auto; /* Enable vertical scrolling */
-  margin-bottom: 10px; /* Space between messages and input */
-  padding: 10px; /* Optional: padding */
-  /* Optional: background color */ /* Space between messages and input */
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+  padding: 10px;
 }
 .chat-box__container .chat__header .messages__container .messages__inner {
   flex: 1;
   min-height: 100%;
   align-content: flex-end;
+}
+.chat-box__container .chat__header .messages__container .messages__inner .date-container {
+  color: white;
+}
+.chat-box__container .chat__header .messages__container .messages__inner .date-container .date-notify {
+  display: flex;
+  border: 2px solid green;
+  justify-content: center;
 }
 .chat-box__container .chat__header .input__container {
   display: flex;
@@ -594,6 +615,18 @@
   height: 40px;
   margin-bottom: 10px;
   align-items: center;
+}
+.chat-box__container .chat__header .input__container .emoji-button {
+  width: 30px;
+  height: 30px;
+  background-image: url("../components/images/icons8-smile-beam-32.png");
+  background-repeat: no-repeat;
+  background-size: contain;
+  border: 2px solid red;
+  margin-left: 10px;
+}
+.chat-box__container .chat__header .input__container .emoji-button:hover {
+  cursor: pointer;
 }
 .chat-box__container .chat__header .input__container input {
   width: 80%;
@@ -618,6 +651,7 @@
 .chat-card__container {
   width: auto;
   height: auto;
+  max-height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -631,7 +665,16 @@
   color: white;
   margin-block: 12px;
 }
-.chat-card__container .card__container {
+.chat-card__container .chatlist__container {
+  width: 100%;
+  max-height: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+.chat-card__container .chatlist__container .card__container {
   border: 1px solid rgba(205, 89, 255, 0.8);
   width: 90%;
   height: auto;
@@ -641,27 +684,27 @@
   margin-bottom: 22px;
   align-content: center;
 }
-.chat-card__container .card__container:hover {
+.chat-card__container .chatlist__container .card__container:hover {
   cursor: pointer;
   opacity: 0.7;
 }
-.chat-card__container .card__container > * {
+.chat-card__container .chatlist__container .card__container > * {
   pointer-events: none;
 }
-.chat-card__container .card__container .profile__card {
+.chat-card__container .chatlist__container .card__container .profile__card {
   border: 1px solid rgba(158, 66, 197, 0.8);
   width: 70px;
   height: 70px;
   border-radius: 50%;
   margin-left: 10px;
 }
-.chat-card__container .card__container .profile__card img {
+.chat-card__container .chatlist__container .card__container .profile__card img {
   object-fit: cover;
   height: 100%;
   width: 100%;
   border-radius: 50%;
 }
-.chat-card__container .card__container .profile__card .status {
+.chat-card__container .chatlist__container .card__container .profile__card .status {
   width: 20px;
   height: 20px;
   display: none;
@@ -671,7 +714,7 @@
   border-radius: 50%;
   background-color: #121212;
 }
-.chat-card__container .card__container .profile__card .Offline, .chat-card__container .card__container .profile__card .Online {
+.chat-card__container .chatlist__container .card__container .profile__card .Offline, .chat-card__container .chatlist__container .card__container .profile__card .Online {
   display: flex;
   position: relative;
   bottom: 25px;
@@ -683,7 +726,7 @@
   align-items: center;
   border-radius: 50%;
 }
-.chat-card__container .card__container .profile__card .Offline .inner {
+.chat-card__container .chatlist__container .card__container .profile__card .Offline .inner {
   width: 40%;
   height: 40%;
   display: flex;
@@ -692,7 +735,7 @@
   border-radius: 50%;
   border: 2px solid grey;
 }
-.chat-card__container .card__container .profile__card .Online .inner {
+.chat-card__container .chatlist__container .card__container .profile__card .Online .inner {
   width: 40%;
   height: 40%;
   display: flex;
@@ -702,11 +745,11 @@
   border: 2px solid green;
   background-color: green;
 }
-.chat-card__container .card__container h1 {
+.chat-card__container .chatlist__container .card__container h1 {
   font-size: 20px;
   color: white;
 }
-.chat-card__container .card__container .inner-card {
+.chat-card__container .chatlist__container .card__container .inner-card {
   display: flex;
   flex-direction: column;
   margin-left: 15px;
@@ -714,14 +757,14 @@
   width: 70%;
   justify-content: center;
 }
-.chat-card__container .card__container .inner-card .details__card {
+.chat-card__container .chatlist__container .card__container .inner-card .details__card {
   display: flex;
   width: 100%;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
 }
-.chat-card__container .card__container .inner-card .details__card p {
+.chat-card__container .chatlist__container .card__container .inner-card .details__card p {
   font-size: 16px;
   color: white;
   width: 14em;
@@ -729,11 +772,11 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-.chat-card__container .card__container .inner-card .details__card .time-bar {
+.chat-card__container .chatlist__container .card__container .inner-card .details__card .time-bar {
   width: auto;
   border-radius: 8px;
 }
-.chat-card__container .card__container .inner-card .details__card .time-bar p {
+.chat-card__container .chatlist__container .card__container .inner-card .details__card .time-bar p {
   width: auto;
   margin-right: 10px;
   font-size: 14px;

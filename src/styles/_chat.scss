@@ -1,7 +1,19 @@
+*::-webkit-scrollbar {
+    width: 10px;
+  }
+  *::-webkit-scrollbar-track {
+    background: #242424;
+  }
+
+  *::-webkit-scrollbar-thumb {
+    background-color: rgba(205, 87, 255, 0.6);
+    border-radius: 5px;
+    border: 0px solid #ffffff;
+  }
 .chat-box__container {
     width: 100%;
     height: 95%;
-    border: 1px solid rgba(205, 89, 255, 0.6);
+    border: 1px solid rgba(205, 87, 255, 0.6);
     background-color: #121212;
     margin-inline: 10px;
     background-color: rgba(18, 18, 18,0.6);
@@ -120,24 +132,29 @@
         }
 
         .messages__container {
-            flex: 1; /* Allow messages container to take available height */
-            overflow-y: auto; /* Enable vertical scrolling */
-            margin-bottom: 10px; /* Space between messages and input */
-            padding: 10px; /* Optional: padding */
-            // background-color: #121212;
-            // display:flex; 
-            /* Optional: background color */; /* Space between messages and input */
-            // border: 1px solid rgba(205, 89, 255, 1);
+            flex: 1; 
+            overflow-y: auto; 
+            margin-bottom: 10px; 
+            padding: 10px; 
+
 
             .messages__inner {
                 flex:1;
-                // height: 100%;
                 min-height: 100%;
                 // border: 1px solid rgba(205, 89, 255, 1);
                 align-content: flex-end;
-                // flex-direction: column; /* Stack messages vertically */
-                // justify-content: flex-end; /* Keep the latest messages at the bottom */
-                // border: 1px solid rgba(205, 89, 255, 1)
+
+
+                .date-container {
+                    color: white;
+                    .date-notify{
+                        display: flex;
+                    border: 2px solid green;
+                    
+                justify-content: center;
+                                }
+                }
+  
             }
          
         }
@@ -151,7 +168,19 @@
             margin-bottom: 10px;
             align-items: center;
             // border: 2px solid green;
-    
+
+            .emoji-button {
+                width: 30px;
+                height: 30px;
+                background-image: url('../components/images/icons8-smile-beam-32.png');
+                background-repeat: no-repeat;
+                background-size: contain;
+                border: 2px solid red;
+                margin-left: 10px;
+                &:hover {
+                    cursor: pointer;
+                }
+            }
             input {
                 width: 80%;
                 height: 30px;

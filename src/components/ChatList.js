@@ -87,18 +87,38 @@ const ChatList = () => {
             })
         })},[])
 
-        const formatTimestamp = (timestamp) => {
-            const date = new Date(timestamp);
-            return date.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-            });
-          };
+        // const formatTimestamp = (timestamp) => {
+        //     const date = new Date(timestamp);
+        //     return date.toLocaleTimeString('en-US', {
+        //         hour: '2-digit',
+        //         minute: '2-digit',
+        //         hour12: true,
+        //     });
+        //   };
+
+          function formatTimestamp(timestamp) {
+            const timestampDate = new Date(timestamp);
+            const now = new Date();
+        
+            // Start of today and yesterday
+            const todayStart = new Date(now.setHours(0, 0, 0, 0));
+            const yesterdayStart = new Date(todayStart);
+            yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+        
+            if (timestampDate >= todayStart) {
+                return "Today";
+            } else if (timestampDate >= yesterdayStart) {
+                return "Yesterday";
+            } else {
+                return timestampDate.toISOString().split('T')[0]; 
+
+            }
+        }
 
     return (
         <div className='chat-card__container'>
             <h1 id="chat-card__header">Chat</h1>
+            <div className='chatlist__container'>
             {chatList.map((chat, key) => (
                 <div 
                     className='card__container' 
@@ -116,7 +136,7 @@ const ChatList = () => {
                     <h1>{chat.displayName}</h1>
                     <div className='details__card'>
              
-                        <p>{chat.lastMessage || "Start sending a message to this user"}
+                        <p>{chat?.lastMessage || "Start sending a message to this user"}
                             </p>
                             <div className='time-bar'>
                             
@@ -127,6 +147,7 @@ const ChatList = () => {
                 </div>
                 </div>
             ))}
+            </div>
         </div>
     );
 };

@@ -9,12 +9,13 @@ import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from '../components/sound/receivingSound.mp3';
 import {Howl, Howler} from 'howler';
 import Placeholder from '../components/images/avatar_placeholder.png';
+import EmojiPicker from 'emoji-picker-react';
 
 
 const Chat = () => {
 
     const [{user}, dispatch] = useStateValue();
-    const [text, setText] =useState();
+    const [text, setText] =useState("");
     const navigate = useNavigate();
     const [reciever, setReceiver] = useState();
     const [chat, setChat] = useState([]);
@@ -28,9 +29,7 @@ const Chat = () => {
     const [loading, setLoading] = useState(true);
     const [recieverData, setRecieverData] = useState();
     const [status, setStatus] = useState("Offline");
-
-    const sendSound = new Audio(sendSoundEffect);
-    const receivingSound = new Audio(receivingSoundEffect);
+    const [emojiToggle, setEmojiToggle] = useState(false);
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -242,7 +241,7 @@ const newPostRef = push(postMessagesRef);
 set(newPostRef, {
 
   serverTime: serverTimestamp(),
-  sentAt: timeString,
+  sentAt: serverTimestamp(),
   message: text,
   displayName: user.displayName,
   photoUrl: user.photoURL,
@@ -311,7 +310,73 @@ set(newPostRef, {
           sendMessage();
         }
     };
-  
+  const emojiToggleHandler = () => {
+    setEmojiToggle(!emojiToggle);
+    console.log(emojiToggle)
+  }
+
+  const handleEmoji =(e)=> {
+    setText(prev=>prev+
+      e.emoji);
+    setEmojiToggle(!emojiToggle);
+    console.log(e);
+
+  }
+
+  const generateMessages = () => {
+    const dateMap = {};
+
+    chat.forEach(chatData => {
+        const date = new Date(chatData.sentAt);
+        const dateString = date.toISOString().split('T')[0]; // format: YYYY-MM-DD
+
+        const today = new Date().toISOString().split('T')[0]; 
+        const now = new Date();
+        const todayStart = new Date(now.setHours(0, 0, 0, 0));
+        const yesterdayStart = new Date(todayStart);
+        yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+
+        // set the dateMap entry if it doesn't exist
+        if (!dateMap[dateString]) {
+            dateMap[dateString] = { label: dateString, messages: [] };
+        }
+
+        // Check if the date is today
+        if (dateString === today) {
+            dateMap[dateString].label = "Today"; 
+        } else if (dateString === yesterdayStart.toISOString().split('T')[0]) {
+          dateMap[dateString].label = "Yesterday";
+      }
+    dateMap[dateString].messages.push(chatData);
+    });
+
+    return Object.keys(dateMap).map(date => (
+        <div key={date} className='date-container'>
+           <div className='date-notify'>
+            <h4>{dateMap[date].label}</h4>
+            </div> {/* Use the label for display */}
+            {dateMap[date].messages.map((message, index) => (
+                <ChatMessage key={index} data={message} />
+            ))}
+        </div>
+    ));
+};
+
+
+useEffect(() => {
+  const messagesRef = ref(getDatabase(), `chat/${chatId}/messages`);
+  const unsubscribe = onValue(messagesRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data) {
+          const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
+          setChat(messagesArray);
+          scrollToBottom();
+      }
+  });
+
+  return () => unsubscribe(); // Cleanup on unmount
+}, [chatId]);
+
   return (
     <div className='chat-box__container'>
               {/* <button onClick={closeChat}> Close Chat</button> */}
@@ -343,18 +408,15 @@ set(newPostRef, {
 
         <div className='messages__inner'>
      
-        {chat && chat.length > 0 ? (
-    chat.map((chatData, index) => (
-      <ChatMessage key={index} data={chatData} />
-    ))
-  ) : (
-    <p>No messages</p>
-  )}
+        {generateMessages()}
+        {chat.length === 0 && <p>No messages</p>}
  
   </div>
   <div ref={messagesEndRef} /></div> 
   <div className='input__container'>
-        <input  id="send-message__input" type="text" onChange={handleMessage} onKeyDown={handleKeyPress} />
+  <div className='emoji-button' onClick={emojiToggleHandler}> </div>
+  {/* <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/> */}
+        <input  id="send-message__input" type="text" value={text} onChange={handleMessage} onKeyDown={handleKeyPress} />
         <div id="send-button" onClick={sendMessage}></div>
         </div>
   </div>
