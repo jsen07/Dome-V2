@@ -11,7 +11,7 @@ import {Howl, Howler} from 'howler';
 import Placeholder from '../components/images/avatar_placeholder.png';
 import EmojiPicker from 'emoji-picker-react';
 
-//ewfweefewf
+//ewfwe
 const Chat = () => {
 
     const [{user}, dispatch] = useStateValue();
