@@ -354,7 +354,7 @@ set(newPostRef, {
         <div key={date} className='date-container'>
            <div className='date-notify'>
             <h4>{dateMap[date].label}</h4>
-            </div> {/* Use the label for display */}
+            </div> 
             {dateMap[date].messages.map((message, index) => (
                 <ChatMessage key={index} data={message} />
             ))}
