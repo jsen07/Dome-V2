@@ -1,0 +1,94 @@
+.home__container {
+    width: auto;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content:flex-start;
+    align-items: flex-start;
+    // padding: 10px;
+    // #7e00e6
+
+    .side-menu__bar {
+        width: auto;
+        height: 100%;
+        // border-left: 1px solid rgba(205, 89, 255, 0.8);
+        // border-right: 1px solid rgba(205, 89, 255, 0.8);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-right: 10px;
+        // border-radius: 20px;
+        background-color: #121212;
+        justify-content: space-between;
+
+        .side-bar__top {
+
+        .side-bar__icon {
+            width: 60px;
+            height: 60px;
+            margin-top: 30px;
+            margin-inline: 1em;
+            // outline: 2px solid black;
+            // background-color: rgb(39, 37, 37);
+            border-radius: 20px;
+            transition: all .2s ease-in-out;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(0.90);
+            }
+        }
+
+        #profile__icon {
+            background-image: url("../components/images/user-profile-svgrepo-com.svg");
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+
+        #add-friend__icon {
+            background-image: url('../components/images/add-friend-svgrepo-com.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+        }
+    }
+
+        #logout__icon {
+            width: 50px;
+            height: 50px;
+            background-image: url('../components/svg/logout-svgrepo-com.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            margin-bottom: 30px;
+            transition: all .2s ease-in-out;
+
+            &:hover {
+                cursor: pointer;
+                transform: scale(0.90);
+            }
+        }
+        button {
+            width: 50px;
+            height: 50px;
+            margin-block: 10px;
+        }
+    }
+    // .main__menu {
+    //     width: 500px;
+    //     height: 90%;
+    //     outline: 2px solid black;
+    //     display: flex;
+    //     flex-direction: row;
+    //     border-radius: 20px;
+    //     background-color: #121212;
+    //     color: #b0b0b0;
+    //     border: 2px solid rgb(109, 13, 109);
+
+
+        .chat-list__container {
+            width: 100%;
+            height: 90%;
+            // border: 2px solid blue;
+        }
+
+    // }
+}

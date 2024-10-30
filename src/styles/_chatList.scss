@@ -1,0 +1,180 @@
+.chat-card__container {
+    width: auto;
+    height: auto;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    background-color: #121212;
+    // border: 2px solid green;
+    align-self: self-start;
+
+
+    #chat-card__header{
+        color: white;
+        margin-block: 12px;
+    }
+ .chatlist__container {
+    width: 100%;
+    max-height: 100%;
+    // border: 2px solid red;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    .card__container {
+        border: 1px solid rgba(205, 89, 255, 0.8);
+        width: 90%;
+        height: auto;
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        margin-bottom: 22px;
+        align-content: center;
+
+        &:hover {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        > * {
+            pointer-events: none;
+        }
+
+        .profile__card {
+            border: 1px solid rgba(158, 66, 197, 0.8);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            margin-left: 10px;
+
+            
+
+
+            img {
+                object-fit: cover;
+                height: 100%;
+                width: 100%;
+                border-radius: 50%;
+            }
+
+            .status {
+                width: 20px;
+                height: 20px;
+                // border: 2px solid red;
+                display: none;
+                position: relative;
+                left: 45px;
+                bottom: 35px;
+                border-radius: 50%;
+      
+                background-color:  #121212;
+            }
+
+             .Offline, .Online {
+                display: flex;
+                position: relative;
+                bottom: 25px;
+                left: 45px;
+                width: 25px;
+                height: 25px;
+                background-color: #121212;
+                justify-content: center;
+                align-items: center;
+                border-radius: 50%;
+                // border: 2px solid #121212;
+
+            }
+
+            .Offline {
+                
+                .inner {
+                    width: 40%;
+                    height: 40%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 50%;
+                    border: 2px solid grey;
+          
+                }
+            }
+
+            .Online {
+                .inner {
+                    width: 40%;
+                    height: 40%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    border-radius: 50%;
+                    border: 2px solid green;
+                    background-color: green;;
+          
+                }   
+            }
+        }
+
+        h1 {
+            font-size: 20px;
+            color: white;
+        }
+
+        .inner-card {
+
+            // border: 2px solid green;
+            display: flex;
+            flex-direction: column;
+            margin-left: 15px;
+            margin-right: 10px;
+            width: 70%;
+            justify-content: center;
+
+        .details__card {
+            // border: 2px solid white;
+            display: flex;
+            width: 100%;
+            // margin-inline: 20px;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            // width: auto;
+    
+
+            p{
+                font-size: 16px;
+                color: white;
+                width: 14em;
+                overflow: hidden; 
+                white-space: nowrap; 
+                text-overflow: ellipsis;
+                // border: 2px solid red; 
+            }
+            .time-bar {
+                // flex: 1;
+                // border: 2px solid red;
+                width: auto;
+                border-radius: 8px;
+                p {
+                    width: auto;
+                    margin-right: 10px;
+                    font-size: 14px;
+        
+                }
+                
+                
+            }
+
+        
+            
+        }
+    }
+
+
+    }
+}
+}
