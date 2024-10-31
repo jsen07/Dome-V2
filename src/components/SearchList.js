@@ -37,13 +37,15 @@ const SearchList = ({ results, key }) => {
                         chatId: chatId,
                         lastMessage: "",
                         receiverId: user.uid,
-                        updatedAt: serverTimestamp()
+                        updatedAt: serverTimestamp(),
+                        isSeen: false,
                     }),
                     set(child(ref(db), `chatList/${user.uid}/${results.uid}`), {
                         chatId: chatId,
                         lastMessage: "",
                         receiverId: results.uid,
-                        updatedAt: serverTimestamp()
+                        updatedAt: serverTimestamp(),
+                        isSeen: true,
                     })
                 ]);
 

@@ -12,6 +12,7 @@ const ChatList = () => {
     const [chatList, setChatList] = useState([]);
     const [{ user }] = useStateValue();
     const navigate = useNavigate();
+    const [isSeen, setIsSeen] = useState(false);
 
     const { currentUser } = useAuth();
 
@@ -60,6 +61,7 @@ const ChatList = () => {
         };
 
         fetchChats();
+        console.log(chatList);
 
     }, [user]); 
 
@@ -87,14 +89,25 @@ const ChatList = () => {
             })
         })},[])
 
-        // const formatTimestamp = (timestamp) => {
-        //     const date = new Date(timestamp);
-        //     return date.toLocaleTimeString('en-US', {
-        //         hour: '2-digit',
-        //         minute: '2-digit',
-        //         hour12: true,
-        //     });
-        //   };
+        useEffect(() => {
+            const chatRef = ref(getDatabase(), `chatList/${user.uid}`);
+            const unsubscribe = onValue(chatRef, (snapshot) => {
+                snapshot.forEach((childSnapshot) => {
+                    const chatData = childSnapshot.val();
+                    // If isSeen property changes, update the corresponding chat in chatList
+                    setChatList((prevChatList) => {
+                        return prevChatList.map(chat => {
+                            if (chat.chatId === chatData.chatId) {
+                                return { ...chat, isSeen: chatData.isSeen }; // Update isSeen status
+                            }
+                            return chat;
+                        });
+                    });
+                });
+            });
+    
+            return () => unsubscribe(); // Cleanup listener on unmount
+        }, [user.uid]);
 
           function formatTimestamp(timestamp) {
             const timestampDate = new Date(timestamp);
@@ -121,7 +134,7 @@ const ChatList = () => {
             <div className='chatlist__container'>
             {chatList.map((chat, key) => (
                 <div 
-                    className='card__container' 
+                    className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
                     key={key} 
                     data-userid={user.uid} 
                     onClick={() => navigate(`/home/${chat.chatId}`)}>
@@ -134,12 +147,12 @@ const ChatList = () => {
                     </div>
                     <div className='inner-card'>
                     <h1>{chat.displayName}</h1>
+                 
                     <div className='details__card'>
              
                         <p>{chat?.lastMessage || "Start sending a message to this user"}
                             </p>
                             <div className='time-bar'>
-                            
                             <p>{formatTimestamp(chat?.updatedAt)}</p>
                             </div>
                 

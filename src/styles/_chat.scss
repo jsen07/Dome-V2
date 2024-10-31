@@ -159,6 +159,12 @@
          
         }
 
+        #seen {
+            color : white;
+            border: 2px solid green;
+            align-self: self-end;
+            
+        }
         .input__container {
             
             display: flex;
@@ -175,11 +181,18 @@
                 background-image: url('../components/images/icons8-smile-beam-32.png');
                 background-repeat: no-repeat;
                 background-size: contain;
-                border: 2px solid red;
+                // border: 2px solid red;
                 margin-left: 10px;
                 &:hover {
                     cursor: pointer;
                 }
+            }
+
+            .emoji-picker__container {
+                // border: 2px solid red;
+                position: absolute;
+                bottom: 75px;
+               
             }
             input {
                 width: 80%;

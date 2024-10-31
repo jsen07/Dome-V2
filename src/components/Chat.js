@@ -3,7 +3,7 @@ import { useStateValue } from './contexts/StateProvider';
 import { actionTypes } from '../reducers/userReducer';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue } from "firebase/database";
+import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue, update } from "firebase/database";
 import ChatMessage from './ChatMessage';
 import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from '../components/sound/receivingSound.mp3';
@@ -19,7 +19,7 @@ const Chat = () => {
     const navigate = useNavigate();
     const [reciever, setReceiver] = useState();
     const [chat, setChat] = useState([]);
-    const [talkingTo, setTalkingTo] = useState();
+    const [seen, setSeen] = useState(false);
 
     const chatMessageRef = useRef();
     const messagesEndRef = useRef(null);
@@ -30,6 +30,7 @@ const Chat = () => {
     const [recieverData, setRecieverData] = useState();
     const [status, setStatus] = useState("Offline");
     const [emojiToggle, setEmojiToggle] = useState(false);
+
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -66,6 +67,10 @@ const Chat = () => {
                       const messagesArray = Object.values(data.messages || {}).sort((a, b) => a.serverTime - b.serverTime);
   
                       setChat(messagesArray);
+
+
+
+
 
                       resolve({
                           allowedUsers: allowedUsersArray,
@@ -150,11 +155,16 @@ useEffect(() => {
                       const newMessage = messagesArray[messagesArray.length - 1];
                         if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
                             console.log("New message detected:", newMessage);
+                            console.log(newMessage.key)
+                            setSeen(false);
                             receiveSend.play();
                         }
-                      }
+                      } 
+
+
                  }
                  });
+
 
 
             return () => getNewMessage();
@@ -215,24 +225,13 @@ useEffect(() => {
           if(text ===""){
             return
           }
+
           const chatRef = ref(getDatabase());
 
           const db = getDatabase();
 
 
 // console.log(reciever)
-
-const formatTimestamp = (timestamp) => {
-  const date = new Date(timestamp);
-  return date.toLocaleTimeString('en-US', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: true,
-  });
-};
-
-const currentTimestamp = Date.now();
-const timeString = formatTimestamp(currentTimestamp);
          
       
 
@@ -246,8 +245,7 @@ set(newPostRef, {
   displayName: user.displayName,
   photoUrl: user.photoURL,
   uid: user.uid,
-  chatId: chatId
-    // ...
+  chatId: chatId,
 });
 
           set(child(chatRef, "chatList/"+ reciever +"/"+ user.uid), {
@@ -255,7 +253,8 @@ set(newPostRef, {
             chatId: chatId,
             lastMessage: text,
             receiverId: user.uid,
-            updatedAt: serverTimestamp()
+            updatedAt: serverTimestamp(),
+            isSeen: false,
         
         });
        
@@ -270,6 +269,9 @@ set(newPostRef, {
 
  
         }
+
+//UPDATE USERS LAST MESSAGGE TO TRUE
+
 
         const handleMessage = (event) => {
           setText(event.target.value)
@@ -327,33 +329,42 @@ set(newPostRef, {
     const dateMap = {};
 
     chat.forEach(chatData => {
-        const date = new Date(chatData.sentAt);
-        const dateString = date.toISOString().split('T')[0]; // format: YYYY-MM-DD
+        const timestamp = chatData.sentAt; // Assuming sentAt is the timestamp
+        if (timestamp) {
+            const date = new Date(timestamp);
+            if (!isNaN(date)) {
+                const dateString = date.toISOString().split('T')[0]; // format: YYYY-MM-DD
 
-        const today = new Date().toISOString().split('T')[0]; 
-        const now = new Date();
-        const todayStart = new Date(now.setHours(0, 0, 0, 0));
-        const yesterdayStart = new Date(todayStart);
-        yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+                const today = new Date().toISOString().split('T')[0]; 
+                const now = new Date();
+                const todayStart = new Date(now.setHours(0, 0, 0, 0));
+                const yesterdayStart = new Date(todayStart);
+                yesterdayStart.setDate(yesterdayStart.getDate() - 1);
 
-        // set the dateMap entry if it doesn't exist
-        if (!dateMap[dateString]) {
-            dateMap[dateString] = { label: dateString, messages: [] };
+                // Set the dateMap entry if it doesn't exist
+                if (!dateMap[dateString]) {
+                    dateMap[dateString] = { label: dateString, messages: [] };
+                }
+
+                // Check if the date is today
+                if (dateString === today) {
+                    dateMap[dateString].label = "Today"; 
+                } else if (dateString === yesterdayStart.toISOString().split('T')[0]) {
+                    dateMap[dateString].label = "Yesterday";
+                }
+                dateMap[dateString].messages.push(chatData);
+            } else {
+                console.error("Invalid date:", timestamp);
+            }
+        } else {
+            console.error("Missing timestamp for message:", chatData);
         }
-
-        // Check if the date is today
-        if (dateString === today) {
-            dateMap[dateString].label = "Today"; 
-        } else if (dateString === yesterdayStart.toISOString().split('T')[0]) {
-          dateMap[dateString].label = "Yesterday";
-      }
-    dateMap[dateString].messages.push(chatData);
     });
 
     return Object.keys(dateMap).map(date => (
         <div key={date} className='date-container'>
-           <div className='date-notify'>
-            <h4>{dateMap[date].label}</h4>
+            <div className='date-notify'>
+                <h4>{dateMap[date].label}</h4>
             </div> 
             {dateMap[date].messages.map((message, index) => (
                 <ChatMessage key={index} data={message} />
@@ -363,9 +374,10 @@ set(newPostRef, {
 };
 
 
+
 useEffect(() => {
   const messagesRef = ref(getDatabase(), `chat/${chatId}/messages`);
-  const unsubscribe = onValue(messagesRef, (snapshot) => {
+  const getMessages = onValue(messagesRef, (snapshot) => {
       const data = snapshot.val();
       if (data) {
           const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
@@ -374,9 +386,50 @@ useEffect(() => {
       }
   });
 
-  return () => unsubscribe(); // Cleanup on unmount
+  return () => getMessages(); 
 }, [chatId]);
 
+
+useEffect(() => {
+  const db = getDatabase();
+  const chatListRef = ref(db, `chatList/${user.uid}/${reciever}`);
+  const userMessageUpdate = ref(db, `chatList/${reciever}/${user.uid}`);
+  // Listen for changes to the isSeen property
+  const updateIsSeen = onValue(chatListRef, (snapshot) => {
+      const data = snapshot.val();
+      if (data && data.isSeen !== undefined) {
+          console.log("isSeen changed:", data.isSeen);
+          
+          // Update the isSeen property if necessary
+          if (!data.isSeen) {
+              update(chatListRef, { isSeen: true });
+          }
+
+    
+          
+      }
+  });
+  const UserMessageSeen = onValue(userMessageUpdate, (snapshot) => {
+    const data = snapshot.val();
+    if (data && data.isSeen !== undefined) {
+        console.log(data);
+        
+        // Update the isSeen property if necessary
+        if (data.isSeen) {
+          setSeen(true)
+        }
+        else {
+          setSeen(false);
+        }
+      
+
+  
+        
+    }
+});
+
+  return () => [updateIsSeen(), UserMessageSeen()];
+}, [user.uid, reciever]); 
   return (
     <div className='chat-box__container'>
               {/* <button onClick={closeChat}> Close Chat</button> */}
@@ -409,14 +462,18 @@ useEffect(() => {
         <div className='messages__inner'>
      
         {generateMessages()}
-        {chat.length === 0 && <p>No messages</p>}
+        { seen && ( <span id="seen"> Seen </span>)}
  
+        {chat.length === 0 && <p>No messages</p>}
+    
   </div>
   <div ref={messagesEndRef} /></div> 
   <div className='input__container'>
   <div className='emoji-button' onClick={emojiToggleHandler}> </div>
+  <div className='emoji-picker__container'>
   <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
-        <input  id="send-message__input" type="text" value={text} onChange={handleMessage} onKeyDown={handleKeyPress} />
+  </div>
+   <input  id="send-message__input" type="text" value={text} onChange={handleMessage} onKeyDown={handleKeyPress} />
         <div id="send-button" onClick={sendMessage}></div>
         </div>
   </div>

@@ -608,6 +608,11 @@
   border: 2px solid green;
   justify-content: center;
 }
+.chat-box__container .chat__header #seen {
+  color: white;
+  border: 2px solid green;
+  align-self: self-end;
+}
 .chat-box__container .chat__header .input__container {
   display: flex;
   flex-direction: row;
@@ -622,11 +627,14 @@
   background-image: url("../components/images/icons8-smile-beam-32.png");
   background-repeat: no-repeat;
   background-size: contain;
-  border: 2px solid red;
   margin-left: 10px;
 }
 .chat-box__container .chat__header .input__container .emoji-button:hover {
   cursor: pointer;
+}
+.chat-box__container .chat__header .input__container .emoji-picker__container {
+  position: absolute;
+  bottom: 75px;
 }
 .chat-box__container .chat__header .input__container input {
   width: 80%;
@@ -780,6 +788,12 @@
   width: auto;
   margin-right: 10px;
   font-size: 14px;
+}
+.chat-card__container .chatlist__container .card__container.false {
+  background-color: aqua;
+}
+.chat-card__container .chatlist__container .card__container.true {
+  background-color: #121212;
 }
 
 .user-message, .message {
