@@ -30,7 +30,7 @@ const Chat = () => {
     const [recieverData, setRecieverData] = useState();
     const [status, setStatus] = useState("Offline");
     const [emojiToggle, setEmojiToggle] = useState(false);
-
+    const [lastMessage, setLastMessage] = useState();
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -60,9 +60,7 @@ const Chat = () => {
                       if (index > -1) {
                           allowedUsersArray.splice(index, 1);
                           setReceiver(allowedUsersArray[0]); 
-                      } else {
-                        setReceiver(null); 
-                      }
+                      } 
        
                       const messagesArray = Object.values(data.messages || {}).sort((a, b) => a.serverTime - b.serverTime);
   
@@ -149,14 +147,14 @@ useEffect(() => {
                 if (data) {
                     const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
                     setChat(messagesArray);
+                    setLastMessage(messagesArray[messagesArray.length-1])
 
                     // Check for new messages
                     if (messagesArray.length > result.messages.length) {
                       const newMessage = messagesArray[messagesArray.length - 1];
+                      setLastMessage(newMessage)
                         if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
-                            console.log("New message detected:", newMessage);
-                            console.log(newMessage.key)
-                            setSeen(false);
+                
                             receiveSend.play();
                         }
                       } 
@@ -189,9 +187,6 @@ useEffect(() => {
                       const status = snapshot.val(); 
                       setStatus(status); 
                       resolve(status);
-                  } else {
-                      console.log("No data available for this receiver");
-                      resolve(null); // Resolve with null if no data
                   }
               })
               .catch((error) => {
@@ -329,7 +324,7 @@ set(newPostRef, {
     const dateMap = {};
 
     chat.forEach(chatData => {
-        const timestamp = chatData.sentAt; // Assuming sentAt is the timestamp
+        const timestamp = chatData.sentAt;
         if (timestamp) {
             const date = new Date(timestamp);
             if (!isNaN(date)) {
@@ -390,46 +385,31 @@ useEffect(() => {
 }, [chatId]);
 
 
-useEffect(() => {
-  const db = getDatabase();
-  const chatListRef = ref(db, `chatList/${user.uid}/${reciever}`);
-  const userMessageUpdate = ref(db, `chatList/${reciever}/${user.uid}`);
-  // Listen for changes to the isSeen property
-  const updateIsSeen = onValue(chatListRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data && data.isSeen !== undefined) {
-          console.log("isSeen changed:", data.isSeen);
-          
-          // Update the isSeen property if necessary
-          if (!data.isSeen) {
-              update(chatListRef, { isSeen: true });
-          }
+        useEffect(() => {
+            const db = getDatabase();
+            const chatListRef = ref(db, `chatList/${user.uid}/${reciever}`);
+            const userMessageUpdate = ref(db, `chatList/${reciever}/${user.uid}`);
 
-    
-          
-      }
-  });
-  const UserMessageSeen = onValue(userMessageUpdate, (snapshot) => {
-    const data = snapshot.val();
-    if (data && data.isSeen !== undefined) {
-        console.log(data);
-        
-        // Update the isSeen property if necessary
-        if (data.isSeen) {
-          setSeen(true)
-        }
-        else {
-          setSeen(false);
-        }
-      
+            const updateIsSeen = onValue(chatListRef, (snapshot) => {
+            const chatData = snapshot.val();
+                if (chatData && !chatData.isSeen) {
+                    update(chatListRef, { isSeen: true });
+                }
+        });
 
-  
-        
-    }
-});
+            const UserMessageSeen = onValue(userMessageUpdate, (snapshot) => {
+            const messageData = snapshot.val();
+                if (messageData && lastMessage?.uid === messageData.receiverId) {
+                setSeen(messageData.isSeen);
+                }
+            });
 
-  return () => [updateIsSeen(), UserMessageSeen()];
-}, [user.uid, reciever]); 
+            return () => {
+                updateIsSeen();
+                UserMessageSeen(); 
+            };
+}, [reciever, chatId, lastMessage]);
+
   return (
     <div className='chat-box__container'>
               {/* <button onClick={closeChat}> Close Chat</button> */}
