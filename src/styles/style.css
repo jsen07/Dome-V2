@@ -365,7 +365,7 @@
 
 .search-user__container {
   width: 650px;
-  height: 100%;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -380,6 +380,7 @@
   display: flex;
   width: 90%;
   margin-inline: 20px;
+  margin-block: 30px;
   flex-direction: row;
 }
 .search-user__container .search-form__container input {
@@ -588,7 +589,6 @@
   flex-direction: column;
   justify-content: center;
   margin-left: 15px;
-  transition: all 0.3s ease-in-out;
 }
 .chat-box__container .chat__header .chat__banner .header-details h1 {
   font-size: 18px;
@@ -596,7 +596,6 @@
 .chat-box__container .chat__header .chat__banner .header-details .details {
   font-size: 14px;
   margin: 0;
-  transition: color 0.3s ease-in-out;
 }
 .chat-box__container .chat__header .chat__banner .header-details .details.Online {
   color: green;
@@ -660,7 +659,9 @@
   height: 30px;
   padding-inline: 10px;
   margin-inline: 10px;
-  border-radius: 12px;
+  background-color: #121212;
+  border: 0;
+  color: white;
 }
 .chat-box__container .chat__header .input__container #send-button {
   width: 60px;
@@ -709,10 +710,13 @@
   flex-direction: row;
   margin-bottom: 22px;
   align-content: center;
+  background-color: rgba(205, 89, 255, 0.8);
+  border-radius: 5px;
 }
 .chat-card__container .chatlist__container .card__container:hover {
   cursor: pointer;
-  opacity: 0.7;
+  opacity: 0.5;
+  background-color: #292929;
 }
 .chat-card__container .chatlist__container .card__container > * {
   pointer-events: none;
@@ -808,7 +812,7 @@
   font-size: 14px;
 }
 .chat-card__container .chatlist__container .card__container.false {
-  border: 1px solid rgba(205, 89, 255, 0.8);
+  background-color: #292929;
 }
 .chat-card__container .chatlist__container .card__container.true {
   background-color: #121212;

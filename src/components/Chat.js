@@ -261,7 +261,6 @@ set(newPostRef, {
         setText("");
         input.value ="";
         soundSend.play();
-        scrollToBottom();
 
 
 
@@ -277,7 +276,7 @@ set(newPostRef, {
         }
         const scrollToBottom = () => {
           if (messagesEndRef.current) {
-              if (!seenEndRef) {
+              if (!seenEndRef.current) {
                   messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
               } else {
                   seenEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -298,7 +297,7 @@ set(newPostRef, {
         }, 50); 
     
         return () => clearTimeout(timer);
-    }, [chat]);
+    }, [chat, seen]);
 
   
       useEffect(() => {
@@ -367,9 +366,7 @@ set(newPostRef, {
             } else {
                 console.error("Invalid date:", timestamp);
             }
-        } else {
-            console.error("Missing timestamp for message:", chatData);
-        }
+        } 
       }
     });
 
@@ -407,6 +404,8 @@ set(newPostRef, {
                 else {
                   setSeen(false)
                 }
+
+              
             });
 
             return () => {

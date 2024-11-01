@@ -128,7 +128,7 @@ const ChatList = () => {
 
     return (
         <div className='chat-card__container'>
-            <h1 id="chat-card__header">Chat</h1>
+            <h1 id="chat-card__header">{chatList.length > 0 ? `Messages (${chatList.length})` : 'Messages'}</h1>
             <div className='chatlist__container'>
             {chatList.map((chat, key) => (
                 <div 

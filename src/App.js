@@ -2,7 +2,7 @@ import './styles/style.css';
 import Login from './components/Login';
 import Home from './components/Home';
 import { AuthProvider } from './components/contexts/AuthContext';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import ProtectedRoute from './components/ProtectedRoute';
 import { useStateValue } from './components/contexts/StateProvider';
@@ -40,9 +40,12 @@ function App() {
             } />
             <Route path="/home" element={
                 <PrivateRoute>
+                    
                     <Home />
                 </PrivateRoute>
             } />
+
+<Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         </AuthProvider>
         </Router>
