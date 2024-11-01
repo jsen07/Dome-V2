@@ -27,6 +27,7 @@ const ChatMessage = ({ data }) => {
         {/* <div className='message-time'>
         </div> */}
         </div>
+        {/* <span id="message__time-sent"> {formatTimestamp(data.sentAt)}</span> */}
     </div>
   )
 }

@@ -1,28 +1,26 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useStateValue } from './contexts/StateProvider';
-import { actionTypes } from '../reducers/userReducer';
 import { useParams } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
 import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue, update } from "firebase/database";
 import ChatMessage from './ChatMessage';
 import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from '../components/sound/receivingSound.mp3';
-import {Howl, Howler} from 'howler';
+import { Howl } from 'howler';
 import Placeholder from '../components/images/avatar_placeholder.png';
 import EmojiPicker from 'emoji-picker-react';
 
 //ewfwe
 const Chat = () => {
 
-    const [{user}, dispatch] = useStateValue();
+    const [ {user} ] = useStateValue();
     const [text, setText] =useState("");
-    const navigate = useNavigate();
     const [reciever, setReceiver] = useState();
     const [chat, setChat] = useState([]);
     const [seen, setSeen] = useState(false);
 
-    const chatMessageRef = useRef();
+
     const messagesEndRef = useRef(null);
+    const seenEndRef = useRef(null);
     const messagesContainerRef = useRef(null);
     const [isAtBottom, setIsAtBottom] = useState(true);
     const { chatId } = useParams();
@@ -31,6 +29,7 @@ const Chat = () => {
     const [status, setStatus] = useState("Offline");
     const [emojiToggle, setEmojiToggle] = useState(false);
     const [lastMessage, setLastMessage] = useState();
+    const inputRef = useRef(null);
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -149,6 +148,7 @@ useEffect(() => {
                     if(messagesArray[messagesArray.length-1].chatId === chatId) {
                     setChat(messagesArray);
                     setLastMessage(messagesArray[messagesArray.length-1])
+          
                     
 
                     // Check for new messages
@@ -276,8 +276,12 @@ set(newPostRef, {
 
         }
         const scrollToBottom = () => {
-          if (isAtBottom) {
-              messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+          if (messagesEndRef.current) {
+              if (!seenEndRef) {
+                  messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+              } else {
+                  seenEndRef.current?.scrollIntoView({ behavior: "smooth" });
+              }
           }
       };
   
@@ -289,8 +293,13 @@ set(newPostRef, {
       };
   
       useEffect(() => {
-          scrollToBottom();
-      }, [chat]); 
+        const timer = setTimeout(() => {
+            scrollToBottom();
+        }, 50); 
+    
+        return () => clearTimeout(timer);
+    }, [chat]);
+
   
       useEffect(() => {
           const container = messagesContainerRef.current;
@@ -312,14 +321,14 @@ set(newPostRef, {
     };
   const emojiToggleHandler = () => {
     setEmojiToggle(!emojiToggle);
-    console.log(emojiToggle)
+    
   }
 
   const handleEmoji =(e)=> {
     setText(prev=>prev+
       e.emoji);
     setEmojiToggle(!emojiToggle);
-    console.log(e);
+    inputRef.current.focus();
 
   }
 
@@ -327,7 +336,7 @@ set(newPostRef, {
     const dateMap = {};
 
     chat.forEach(chatData => {
-      
+
       if(chatData.chatId === chatId){
         const timestamp = chatData.sentAt;
        
@@ -395,6 +404,9 @@ set(newPostRef, {
                 if (messageData && lastMessage?.uid === messageData.receiverId) {
                 setSeen(messageData.isSeen);
                 }
+                else {
+                  setSeen(false)
+                }
             });
 
             return () => {
@@ -402,13 +414,15 @@ set(newPostRef, {
                 UserMessageSeen(); 
             };
 }, [reciever, chatId, lastMessage]);
+// 
+
 
   return (
     <div className='chat-box__container'>
               {/* <button onClick={closeChat}> Close Chat</button> */}
         <div className='chat__header'>
         { loading ?  (
-          <h1> LOADING</h1>
+          <h1></h1>
 
         ) : (
           <div className='chat__banner'>
@@ -420,9 +434,9 @@ set(newPostRef, {
                             </div>
                     </div>
                     <div className='header-details'>
-                    <p> {recieverData?.displayName}</p>
+                    <h1> {recieverData?.displayName}</h1>
                     {status && (
-                           <p> {status} </p>
+                           <p className={ status ? `details ${status}` : "details"}> {status} </p>
                     )}
                
                     </div>
@@ -435,7 +449,9 @@ set(newPostRef, {
         <div className='messages__inner'>
      
         {generateMessages()}
-        { seen && ( <span id="seen"> Seen </span>)}
+        <div className='seen__container'>
+        { seen && ( <span id="seen"ref={seenEndRef}> Seen </span>)}
+        </div>
  
         {chat.length === 0 && <p>No messages</p>}
     
@@ -446,7 +462,7 @@ set(newPostRef, {
   <div className='emoji-picker__container'>
   <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
   </div>
-   <input  id="send-message__input" type="text" value={text} onChange={handleMessage} onKeyDown={handleKeyPress} />
+   <input  id="send-message__input" type="text"  ref={inputRef} value={text} onChange={handleMessage} onKeyDown={handleKeyPress} />
         <div id="send-button" onClick={sendMessage}></div>
         </div>
   </div>
