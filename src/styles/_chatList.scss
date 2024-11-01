@@ -27,7 +27,7 @@
     justify-content: flex-start;
     align-items: center;
     .card__container {
-        border: 1px solid rgba(205, 89, 255, 0.8);
+        // border: 1px solid rgba(205, 89, 255, 0.8);
         width: 90%;
         height: auto;
         padding: 10px;
@@ -177,7 +177,7 @@
 
     }
     .card__container.false {
-        background-color: aqua;
+              border: 1px solid rgba(205, 89, 255, 0.8);
     }
 
     .card__container.true {

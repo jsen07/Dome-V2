@@ -12,7 +12,6 @@ const ChatList = () => {
     const [chatList, setChatList] = useState([]);
     const [{ user }] = useStateValue();
     const navigate = useNavigate();
-    const [isSeen, setIsSeen] = useState(false);
 
     const { currentUser } = useAuth();
 
@@ -61,7 +60,6 @@ const ChatList = () => {
         };
 
         fetchChats();
-        console.log(chatList);
 
     }, [user]); 
 

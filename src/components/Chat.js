@@ -146,8 +146,10 @@ useEffect(() => {
                  const data = snapshot.val();
                 if (data) {
                     const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
+                    if(messagesArray[messagesArray.length-1].chatId === chatId) {
                     setChat(messagesArray);
                     setLastMessage(messagesArray[messagesArray.length-1])
+                    
 
                     // Check for new messages
                     if (messagesArray.length > result.messages.length) {
@@ -158,6 +160,7 @@ useEffect(() => {
                             receiveSend.play();
                         }
                       } 
+                    }
 
 
                  }
@@ -324,7 +327,11 @@ set(newPostRef, {
     const dateMap = {};
 
     chat.forEach(chatData => {
+      
+      if(chatData.chatId === chatId){
         const timestamp = chatData.sentAt;
+       
+       
         if (timestamp) {
             const date = new Date(timestamp);
             if (!isNaN(date)) {
@@ -354,6 +361,7 @@ set(newPostRef, {
         } else {
             console.error("Missing timestamp for message:", chatData);
         }
+      }
     });
 
     return Object.keys(dateMap).map(date => (
@@ -368,21 +376,6 @@ set(newPostRef, {
     ));
 };
 
-
-
-useEffect(() => {
-  const messagesRef = ref(getDatabase(), `chat/${chatId}/messages`);
-  const getMessages = onValue(messagesRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-          const messagesArray = Object.values(data).sort((a, b) => a.serverTime - b.serverTime);
-          setChat(messagesArray);
-          scrollToBottom();
-      }
-  });
-
-  return () => getMessages(); 
-}, [chatId]);
 
 
         useEffect(() => {

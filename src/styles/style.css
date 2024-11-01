@@ -683,7 +683,6 @@
   align-items: center;
 }
 .chat-card__container .chatlist__container .card__container {
-  border: 1px solid rgba(205, 89, 255, 0.8);
   width: 90%;
   height: auto;
   padding: 10px;
@@ -790,7 +789,7 @@
   font-size: 14px;
 }
 .chat-card__container .chatlist__container .card__container.false {
-  background-color: aqua;
+  border: 1px solid rgba(205, 89, 255, 0.8);
 }
 .chat-card__container .chatlist__container .card__container.true {
   background-color: #121212;
