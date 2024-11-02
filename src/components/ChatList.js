@@ -12,6 +12,8 @@ const ChatList = () => {
     const [chatList, setChatList] = useState([]);
     const [{ user }] = useStateValue();
     const navigate = useNavigate();
+    const [onlineUsersCount, setOnlineUsersCount] = useState(0);
+    const [onlineUsers, setOnlineUsers] = useState(new Set()); // Track online users
 
     const { currentUser } = useAuth();
 
@@ -72,7 +74,7 @@ const ChatList = () => {
                 //get user id and status 
                 const userId = childSnapshot.key;
                 const userStatus = childSnapshot.val()
-
+       
                 //map through chatlist and update user status on change
                 setChatList((chatData) => {
                     return chatData.map(chat => {
@@ -104,8 +106,31 @@ const ChatList = () => {
                 });
             });
     
-            return () => unsubscribe(); // Cleanup listener on unmount
+            return () => unsubscribe();
         }, [user.uid]);
+
+        useEffect(() => {
+            if (!currentUser) return;
+    
+            const db = getDatabase();
+            const statusRef = ref(db, 'status');
+    
+            // Listen for changes in online status
+            const unsubscribe = onValue(statusRef, (snapshot) => {
+                const onlineUsersTemp = new Set();
+                snapshot.forEach((childSnapshot) => {
+                    const userId = childSnapshot.key;
+                    const userStatus = childSnapshot.val();
+                    if (userStatus === 'Online' && userId !== currentUser.uid) {
+                        onlineUsersTemp.add(userId); 
+                    }
+                });
+                setOnlineUsers(onlineUsersTemp);
+                setOnlineUsersCount(onlineUsersTemp.size);
+            });
+    
+            return () => unsubscribe(); // Cleanup listener on unmount
+        }, [currentUser]);
 
           function formatTimestamp(timestamp) {
             const timestampDate = new Date(timestamp);
@@ -129,6 +154,7 @@ const ChatList = () => {
     return (
         <div className='chat-card__container'>
             <h1 id="chat-card__header">{chatList.length > 0 ? `Messages (${chatList.length})` : 'Messages'}</h1>
+            <h1> Online {onlineUsersCount}</h1>
             <div className='chatlist__container'>
             {chatList.map((chat, key) => (
                 <div 
