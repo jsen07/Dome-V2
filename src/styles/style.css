@@ -236,9 +236,14 @@
   height: 50px;
   margin-block: 10px;
 }
-.home__container .chat-list__container {
+.home__container .chat-list-container {
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
   width: 100%;
   height: 90%;
+}
+.home__container .chat-list-container.hidden {
+  opacity: 0;
 }
 
 .profile__page {
@@ -710,7 +715,6 @@
   flex-direction: row;
   margin-bottom: 22px;
   align-content: center;
-  background-color: rgba(205, 89, 255, 0.8);
   border-radius: 5px;
 }
 .chat-card__container .chatlist__container .card__container:hover {

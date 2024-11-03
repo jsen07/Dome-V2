@@ -16,9 +16,13 @@ const SearchList = ({ results, key }) => {
     const createChat = async () => {
         const db = getDatabase();
         const chatId = generateChatId(user.uid, results.uid);
+        
 
         try {
             const chatSnapshot = await get(child(ref(db), `chat/${chatId}`));
+            const chatListRef = ref(db, 'chatList');
+            const newChatListRef = push(chatListRef);
+            const chatListId = newChatListRef.key;
 
             // Check if chat already exists
             if (!chatSnapshot.exists()) {
@@ -39,6 +43,7 @@ const SearchList = ({ results, key }) => {
                         receiverId: user.uid,
                         updatedAt: serverTimestamp(),
                         isSeen: false,
+                        id: chatListId
                     }),
                     set(child(ref(db), `chatList/${user.uid}/${results.uid}`), {
                         chatId: chatId,
@@ -46,6 +51,7 @@ const SearchList = ({ results, key }) => {
                         receiverId: results.uid,
                         updatedAt: serverTimestamp(),
                         isSeen: true,
+                        id: chatListId
                     })
                 ]);
 

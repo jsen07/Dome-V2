@@ -29,6 +29,7 @@ const Chat = () => {
     const [status, setStatus] = useState("Offline");
     const [emojiToggle, setEmojiToggle] = useState(false);
     const [lastMessage, setLastMessage] = useState();
+    const [unSeenMessages, setUnseenMessages] = useState([]);
     const inputRef = useRef(null);
 
     var soundSend = new Howl({
@@ -229,12 +230,14 @@ useEffect(() => {
           const db = getDatabase();
 
 
+
 // console.log(reciever)
          
       
 
 const postMessagesRef = ref(db, `chat/${chatId}/messages`);
 const newPostRef = push(postMessagesRef);
+const uniqueId = newPostRef.key;
 set(newPostRef, {
 
   serverTime: serverTimestamp(),
@@ -253,6 +256,7 @@ set(newPostRef, {
             receiverId: user.uid,
             updatedAt: serverTimestamp(),
             isSeen: false,
+            id: uniqueId
         
         });
        
@@ -400,21 +404,41 @@ set(newPostRef, {
             const messageData = snapshot.val();
                 if (messageData && lastMessage?.uid === messageData.receiverId) {
                 setSeen(messageData.isSeen);
+
+                if (!messageData.isSeen) {
+                    // Push unseen messages to the array
+                    setUnseenMessages((prev) => {
+                        // Check if the message already exists
+                        const exists = prev.some(msg => msg.id === messageData.id);
+                        if (!exists) {
+                            return [...prev, messageData];
+                        }
+                        return prev; // Return the existing array if it already contains the message
+                    });
+                }
+                else {
+                    setUnseenMessages([]);
+                }
+
+                
                 }
                 else {
                   setSeen(false)
                 }
 
+                
+
               
             });
-
             return () => {
                 updateIsSeen();
                 UserMessageSeen(); 
             };
 }, [reciever, chatId, lastMessage]);
-// 
 
+useEffect(() => {
+    console.log(unSeenMessages)
+},[unSeenMessages])
 
   return (
     <div className='chat-box__container'>
