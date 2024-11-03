@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useStateValue } from './contexts/StateProvider';
 import { useParams } from 'react-router-dom';
-import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue, update } from "firebase/database";
+import { serverTimestamp, ref, child, get, set, getDatabase, push, onValue, update, remove } from "firebase/database";
 import ChatMessage from './ChatMessage';
 import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from '../components/sound/receivingSound.mp3';
@@ -29,8 +29,9 @@ const Chat = () => {
     const [status, setStatus] = useState("Offline");
     const [emojiToggle, setEmojiToggle] = useState(false);
     const [lastMessage, setLastMessage] = useState();
-    const [unSeenMessages, setUnseenMessages] = useState([]);
+    const [unseenMessages, setUnseenMessages] = useState({});
     const inputRef = useRef(null);
+    const notificationSentRef = useRef(false);
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -259,6 +260,17 @@ set(newPostRef, {
             id: uniqueId
         
         });
+
+        const notificationRef = ref(db, `chatList/${reciever}/notifications/${user.uid}/messages`);
+        const newNotifRef = push(notificationRef);
+        set(newNotifRef, {
+            message: text,
+            displayName: user.uid,
+            sentAt: serverTimestamp(),
+            isSeen: false,
+            chatId: chatId,
+            id: uniqueId,
+        });   
        
         const input = document.getElementById("send-message__input");
 
@@ -390,55 +402,85 @@ set(newPostRef, {
 
         useEffect(() => {
             const db = getDatabase();
+
             const chatListRef = ref(db, `chatList/${user.uid}/${reciever}`);
             const userMessageUpdate = ref(db, `chatList/${reciever}/${user.uid}`);
+            // const notificationRef = ref(db, `chatList/${reciever}/notifications/${user.uid}/messages`);
+ 
+        
 
             const updateIsSeen = onValue(chatListRef, (snapshot) => {
+                const messageToDelete = ref(db, `chatList/${user.uid}/notifications/${reciever}/messages`);
             const chatData = snapshot.val();
                 if (chatData && !chatData.isSeen) {
                     update(chatListRef, { isSeen: true });
+
+                    console.log("Deleting from path:", messageToDelete.toString());
+
+                remove(messageToDelete).catch(error => {
+                    console.error('Error deleting message:', error);
+                });
+                    
                 }
         });
-
-            const UserMessageSeen = onValue(userMessageUpdate, (snapshot) => {
-            const messageData = snapshot.val();
-                if (messageData && lastMessage?.uid === messageData.receiverId) {
-                setSeen(messageData.isSeen);
-
-                if (!messageData.isSeen) {
-                    // Push unseen messages to the array
-                    setUnseenMessages((prev) => {
-                        // Check if the message already exists
-                        const exists = prev.some(msg => msg.id === messageData.id);
-                        if (!exists) {
-                            return [...prev, messageData];
-                        }
-                        return prev; // Return the existing array if it already contains the message
-                    });
-                }
-                else {
-                    setUnseenMessages([]);
-                }
-
                 
-                }
-                else {
-                  setSeen(false)
-                }
+                const UserMessageSeen = onValue(userMessageUpdate, (snapshot) => {
+                    const messageData = snapshot.val();
+                    
+                    if (messageData && lastMessage?.uid === messageData.receiverId) {
+                        setSeen(messageData.isSeen);
+        
+                      
+                    } else {
+                        setSeen(false);
+                    }
+                });
+        
+                return () => {
+                    updateIsSeen();
+                    UserMessageSeen();
+             
+                };
 
-                
-
-              
-            });
-            return () => {
-                updateIsSeen();
-                UserMessageSeen(); 
-            };
 }, [reciever, chatId, lastMessage]);
 
-useEffect(() => {
-    console.log(unSeenMessages)
-},[unSeenMessages])
+// useEffect(() => {
+//     const db = getDatabase();
+
+//     if(reciever) {
+
+//     get(notificationRef).then((snapshot) => {
+//         if (!snapshot.exists()) {   
+//             if(unseenMessages) {    
+//                 set(newNotifRef, {
+//                     message: unseenMessages.lastMessage,
+//                     displayName: unseenMessages.receiverId,
+//                     sentAt: unseenMessages.updatedAt,
+//                     isSeen: unseenMessages.isSeen,
+//                     chatId: unseenMessages.chatId,
+//                     id: unseenMessages.id,
+//                 });    
+//             }
+//         } 
+//         else {
+//             console.log(snapshot.val())
+//         }
+//     }).catch((error) => {
+//         console.error(error);
+//     });
+// }
+
+
+//     // set(newNotifRef, {
+//     //     message: unseenMessages?.lastMessage,
+//     //     displayName: unseenMessages?.receiverId,
+//     //     sentAt: unseenMessages?.updatedAt,
+//     //     isSeen: unseenMessages?.isSeen,
+//     //     chatId: unseenMessages?.chatId,
+//     //     id: unseenMessages?.id
+//     // });    
+    
+// },[chatId]);
 
   return (
     <div className='chat-box__container'>

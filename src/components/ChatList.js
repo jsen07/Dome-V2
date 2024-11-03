@@ -10,10 +10,17 @@ const ChatList = () => {
 
     
     const [chatList, setChatList] = useState([]);
+    const [AllChatList, setAllChatList] = useState([]);
     const [{ user }] = useStateValue();
     const navigate = useNavigate();
     const [onlineUsersCount, setOnlineUsersCount] = useState(0);
     const [onlineUsers, setOnlineUsers] = useState(new Set()); // Track online users
+    const [filter, setFilter] = useState('chatList');
+    const [onlineUserList,  setOnlineUserList] = useState([]);
+    const [notificationList,  setNotificationList] = useState([]);
+    const [onlineToggle, setOnlineToggle] = useState(false);
+    const [notificationToggle, setNotificationToggle] = useState(false);
+    const [allToggle, setAllToggle] = useState(false);
 
     const { currentUser } = useAuth();
 
@@ -32,15 +39,19 @@ const ChatList = () => {
                     const childData = childSnapshot.val();
                     const userPromise = get(child(ref(getDatabase()), `users/${childData.receiverId}`));
                     const statusPromise = get(child(ref(getDatabase()), `status/${childData.receiverId}`));
+                    const notificationsPromise = get(child(ref(getDatabase()), `chatList/${user.uid}/notifications/${childData.receiverId}`));
 
-                    chatPromises.push(Promise.all([userPromise, statusPromise]).then(([userSnapshot, statusSnapshot]) => {
+                    chatPromises.push(Promise.all([userPromise, statusPromise, notificationsPromise]).then(([userSnapshot, statusSnapshot, notificationsSnapshot]) => {
                         if (userSnapshot.exists()) {
                             const userData = userSnapshot.val();
                             const status = statusSnapshot.val();
+                            const notifications = notificationsSnapshot.exists() ? notificationsSnapshot.val() : {};
+                            const { messages = {} } = notifications;
                             return {
                                 ...childData,
                                 ...userData,
-                                status
+                                status,
+                                messages
                             };
                         } else {
                             console.log("No data for user:", childData.receiverId);
@@ -55,6 +66,7 @@ const ChatList = () => {
                     const chatObjects = await Promise.all(chatPromises);
                     const filteredChats = chatObjects.filter(chat => chat !== null); 
                     setChatList(filteredChats.sort((a, b) => b.updatedAt - a.updatedAt));
+                    setAllChatList(filteredChats.sort((a, b) => b.updatedAt - a.updatedAt))
                 } catch (error) {
                     console.error("Error fetching user data:", error);
                 }
@@ -62,7 +74,7 @@ const ChatList = () => {
         };
 
         fetchChats();
-
+        
     }, [user]); 
 
     //Listener for updates on user status'
@@ -90,6 +102,11 @@ const ChatList = () => {
         })},[])
 
         useEffect(() => {
+            if(!onlineToggle && !notificationToggle) {
+                setAllToggle(true);
+            }
+        })
+        useEffect(() => {
             const chatRef = ref(getDatabase(), `chatList/${user.uid}`);
             const unsubscribe = onValue(chatRef, (snapshot) => {
                 snapshot.forEach((childSnapshot) => {
@@ -114,8 +131,7 @@ const ChatList = () => {
     
             const db = getDatabase();
             const statusRef = ref(db, 'status');
-    
-            // Listen for changes in online status
+            
             const unsubscribe = onValue(statusRef, (snapshot) => {
                 const onlineUsersTemp = new Set();
                 snapshot.forEach((childSnapshot) => {
@@ -129,8 +145,52 @@ const ChatList = () => {
                 setOnlineUsersCount(onlineUsersTemp.size);
             });
     
-            return () => unsubscribe(); // Cleanup listener on unmount
+            return () => unsubscribe(); 
         }, [currentUser]);
+
+
+
+    // get onlnie users
+    useEffect(() => {
+        const onlineChats = AllChatList.filter(chat => onlineUsers.has(chat.receiverId));
+        setOnlineUserList(onlineUsers.size > 0 ? onlineChats : AllChatList)
+    }, [onlineUsers, chatList]);
+
+    const handleOnlineFilter = () => {
+        setNotificationToggle(false);
+        // const onlineChats = AllChatList.filter(chat => onlineUsers.has(chat.receiverId));
+        // setChatList(onlineChats);
+        setOnlineToggle(true);
+
+
+        
+        const onlineChats = AllChatList.filter(chat => onlineUsers.has(chat.receiverId));
+        setOnlineUserList(onlineUsers.size > 0 ? onlineChats : AllChatList)
+
+    };
+    const handleAllFilter = () => {
+        setOnlineToggle(false);
+        setNotificationToggle(false);
+
+    }
+
+    useEffect(() => {
+        const chatsWithNotifications = AllChatList.filter(chat => 
+            chat.messages && Object.keys(chat.messages).length > 0
+        );
+        setNotificationList(chatsWithNotifications);
+    }, [AllChatList]);
+
+    const handleNotificationsFilter = () => {
+        setOnlineToggle(false);
+        setNotificationToggle(true);
+        const chatsWithNotifications = AllChatList.filter(chat => 
+            chat.messages && Object.keys(chat.messages).length > 0
+        );
+        setNotificationList(chatsWithNotifications);
+    };
+
+
 
           function formatTimestamp(timestamp) {
             const timestampDate = new Date(timestamp);
@@ -153,38 +213,119 @@ const ChatList = () => {
 
     return (
         <div className='chat-card__container'>
-            <h1 id="chat-card__header">{chatList.length > 0 ? `Messages (${chatList.length})` : 'Messages'}</h1>
-            <h1> Online {onlineUsersCount}</h1>
-            <div className='chatlist__container'>
-            {chatList.map((chat, key) => (
-                <div 
-                    className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
-                    key={key} 
-                    data-userid={user.uid} 
-                    onClick={() => navigate(`/home/${chat.chatId}`)}>
-                    <div className='profile__card'>
-                        <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
-                        <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
-                       
-                            </div>
-                            </div>
-                    </div>
-                    <div className='inner-card'>
-                    <h1>{chat.displayName}</h1>
+
+            {/* <p> Online {onlineUsersCount}</p> */}
+            <p onClick={handleAllFilter}>All</p>
+            <p onClick={handleOnlineFilter}>Online</p>
+            <p onClick={handleNotificationsFilter} style={{ cursor: 'pointer' }}> Unread</p>
+            
+            {!onlineToggle && !notificationToggle && (
+                <div className='chatlist__container'>
+                {chatList.map((chat, key) => (
+                    <div 
+                        className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
+                        key={key} 
+                        data-userid={user.uid} 
+                        onClick={() => navigate(`/home/${chat.chatId}`)}>
+                        <div className='profile__card'>
+                            <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
+                            <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
+                           
+                                </div>
+                                </div>
+                        </div>
+                        <div className='inner-card'>
+                        <h1>{chat.displayName}</h1>
+                     
+                        <div className='details__card'>
                  
-                    <div className='details__card'>
-             
-                        <p>{chat?.lastMessage || "Start sending a message to this user"}
-                            </p>
-                            <div className='time-bar'>
-                            <p>{formatTimestamp(chat?.updatedAt)}</p>
-                            </div>
-                
+                            <p>{chat?.lastMessage || "Start sending a message to this user"}
+                                </p>
+                        
+                                <div className='time-bar'>
+                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
+                                <p>{formatTimestamp(chat?.updatedAt)}</p>
+                                </div>
+                    
+                        </div>
                     </div>
+                    </div>
+                ))}
                 </div>
+            )}
+
+            {onlineToggle && (
+                <div className='chatlist__container'>
+                {onlineUserList.map((chat, key) => (
+                    <div 
+                        className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
+                        key={key} 
+                        data-userid={user.uid} 
+                        onClick={() => navigate(`/home/${chat.chatId}`)}>
+                        <div className='profile__card'>
+                            <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
+                            <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
+                           
+                                </div>
+                                </div>
+                        </div>
+                        <div className='inner-card'>
+                        <h1>{chat.displayName}</h1>
+                     
+                        <div className='details__card'>
+                 
+                            <p>{chat?.lastMessage || "Start sending a message to this user"}
+                                </p>
+                        
+                                <div className='time-bar'>
+                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
+                                <p>{formatTimestamp(chat?.updatedAt)}</p>
+                                </div>
+                    
+                        </div>
+                    </div>
+                    </div>
+                ))}
                 </div>
-            ))}
-            </div>
+            )}
+
+            
+{notificationToggle && (
+                <div className='chatlist__container'>
+                    
+                {notificationList.map((chat, key) => (
+                    <div 
+                        className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
+                        key={key} 
+                        data-userid={user.uid} 
+                        onClick={() => navigate(`/home/${chat.chatId}`)}>
+                        <div className='profile__card'>
+                            <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
+                            <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
+                           
+                                </div>
+                                </div>
+                        </div>
+                        <div className='inner-card'>
+                        <h1>{chat.displayName}</h1>
+                     
+                        <div className='details__card'>
+                 
+                            <p>{chat?.lastMessage || "Start sending a message to this user"}
+                                </p>
+                        
+                                <div className='time-bar'>
+                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
+                                <p>{formatTimestamp(chat?.updatedAt)}</p>
+                                </div>
+                    
+                        </div>
+                    </div>
+                    </div>
+                ))}
+                </div>
+            )}
+            
         </div>
     );
 };

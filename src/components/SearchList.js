@@ -24,6 +24,9 @@ const SearchList = ({ results, key }) => {
             const newChatListRef = push(chatListRef);
             const chatListId = newChatListRef.key;
 
+            const userNotificationKey = push(ref(db, `chatList/${user.uid}/notifications`)).key
+            const recieverNotificationKey = push(ref(db, `chatList/${results.uid}/notifications`)).key
+
             // Check if chat already exists
             if (!chatSnapshot.exists()) {
                 const chatData = {
@@ -39,6 +42,7 @@ const SearchList = ({ results, key }) => {
                     await Promise.all([
                     set(child(ref(db), `chatList/${results.uid}/${user.uid}`), {
                         chatId: chatId,
+                        displayName: user.displayName,
                         lastMessage: "",
                         receiverId: user.uid,
                         updatedAt: serverTimestamp(),
@@ -47,11 +51,22 @@ const SearchList = ({ results, key }) => {
                     }),
                     set(child(ref(db), `chatList/${user.uid}/${results.uid}`), {
                         chatId: chatId,
+                        displayName: results.displayName,
                         lastMessage: "",
                         receiverId: results.uid,
                         updatedAt: serverTimestamp(),
-                        isSeen: true,
+                        isSeen: false,
                         id: chatListId
+                    }),
+
+                    //set notification 
+                    set(child(ref(db), `chatList/${user.uid}/notifications/${results.uid}`),
+                     {
+                        messages: {}
+                    }),
+                    set(child(ref(db), `chatList/${results.uid}/notifications/${user.uid}`),
+                     {
+                        messages: {}
                     })
                 ]);
 
