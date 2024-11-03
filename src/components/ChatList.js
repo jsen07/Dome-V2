@@ -74,8 +74,8 @@ const ChatList = () => {
         };
 
         fetchChats();
-        
-    }, [user]); 
+        console.log(onlineUserList)
+    }, [user, onlineUsers]); 
 
     //Listener for updates on user status'
 
@@ -216,8 +216,9 @@ const ChatList = () => {
 
             {/* <p> Online {onlineUsersCount}</p> */}
             <p onClick={handleAllFilter}>All</p>
-            <p onClick={handleOnlineFilter}>Online</p>
-            <p onClick={handleNotificationsFilter} style={{ cursor: 'pointer' }}> Unread</p>
+            {onlineUsersCount > 0 &&  <p onClick={handleOnlineFilter}>Online</p>}
+            {notificationList.length > 0 && <p onClick={handleNotificationsFilter} style={{ cursor: 'pointer' }}> Unread</p>}
+     
             
             {!onlineToggle && !notificationToggle && (
                 <div className='chatlist__container'>
@@ -325,7 +326,7 @@ const ChatList = () => {
                 ))}
                 </div>
             )}
-            
+  
         </div>
     );
 };
