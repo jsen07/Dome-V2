@@ -21,6 +21,7 @@ const ChatList = () => {
     const [onlineToggle, setOnlineToggle] = useState(false);
     const [notificationToggle, setNotificationToggle] = useState(false);
     const [allToggle, setAllToggle] = useState(false);
+    const [typingStatus, setTypingStatus] = useState({});
 
     const { currentUser } = useAuth();
 
@@ -74,7 +75,6 @@ const ChatList = () => {
         };
 
         fetchChats();
-        console.log(onlineUserList)
     }, [user, onlineUsers]); 
 
     //Listener for updates on user status'
@@ -100,6 +100,28 @@ const ChatList = () => {
                  })
             })
         })},[])
+
+useEffect(() => {
+    const typingRef = ref(getDatabase(), `typingStatus`);
+
+    const unsubscribe = onValue(typingRef, (snapshot) => {
+        const typingData = {};
+        snapshot.forEach((childSnapshot) => {
+            const chatId = childSnapshot.key;
+            childSnapshot.forEach((userSnapshot) => {
+                const userId = userSnapshot.key;
+                const isTyping = userSnapshot.val();
+                if (isTyping) {
+                    typingData[chatId] = typingData[chatId] || [];
+                    typingData[chatId].push(userId);
+                }
+            });
+        });
+        setTypingStatus(typingData);
+    });
+
+    return () => unsubscribe();
+}, []);
 
         useEffect(() => {
             if(!onlineToggle && !notificationToggle) {
@@ -213,7 +235,7 @@ const ChatList = () => {
 
     return (
         <div className='chat-card__container'>
-
+<h1> Messages </h1>
             {/* <p> Online {onlineUsersCount}</p> */}
             <p onClick={handleAllFilter}>All</p>
             {onlineUsersCount > 0 &&  <p onClick={handleOnlineFilter}>Online</p>}
@@ -239,10 +261,11 @@ const ChatList = () => {
                         <h1>{chat.displayName}</h1>
                      
                         <div className='details__card'>
-                 
-                            <p>{chat?.lastMessage || "Start sending a message to this user"}
-                                </p>
-                        
+                        {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
+  <p className="typing-indicator">is typing...</p>
+) : (
+  <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+)}
                                 <div className='time-bar'>
                                 {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
                                 <p>{formatTimestamp(chat?.updatedAt)}</p>
@@ -332,3 +355,4 @@ const ChatList = () => {
 };
 
 export default ChatList;
+

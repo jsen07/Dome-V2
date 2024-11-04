@@ -17,6 +17,8 @@ const Chat = () => {
     const [reciever, setReceiver] = useState();
     const [chat, setChat] = useState([]);
     const [seen, setSeen] = useState(false);
+    const [isTyping, setIsTyping] = useState(false);
+    const [typingUsers, setTypingUsers] = useState({});
 
 
     const messagesEndRef = useRef(null);
@@ -32,6 +34,7 @@ const Chat = () => {
     const [unseenMessages, setUnseenMessages] = useState({});
     const inputRef = useRef(null);
     const notificationSentRef = useRef(false);
+    const typingTimeoutRef = useRef(null);
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -444,43 +447,45 @@ set(newPostRef, {
 
 }, [reciever, chatId, lastMessage]);
 
-// useEffect(() => {
-//     const db = getDatabase();
+const notifyTyping = (chatId, userId, typing, displayName) => {
+    set(ref(getDatabase(), `typingStatus/${chatId}/${userId}`), typing)
+};
 
-//     if(reciever) {
+const handleInputChange = (e) => {
+    setText(e.target.value);
 
-//     get(notificationRef).then((snapshot) => {
-//         if (!snapshot.exists()) {   
-//             if(unseenMessages) {    
-//                 set(newNotifRef, {
-//                     message: unseenMessages.lastMessage,
-//                     displayName: unseenMessages.receiverId,
-//                     sentAt: unseenMessages.updatedAt,
-//                     isSeen: unseenMessages.isSeen,
-//                     chatId: unseenMessages.chatId,
-//                     id: unseenMessages.id,
-//                 });    
-//             }
-//         } 
-//         else {
-//             console.log(snapshot.val())
-//         }
-//     }).catch((error) => {
-//         console.error(error);
-//     });
-// }
-
-
-//     // set(newNotifRef, {
-//     //     message: unseenMessages?.lastMessage,
-//     //     displayName: unseenMessages?.receiverId,
-//     //     sentAt: unseenMessages?.updatedAt,
-//     //     isSeen: unseenMessages?.isSeen,
-//     //     chatId: unseenMessages?.chatId,
-//     //     id: unseenMessages?.id
-//     // });    
+    // Notify typing status for the recipient
+    if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
     
-// },[chatId]);
+    if (!isTyping) {
+        setIsTyping(true);
+        notifyTyping(chatId, user.uid, true);
+    }
+
+    typingTimeoutRef.current = setTimeout(() => {
+        setIsTyping(false);
+        notifyTyping(chatId, user.uid, false);
+    }, 2000); // add 2 second delay 
+};
+
+// Listen for typing status updates from the recipient
+useEffect(() => {
+    const typingRef = ref(getDatabase(), `typingStatus/${chatId}`);
+    const unsubscribe = onValue(typingRef, (snapshot) => {
+        const usersTyping = {};
+        snapshot.forEach(childSnapshot => {
+            const userId = childSnapshot.key;
+            if (childSnapshot.val() && userId === reciever) {
+                usersTyping[userId] = true;
+            }
+        });
+        setTypingUsers(usersTyping);
+    });
+console.log(typingUsers)
+    return () => unsubscribe();
+}, [chatId]);
+
+
 
   return (
     <div className='chat-box__container'>
@@ -514,8 +519,11 @@ set(newPostRef, {
         <div className='messages__inner'>
      
         {generateMessages()}
+      
         <div className='seen__container'>
-        { seen && ( <span id="seen"ref={seenEndRef}> Seen </span>)}
+        {Object.keys(typingUsers).length > 0 &&
+                        <p id='typing'>{recieverData?.displayName} is typing...</p>}
+        { seen && Object.keys(typingUsers).length === 0 && ( <span ref={seenEndRef}> Seen </span>)}
         </div>
  
         {chat.length === 0 && <p>No messages</p>}
@@ -527,7 +535,7 @@ set(newPostRef, {
   <div className='emoji-picker__container'>
   <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
   </div>
-   <input  id="send-message__input" type="text"  ref={inputRef} value={text} onChange={handleMessage} onKeyDown={handleKeyPress} />
+   <input  id="send-message__input" type="text"  ref={inputRef} value={text} onChange={handleInputChange} onKeyDown={handleKeyPress} />
         <div id="send-button" onClick={sendMessage}></div>
         </div>
   </div>

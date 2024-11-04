@@ -2,12 +2,13 @@
     width: 10px;
   }
   *::-webkit-scrollbar-track {
-    background: #242424;
+    // background: #242424;
+    opacity: 0;
   }
 
   *::-webkit-scrollbar-thumb {
     background-color: rgba(205, 87, 255, 0.6);
-    border-radius: 5px;
+    border-radius: 2px;
     border: 0px solid #ffffff;
   }
 .chat-box__container {
@@ -170,7 +171,9 @@
                     width: 100%;
                     display: flex;
                     justify-content: flex-end;
-                        #seen {
+                    font-style: oblique;
+                    
+                        span, p {
                             color : white;
                             margin-right: 12px;
                             
@@ -204,7 +207,7 @@
             flex-direction: row;
             width: 100%;
             height: 40px;
-            margin-bottom: 10px;
+            // margin-bottom: 10px;
             align-items: center;
             // border: 2px solid green;
 
@@ -263,5 +266,6 @@
 
     }
 
-
 }
+
+
