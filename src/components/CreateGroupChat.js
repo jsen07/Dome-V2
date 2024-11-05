@@ -1,10 +1,3 @@
-<<<<<<< HEAD
-import React from 'react'
-
-const CreateGroupChat = () => {
-  return (
-    <div>Create GROUP CHAT HERE </div>
-=======
 import React, { useState } from 'react'
 import { ref, onValue, getDatabase, get, push, set, serverTimestamp } from "firebase/database";
 import {  useStateValue } from './contexts/StateProvider';
@@ -131,7 +124,6 @@ if(userList.length !== 0 && searchedIDs.length !== 0 ) {
     }
     <h2 onClick={createGroupChat}>Create</h2>
       </div>
->>>>>>> 58f1642 (group chat path added)
   )
 }
 
