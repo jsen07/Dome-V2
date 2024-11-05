@@ -216,6 +216,9 @@ useEffect(() => {
 
           function formatTimestamp(timestamp) {
             const timestampDate = new Date(timestamp);
+            const hours = timestampDate.getHours();       // Get hours
+            const minutes = timestampDate.getMinutes()
+            const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')}`;
             const now = new Date();
         
             // Start of today and yesterday
@@ -224,7 +227,9 @@ useEffect(() => {
             yesterdayStart.setDate(yesterdayStart.getDate() - 1);
         
             if (timestampDate >= todayStart) {
+         
                 return "Today";
+                // return timeOfMessage;
             } else if (timestampDate >= yesterdayStart) {
                 return "Yesterday";
             } else {
