@@ -4,7 +4,7 @@ import { useAuth } from './contexts/AuthContext';
 import { ref, child, get, getDatabase } from "firebase/database";
 import { useParams } from 'react-router-dom'
 
-const ChatRoute = ({ children }) => {
+const GroupchatRoute = ({ children }) => {
     const { currentUser } = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthorized, setIsAuthorized] = useState(false);
@@ -14,24 +14,6 @@ const ChatRoute = ({ children }) => {
         
         if (currentUser) {
             const chatRef = ref(getDatabase());
-            get(child(chatRef, 'chat/'+chatId)).then((snapshot) => {
-                let authorized = false;
-                const data = snapshot.val();
-                if(data.allowedUsers.includes(currentUser.uid)){
-                    authorized = true;
-                }
-
-                setIsAuthorized(authorized);
-                setIsLoading(false);
-            }).catch((error) => {
-                console.error(error);
-                setIsLoading(false);
-            });
-<<<<<<< HEAD
-        } else {
-            setIsLoading(false);
-        }
-=======
 
             get(child(chatRef, 'groupChat/'+chatId)).then((snapshot) => {
                 let authorized = false;
@@ -51,7 +33,6 @@ const ChatRoute = ({ children }) => {
         }
 
         
->>>>>>> 58f1642 (group chat path added)
     }, [currentUser]);
 
     // Loading state
@@ -64,11 +45,7 @@ const ChatRoute = ({ children }) => {
         return <Navigate replace to="/home" />;
     }
 
-<<<<<<< HEAD
-    return children; // Render children if authorized
-=======
     return children;
->>>>>>> 58f1642 (group chat path added)
 };
 
-export default ChatRoute;
+export default GroupchatRoute;

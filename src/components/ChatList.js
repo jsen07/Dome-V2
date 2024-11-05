@@ -5,6 +5,10 @@ import Placeholder from './images/avatar_placeholder.png';
 import { useNavigate } from 'react-router-dom';
 import { db } from '../firebase';
 import { useAuth } from './contexts/AuthContext';
+<<<<<<< HEAD
+=======
+import CreateGroupChat from './CreateGroupChat';
+>>>>>>> 58f1642 (group chat path added)
 
 const ChatList = () => {
 
@@ -22,6 +26,10 @@ const ChatList = () => {
     const [notificationToggle, setNotificationToggle] = useState(false);
     const [allToggle, setAllToggle] = useState(false);
     const [typingStatus, setTypingStatus] = useState({});
+<<<<<<< HEAD
+=======
+    const [groupChatToggle, setGroupChatToggle] = useState(false);
+>>>>>>> 58f1642 (group chat path added)
 
     const { currentUser } = useAuth();
 
@@ -237,6 +245,7 @@ useEffect(() => {
 
             }
         }
+<<<<<<< HEAD
 
     return (
         <div className='chat-card__container'>
@@ -244,6 +253,21 @@ useEffect(() => {
             {/* <p> Online {onlineUsersCount}</p> */}
             <p onClick={handleAllFilter}>All</p>
             {onlineUsersCount > 0 &&  <p onClick={handleOnlineFilter}>Online</p>}
+=======
+const createGroupChatToggle = () => {
+    setGroupChatToggle(prev => !prev);
+    };
+    return (
+        <div className='chat-card__container'>
+                 {groupChatToggle && (
+                      <CreateGroupChat createGroupChatToggle={createGroupChatToggle} />
+                 )}
+<h1> Messages </h1>
+<h2 onClick={createGroupChatToggle}> Create group chat </h2>
+            {/* <p> Online {onlineUsersCount}</p> */}
+            <p onClick={handleAllFilter}>All</p>
+            {onlineUsersCount > 0 &&  <p onClick={handleOnlineFilter}>Online ({onlineUsersCount})</p>}
+>>>>>>> 58f1642 (group chat path added)
             {notificationList.length > 0 && <p onClick={handleNotificationsFilter} style={{ cursor: 'pointer' }}> Unread</p>}
      
             

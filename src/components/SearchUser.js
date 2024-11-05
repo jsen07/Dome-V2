@@ -14,7 +14,11 @@ const SearchUser = () => {
     const [error, setError] = useState();
 
 
+<<<<<<< HEAD
     const searchUserByID = async () => {;
+=======
+    const searchUserByID = async () => {
+>>>>>>> 58f1642 (group chat path added)
         const dbRef = ref(db, 'users');
         const arr = [];
         const searchValue = document.getElementById("search-user__box").value;
@@ -27,7 +31,10 @@ onValue(dbRef, (snapshot) => {
 
         if (childKey !== currentUser.uid && childData.displayName === searchValue) {
             arr.push(childData);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 58f1642 (group chat path added)
         }
     })
     setUserList(arr);
