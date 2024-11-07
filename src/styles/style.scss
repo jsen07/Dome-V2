@@ -12,10 +12,11 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    background-image: url('../components/images/solo-leveling-game-3840x2160-17908.jpeg');
-    // background-color: black;
+    // background-image: url('../components/images/solo-leveling-game-3840x2160-17908.jpeg');
+    background-color: black;
     background-repeat: no-repeat;
     background-size: cover;
+
 }
 
 
@@ -26,7 +27,5 @@
 @import './chat';
 @import './chatList';
 @import './chatMessage';
-<<<<<<< HEAD
-=======
 @import './createGroupChat';
->>>>>>> 58f1642 (group chat path added)
+@import './groupList';

@@ -1,21 +1,20 @@
 .chat-card__container {
-    width: auto;
-    height: auto;
+    width: 450px;
+    height: 100%;
     max-height: 100%;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    // border-bottom-left-radius: 10px;
+    // border-bottom-right-radius: 10px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
     background-color: #121212;
     // border: 2px solid green;
     align-self: self-start;
-<<<<<<< HEAD
-
-=======
     // position: relative;
->>>>>>> 58f1642 (group chat path added)
 
     #chat-card__header{
         color: white;
@@ -30,14 +29,15 @@
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+
     .card__container {
-        // border: 1px solid rgba(205, 89, 255, 0.8);
+        outline : 1px solid rgba(205, 89, 255, 0.5);
         width: 90%;
         height: auto;
         padding: 10px;
         display: flex;
         flex-direction: row;
-        margin-bottom: 22px;
+        margin-block: 15px;
         align-content: center;
         // background-color: rgba(205, 89, 255, 0.8);
         border-radius: 5px;
@@ -53,7 +53,7 @@
         }
 
         .profile__card {
-            border: 1px solid rgba(158, 66, 197, 0.8);
+            // border: 1px solid rgba(158, 66, 197, 0.8);
             width: 70px;
             height: 70px;
             border-radius: 50%;
@@ -127,10 +127,10 @@
         }
 
         h1 {
-            font-size: 20px;
+            font-size: 18px;
             color: white;
         }
-
+       
         .inner-card {
 
             // border: 2px solid green;
@@ -159,16 +159,20 @@
                 overflow: hidden; 
                 white-space: nowrap; 
                 text-overflow: ellipsis;
+                margin-right: 5px;
                 // border: 2px solid red; 
             }
             .time-bar {
                 // flex: 1;
                 // border: 2px solid red;
+                display: flex;
+                flex-direction: row;
                 width: auto;
                 border-radius: 8px;
+
                 p {
                     width: auto;
-                    margin-right: 10px;
+                    margin-right: 15px;
                     font-size: 14px;
         
                 }
@@ -183,12 +187,14 @@
 
 
     }
-    .card__container.false {
+    .card__container.false { //Notificatons styling
               background-color: #292929;
+              border: 1px solid rgba(205, 89, 255, 0.8);
     }
 
     .card__container.true {
         background-color: #121212;
+        
 
     }
 }

@@ -8,8 +8,8 @@ import receivingSoundEffect from '../components/sound/receivingSound.mp3';
 import { Howl } from 'howler';
 import Placeholder from '../components/images/avatar_placeholder.png';
 import EmojiPicker from 'emoji-picker-react';
+import { useLocation } from 'react-router-dom';
 
-//ewfwe
 const Chat = () => {
 
     const [ {user} ] = useStateValue();
@@ -19,6 +19,7 @@ const Chat = () => {
     const [seen, setSeen] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const [typingUsers, setTypingUsers] = useState({});
+    const [path, setPath] = useState();
 
 
     const messagesEndRef = useRef(null);
@@ -35,6 +36,7 @@ const Chat = () => {
     const inputRef = useRef(null);
     const notificationSentRef = useRef(false);
     const typingTimeoutRef = useRef(null);
+    const location = useLocation();
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -126,14 +128,16 @@ useEffect(() => {
               console.log(error);
           });
   };
-
-  getUserProfile();
+  if (reciever) {
+    getUserProfile();
+}
 
 }, [reciever]);
 
  
   useEffect(() => {
     setLoading(true); 
+    setPath(location.pathname)
 //fetch chat data everytime user changes chat
 
     fetchChatData(chatId, user).then(result => {
@@ -161,8 +165,11 @@ useEffect(() => {
                       const newMessage = messagesArray[messagesArray.length - 1];
                       setLastMessage(newMessage)
                         if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
-                
-                            receiveSend.play();
+
+                            if(newMessage.type == 'direct') {
+                                receiveSend.play();
+                              }
+                              
                         }
                       } 
                     }
@@ -233,9 +240,6 @@ useEffect(() => {
 
           const db = getDatabase();
 
-
-
-// console.log(reciever)
          
       
 
@@ -251,6 +255,7 @@ set(newPostRef, {
   photoUrl: user.photoURL,
   uid: user.uid,
   chatId: chatId,
+  type: 'direct'
 });
 
           set(child(chatRef, "chatList/"+ reciever +"/"+ user.uid), {
@@ -279,6 +284,7 @@ set(newPostRef, {
 
         setText("");
         input.value ="";
+        notifyTyping(chatId, user.uid, false);
         soundSend.play();
 
 
@@ -286,13 +292,6 @@ set(newPostRef, {
  
         }
 
-//UPDATE USERS LAST MESSAGGE TO TRUE
-
-
-        const handleMessage = (event) => {
-          setText(event.target.value)
-
-        }
         const scrollToBottom = () => {
           if (messagesEndRef.current) {
               if (!seenEndRef.current) {
@@ -392,7 +391,9 @@ set(newPostRef, {
     return Object.keys(dateMap).map(date => (
         <div key={date} className='date-container'>
             <div className='date-notify'>
-                <h4>{dateMap[date].label}</h4>
+                <div className='title-date'>
+                    <h4>{dateMap[date].label}</h4>
+                    </div>
             </div> 
             {dateMap[date].messages.map((message, index) => (
                 <ChatMessage key={index} data={message} />
@@ -465,7 +466,7 @@ const handleInputChange = (e) => {
     typingTimeoutRef.current = setTimeout(() => {
         setIsTyping(false);
         notifyTyping(chatId, user.uid, false);
-    }, 2000); // add 2 second delay 
+    }, 1000); 
 };
 
 // Listen for typing status updates from the recipient
@@ -481,9 +482,9 @@ useEffect(() => {
         });
         setTypingUsers(usersTyping);
     });
-console.log(typingUsers)
+
     return () => unsubscribe();
-}, [chatId]);
+}, [chatId, reciever]);
 
 
 
@@ -522,7 +523,7 @@ console.log(typingUsers)
       
         <div className='seen__container'>
         {Object.keys(typingUsers).length > 0 &&
-                        <p id='typing'>{recieverData?.displayName} is typing...</p>}
+                      <p id="typing">{recieverData ? `${recieverData.displayName} is typing...` : "Loading..."}</p>}
         { seen && Object.keys(typingUsers).length === 0 && ( <span ref={seenEndRef}> Seen </span>)}
         </div>
  
@@ -535,7 +536,7 @@ console.log(typingUsers)
   <div className='emoji-picker__container'>
   <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
   </div>
-   <input  id="send-message__input" type="text"  ref={inputRef} value={text} onChange={handleInputChange} onKeyDown={handleKeyPress} />
+   <input  id="send-message__input" placeholder="Type a message..." type="text"  ref={inputRef} value={text} onChange={handleInputChange} onKeyDown={handleKeyPress} />
         <div id="send-button" onClick={sendMessage}></div>
         </div>
   </div>

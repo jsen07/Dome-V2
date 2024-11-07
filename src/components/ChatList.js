@@ -2,13 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { ref, child, get, getDatabase, onValue } from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
 import Placeholder from './images/avatar_placeholder.png';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { useAuth } from './contexts/AuthContext';
-<<<<<<< HEAD
-=======
 import CreateGroupChat from './CreateGroupChat';
->>>>>>> 58f1642 (group chat path added)
 
 const ChatList = () => {
 
@@ -26,13 +23,18 @@ const ChatList = () => {
     const [notificationToggle, setNotificationToggle] = useState(false);
     const [allToggle, setAllToggle] = useState(false);
     const [typingStatus, setTypingStatus] = useState({});
-<<<<<<< HEAD
-=======
     const [groupChatToggle, setGroupChatToggle] = useState(false);
->>>>>>> 58f1642 (group chat path added)
-
+    const location = useLocation();
+    const [path, setPath] = useState();
     const { currentUser } = useAuth();
 
+
+
+
+    useEffect(() => {
+        setPath(location.pathname)
+          
+        }, [location.pathname]);
 
     useEffect(() => {
         if (!user || !user.uid) return; 
@@ -63,7 +65,7 @@ const ChatList = () => {
                                 messages
                             };
                         } else {
-                            console.log("No data for user:", childData.receiverId);
+                            // console.log("No data for user:", childData.receiverId);
                             return null;
                         }
                             }));
@@ -226,9 +228,16 @@ useEffect(() => {
             const timestampDate = new Date(timestamp);
             const hours = timestampDate.getHours();       // Get hours
             const minutes = timestampDate.getMinutes()
-            const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')}`;
+            let dayOrNight = "";
             const now = new Date();
-        
+
+            if(hours > 12) {
+                dayOrNight = "PM"
+            }
+            if(hours == 0 || hours <= 12) {
+                dayOrNight ="AM"
+            }
+            const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
             // Start of today and yesterday
             const todayStart = new Date(now.setHours(0, 0, 0, 0));
             const yesterdayStart = new Date(todayStart);
@@ -236,8 +245,8 @@ useEffect(() => {
         
             if (timestampDate >= todayStart) {
          
-                return "Today";
-                // return timeOfMessage;
+                // return "Today";
+                return timeOfMessage;
             } else if (timestampDate >= yesterdayStart) {
                 return "Yesterday";
             } else {
@@ -245,15 +254,6 @@ useEffect(() => {
 
             }
         }
-<<<<<<< HEAD
-
-    return (
-        <div className='chat-card__container'>
-<h1> Messages </h1>
-            {/* <p> Online {onlineUsersCount}</p> */}
-            <p onClick={handleAllFilter}>All</p>
-            {onlineUsersCount > 0 &&  <p onClick={handleOnlineFilter}>Online</p>}
-=======
 const createGroupChatToggle = () => {
     setGroupChatToggle(prev => !prev);
     };
@@ -267,7 +267,6 @@ const createGroupChatToggle = () => {
             {/* <p> Online {onlineUsersCount}</p> */}
             <p onClick={handleAllFilter}>All</p>
             {onlineUsersCount > 0 &&  <p onClick={handleOnlineFilter}>Online ({onlineUsersCount})</p>}
->>>>>>> 58f1642 (group chat path added)
             {notificationList.length > 0 && <p onClick={handleNotificationsFilter} style={{ cursor: 'pointer' }}> Unread</p>}
      
             
@@ -296,8 +295,9 @@ const createGroupChatToggle = () => {
   <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
 )}
                                 <div className='time-bar'>
-                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
                                 <p>{formatTimestamp(chat?.updatedAt)}</p>
+                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
+                        
                                 </div>
                     
                         </div>
@@ -368,8 +368,8 @@ const createGroupChatToggle = () => {
                                 </p>
                         
                                 <div className='time-bar'>
-                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
                                 <p>{formatTimestamp(chat?.updatedAt)}</p>
+                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
                                 </div>
                     
                         </div>

@@ -1,4 +1,5 @@
 import './styles/style.css';
+import React, { useEffect } from 'react'
 import Login from './components/Login';
 import Home from './components/Home';
 import { AuthProvider } from './components/contexts/AuthContext';
@@ -12,10 +13,36 @@ import Sidebar from './components/Sidebar';
 import ChatList from './components/ChatList';
 import ChatRoute from './components/ChatRoute';
 import GroupChat from './components/GroupChat';
+import { db } from './firebase';
+import { child, get, serverTimestamp } from "firebase/database";
 
 function App() {
 
   const [{isLoading, user}] = useStateValue();
+
+  useEffect(() =>{
+  
+    if(user) {
+      
+      
+      const db_ref = db.ref();
+      get(child(db_ref, `users/${user.uid}`)).then((snapshot) => {
+        if (!snapshot.exists()) {
+          db_ref.child('users/' + user.uid).set({
+            photoUrl: "",
+            displayName: user.displayName,
+            Bio: "",
+            Gender: "Prefer not to say",
+            email: user.email,
+            uid: user.uid,
+            joined: serverTimestamp()
+          })
+        }
+      })
+    }
+    
+    
+    },[user]);
 
   return (
     <div className="home">
@@ -50,8 +77,7 @@ function App() {
             } />
             <Route path="/home" element={
                 <PrivateRoute>
-                    
-                    <Home />
+                        <Sidebar/>
                 </PrivateRoute>
             } />
 

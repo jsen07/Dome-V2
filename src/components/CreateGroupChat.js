@@ -73,7 +73,7 @@ const createGroupChat = async () => {
     messages: {},
     allowedUsers: searchedIDs
 };
-if(userList.length !== 0 && searchedIDs.length !== 0 ) {
+if(userList.length > 2 && searchedIDs.length !== 0 ) {
   if(chatSnapshot.exists()) {
 
     await set(ref(getDatabase(), `groupChat/${chatKey}`), chatData);
@@ -88,7 +88,9 @@ if(userList.length !== 0 && searchedIDs.length !== 0 ) {
     navigate(`/home/groupchat/${chatKey}`);
   }
 }
-
+else {
+  setError("Group chat creation requires a minimum of 3 members. Please add more people!")
+}
 }
   return (
     <div className='createGroupChat__modal'>
@@ -98,10 +100,10 @@ if(userList.length !== 0 && searchedIDs.length !== 0 ) {
       <div className='search-form__container'>
         <input id="search-user__box" type="text" name="search-bar" />
         {error && <p>{error}</p>}
-        {searchedIDs && searchedIDs.map((data, key) => (
+        {/* {searchedIDs && searchedIDs.map((data, key) => (
            <p>{data}</p>
         ))}
-      
+       */}
         <button onClick={searchUserByID}> Search </button>
     </div>
 

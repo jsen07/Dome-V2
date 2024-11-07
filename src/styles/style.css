@@ -7,27 +7,11 @@
 .home {
   height: 100vh;
   width: 100vw;
-<<<<<<< HEAD
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
->>>>>>> 58f1642 (group chat path added)
-  background-image: url("../components/images/solo-leveling-game-3840x2160-17908.jpeg");
+  background-color: black;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -37,74 +21,33 @@
   src: local("Pixelify"), url("../components/fonts/PixelifySans-VariableFont_wght.ttf") format("truetype");
   font-weight: bold;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 @font-face {
   font-family: "Exo";
   src: local("Exo"), url("../components/fonts/Exo2-VariableFont_wght.ttf") format("truetype");
   font-weight: bold;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .login-register {
   width: 100%;
   height: 100%;
   background-image: url("../components/svg/6849656_3422670.svg");
   background-repeat: no-repeat;
   background-size: cover;
-<<<<<<< HEAD
   display: flex;
   flex-direction: column;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .login-register button {
   width: 100px;
   height: 100px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .banner {
   padding-left: 30px;
   padding-top: 20px;
 }
-<<<<<<< HEAD
 .login-register .banner .logo-container {
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-=======
-
-.login-register .banner .logo-container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .banner .logo-container .logo {
   width: 90px;
   height: 90px;
@@ -112,25 +55,16 @@
   background-repeat: no-repeat;
   background-size: cover;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .banner .logo-container h1 {
   font-family: Pixelify;
   color: purple;
   font-size: 70px;
-<<<<<<< HEAD
   background: linear-gradient(135deg, rgb(206, 159, 252) 10%, rgb(115, 103, 240) 100%);
-=======
-  background: linear-gradient(135deg, #ce9ffc 10%, #7367f0 100%);
->>>>>>> 58f1642 (group chat path added)
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   -webkit-text-stroke: 3px black;
   text-shadow: 2px 2px black;
 }
-<<<<<<< HEAD
 .login-register .login-form__container {
   height: auto;
   width: 100%;
@@ -139,25 +73,6 @@
   justify-content: flex-start;
   margin-top: 60px;
 }
-=======
-
-.login-register .login-form__container {
-  height: auto;
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  margin-top: 60px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .login-form__container .form__container {
   width: 45%;
   height: auto;
@@ -165,22 +80,12 @@
   margin-left: 60px;
   background-color: rgba(24, 24, 24, 0.85);
   border-radius: 30px;
-<<<<<<< HEAD
   box-shadow: rgba(44, 1, 48, 0.25) 0px 54px 55px, rgba(31, 1, 34, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
   border-color: rgb(82, 23, 138);
-=======
-  -webkit-box-shadow: rgba(44, 1, 48, 0.25) 0px 54px 55px, rgba(31, 1, 34, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-          box-shadow: rgba(44, 1, 48, 0.25) 0px 54px 55px, rgba(31, 1, 34, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
-  border-color: #52178a;
->>>>>>> 58f1642 (group chat path added)
   margin: 50px;
   padding-left: 50px;
   padding-top: 30px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .login-form__container .form__container h1 {
   font-family: Exo;
   font-weight: 100;
@@ -189,7 +94,6 @@
   text-shadow: 8px 8px black;
   margin-bottom: 15px;
 }
-<<<<<<< HEAD
 .login-register .login-form__container .form__container form {
   display: flex;
   flex-direction: column;
@@ -208,60 +112,19 @@
 .login-register .login-form__container .form__container form label, .login-register .login-form__container .form__container form input {
   margin-block: 10px;
 }
-=======
-
-.login-register .login-form__container .form__container form {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  color: white;
-  width: 75%;
-  padding: 10px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.login-register .login-form__container .form__container form p {
-  font-size: 35px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  color: white;
-  margin-bottom: 30px;
-}
-
-.login-register .login-form__container .form__container form label, .login-register .login-form__container .form__container form input {
-  margin-block: 10px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .login-form__container .form__container form input {
   height: 35px;
   border-radius: 8px;
 }
-<<<<<<< HEAD
 .login-register .login-form__container .form__container form input[type=text], .login-register .login-form__container .form__container form input[type=email] {
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
-=======
-
-.login-register .login-form__container .form__container form input[type=text], .login-register .login-form__container .form__container form input[type=email] {
-  -webkit-transition: all 0.30s ease-in-out;
-  -moz-transition: all 0.30s ease-in-out;
-  -ms-transition: all 0.30s ease-in-out;
-  -o-transition: all 0.30s ease-in-out;
->>>>>>> 58f1642 (group chat path added)
   outline: none;
   border: 1px solid #DDDDDD;
   padding-left: 10px;
   border-color: transparent;
-<<<<<<< HEAD
   border-bottom: 1px solid rgb(117, 7, 168);
   border-right: 1px solid rgb(117, 7, 168);
   background: transparent;
@@ -271,115 +134,63 @@
   box-shadow: 0 0 5px rgb(117, 7, 168);
   border: 2px solid rgb(117, 7, 168);
 }
-=======
-  border-bottom: 1px solid #7507a8;
-  border-right: 1px solid #7507a8;
-  background: transparent;
-  color: white;
-}
-
-.login-register .login-form__container .form__container form input[type=text]:focus, .login-register .login-form__container .form__container form input[type=email]:focus {
-  -webkit-box-shadow: 0 0 5px #7507a8;
-          box-shadow: 0 0 5px #7507a8;
-  border: 2px solid #7507a8;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .login-form__container .form__container form input[type=submit] {
   width: 150px;
   border-radius: 10px;
   margin-top: 10px;
 }
-<<<<<<< HEAD
 .login-register .login-form__container .form__container form .form__footer {
   display: flex;
   flex-direction: row;
   align-items: center;
-=======
-
-.login-register .login-form__container .form__container form .form__footer {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
->>>>>>> 58f1642 (group chat path added)
   height: 50px;
   margin-top: 30px;
   margin-bottom: 50px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .login-form__container .form__container form .form__footer button {
   width: 200px;
   height: 50px;
   border-radius: 10px;
   margin-right: 15px;
-<<<<<<< HEAD
   background-color: rgb(161, 84, 233);
-=======
-  background-color: #a154e9;
->>>>>>> 58f1642 (group chat path added)
   border: none;
   font-family: Pixelify;
   color: black;
   font-size: 20px;
 }
-<<<<<<< HEAD
 .login-register .login-form__container .form__container form .form__footer button:hover {
   cursor: pointer;
 }
-=======
-
-.login-register .login-form__container .form__container form .form__footer button:hover {
-  cursor: pointer;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .login-form__container .form__container form .form__footer p {
   margin-inline: 5px;
   font-size: 16px;
   margin-top: 25px;
 }
-<<<<<<< HEAD
 .login-register .login-form__container .form__container form .form__footer #text-state {
   color: rgb(161, 84, 233);
 }
-=======
-
-.login-register .login-form__container .form__container form .form__footer #text-state {
-  color: #a154e9;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .login-form__container .form__container form .form__footer #text-state:hover {
   cursor: pointer;
   color: rgba(161, 84, 233, 0.8);
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .login-register .form__side-text {
   font-family: Pixelify;
   width: 50%;
 }
 
+@font-face {
+  font-family: "Pixelify";
+  src: local("Pixelify"), url("../components/fonts/PixelifySans-VariableFont_wght.ttf") format("truetype");
+  font-weight: bold;
+}
 .home__container {
-  width: auto;
-  height: 100%;
-<<<<<<< HEAD
+  max-width: 50%;
+  height: 98%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
+  font-family: Pixelify;
 }
 .home__container .side-menu__bar {
   width: auto;
@@ -387,137 +198,79 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-right: 10px;
+  margin-inline: 10px;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 20px;
   background-color: #121212;
   justify-content: space-between;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: flex-start;
+.home__container .side-menu__bar .side-bar__top {
+  text-align: center;
 }
-
-.home__container .side-menu__bar {
-  width: auto;
-  height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  margin-right: 10px;
-  background-color: #121212;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+.home__container .side-menu__bar .side-bar__top #side-bar__header {
+  font-size: 16px;
+  margin-block: 20px;
+  margin-inline: 1em;
+  color: #7e00e6;
 }
-
->>>>>>> 58f1642 (group chat path added)
+.home__container .side-menu__bar .side-bar__top #side-bar__header:hover {
+  cursor: pointer;
+}
 .home__container .side-menu__bar .side-bar__top .side-bar__icon {
-  width: 60px;
-  height: 60px;
+  width: 45px;
+  height: 45px;
   margin-top: 30px;
   margin-inline: 1em;
-  border-radius: 20px;
-<<<<<<< HEAD
+  border-radius: 15px;
   transition: all 0.2s ease-in-out;
 }
 .home__container .side-menu__bar .side-bar__top .side-bar__icon:hover {
   cursor: pointer;
   transform: scale(0.9);
 }
-=======
-  -webkit-transition: all .2s ease-in-out;
-  transition: all .2s ease-in-out;
+.home__container .side-menu__bar .side-bar__top .side-bar__icon.active {
+  background-color: #1f1f1f;
+  transform: scale(1.1);
 }
-
-.home__container .side-menu__bar .side-bar__top .side-bar__icon:hover {
-  cursor: pointer;
-  -webkit-transform: scale(0.9);
-          transform: scale(0.9);
-}
-
->>>>>>> 58f1642 (group chat path added)
 .home__container .side-menu__bar .side-bar__top #profile__icon {
   background-image: url("../components/images/user-profile-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .home__container .side-menu__bar .side-bar__top #add-friend__icon {
   background-image: url("../components/images/add-friend-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
+.home__container .side-menu__bar .groupchat__list {
+  flex-grow: 1;
+  overflow-y: auto;
+  margin-block: 5px;
+}
 .home__container .side-menu__bar #logout__icon {
-  width: 50px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background-image: url("../components/svg/logout-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
   margin-bottom: 30px;
-<<<<<<< HEAD
   transition: all 0.2s ease-in-out;
 }
 .home__container .side-menu__bar #logout__icon:hover {
   cursor: pointer;
   transform: scale(0.9);
 }
-=======
-  -webkit-transition: all .2s ease-in-out;
-  transition: all .2s ease-in-out;
-}
-
-.home__container .side-menu__bar #logout__icon:hover {
-  cursor: pointer;
-  -webkit-transform: scale(0.9);
-          transform: scale(0.9);
-}
-
->>>>>>> 58f1642 (group chat path added)
 .home__container .side-menu__bar button {
   width: 50px;
   height: 50px;
   margin-block: 10px;
 }
-<<<<<<< HEAD
 .home__container .chat-list-container {
-=======
-
-.home__container .chat-list-container {
-  -webkit-transition: opacity 0.3s ease-in-out;
->>>>>>> 58f1642 (group chat path added)
   transition: opacity 0.3s ease-in-out;
   opacity: 1;
   width: 100%;
-  height: 90%;
+  height: 100%;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .home__container .chat-list-container.hidden {
   opacity: 0;
 }
@@ -525,12 +278,12 @@
 .profile__page {
   width: 650px;
   height: 100%;
-<<<<<<< HEAD
   display: flex;
   flex-direction: column;
   align-items: center;
   background-color: #121212;
   color: white;
+  outline: 1px solid rgba(205, 89, 255, 0.8);
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 .profile__page .profile__view {
@@ -543,68 +296,17 @@
 .profile__page .profile__view h1 {
   padding-block: 20px;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  background-color: #121212;
-  color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.profile__page .profile__view {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  width: 100%;
-}
-
-.profile__page .profile__view h1 {
-  padding-block: 20px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .profile__page .profile__view .avatar__container {
   width: 350px;
   height: 350px;
-  border: 2px solid rgba(205, 89, 255, 0.8);
   border-radius: 50%;
 }
-<<<<<<< HEAD
 .profile__page .profile__view .avatar__container img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
 }
-=======
-
-.profile__page .profile__view .avatar__container img {
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
-  border-radius: 50%;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .profile__page .profile__view .avatar__container .status {
   width: 60px;
   height: 60px;
@@ -615,7 +317,6 @@
   border-radius: 50%;
   border: 10px solid #121212;
 }
-<<<<<<< HEAD
 .profile__page .profile__view .avatar__container .status.Online {
   display: flex;
   background-color: green;
@@ -631,43 +332,10 @@
   justify-content: center;
   margin-inline: 20px;
 }
-=======
-
-.profile__page .profile__view .avatar__container .status.Online {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: green;
-}
-
-.profile__page .profile__view .avatar__container .status.Offline {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  background-color: #121212;
-}
-
-.profile__page .profile__view .user-profile__details {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  width: 600px;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  margin-inline: 20px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .profile__page .profile__view .user-profile__details p {
   font-size: 16px;
   margin-block: 5px;
 }
-<<<<<<< HEAD
 .profile__page .profile__view .user-profile__details .profile-details {
   margin: 10px;
 }
@@ -701,85 +369,16 @@
   align-items: center;
   margin-bottom: 10px;
 }
-=======
-
-.profile__page .profile__view .user-profile__details .profile-details {
-  margin: 10px;
-}
-
-.profile__page .profile__view .user-profile__details button {
-  margin-top: 20px;
-  height: 35px;
-  -webkit-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-  border-radius: 10px;
-}
-
-.profile__page .profile__view .user-profile__details button:hover {
-  -webkit-transform: scale(0.98);
-          transform: scale(0.98);
-  cursor: pointer;
-}
-
-.profile__page .edit-profile__view {
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
-.profile__page .edit-profile__view .close-button {
-  width: 90%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
-  margin-top: 15px;
-}
-
-.profile__page .edit-profile__view .edit-avatar {
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  margin-bottom: 10px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .profile__page .edit-profile__view .edit-avatar .avatar-container {
   width: 400px;
   height: 400px;
   border-radius: 50%;
   margin-bottom: 15px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .profile__page .edit-profile__view .edit-avatar .avatar-container img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-<<<<<<< HEAD
   object-fit: cover;
 }
 .profile__page .edit-profile__view .user-profile__details {
@@ -796,45 +395,11 @@
   width: 600px;
   display: flex;
   justify-content: flex-start;
-=======
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-
-.profile__page .edit-profile__view .user-profile__details {
-  width: 600px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  padding-inline: 20px;
-}
-
-.profile__page .edit-profile__view .user-profile__details p {
-  margin-block: 8px;
-}
-
-.profile__page .edit-profile__view .edit-buttons__container {
-  width: 600px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
->>>>>>> 58f1642 (group chat path added)
 }
 
 .search-user__container {
   width: 650px;
   height: auto;
-<<<<<<< HEAD
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -846,67 +411,26 @@
   margin-block: 30px;
 }
 .search-user__container .search-form__container {
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  background-color: #121212;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  color: white;
-}
-
-.search-user__container h1 {
-  margin-block: 30px;
-}
-
-.search-user__container .search-form__container {
-  display: -webkit-box;
-  display: -ms-flexbox;
->>>>>>> 58f1642 (group chat path added)
   display: flex;
   width: 90%;
   margin-inline: 20px;
   margin-block: 30px;
-<<<<<<< HEAD
   flex-direction: row;
 }
-=======
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .search-user__container .search-form__container input {
   width: 100%;
   height: 30px;
   border-radius: 5px;
   margin-right: 20px;
   background-color: white;
-<<<<<<< HEAD
   -webkit-transition: all 0.3s ease-in-out;
   -moz-transition: all 0.3s ease-in-out;
   -ms-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
-=======
-  -webkit-transition: all 0.30s ease-in-out;
-  -moz-transition: all 0.30s ease-in-out;
-  -ms-transition: all 0.30s ease-in-out;
-  -o-transition: all 0.30s ease-in-out;
->>>>>>> 58f1642 (group chat path added)
   outline: none;
   border: 1px solid #DDDDDD;
   padding-left: 10px;
   border-color: transparent;
-<<<<<<< HEAD
   border: 1px solid rgb(117, 7, 168);
   background: transparent;
   color: white;
@@ -922,47 +446,16 @@
   margin-block: 20px;
   padding: 10px;
 }
-=======
-  border: 1px solid #7507a8;
-  background: transparent;
-  color: white;
-}
-
-.search-user__container .search-form__container input:focus {
-  -webkit-box-shadow: 0 0 5px #7507a8;
-          box-shadow: 0 0 5px #7507a8;
-  border: 2px solid #7507a8;
-}
-
-.search-user__container .searched-user__box {
-  width: 500px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  margin-block: 20px;
-  padding: 10px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .search-user__container .searched-user__box .searched-user__profile {
   width: 100px;
   height: 100px;
   border: 1px solid white;
   border-radius: 50%;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .search-user__container .searched-user__box .searched-user__profile img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-<<<<<<< HEAD
   object-fit: cover;
 }
 .search-user__container .searched-user__box .searched-user__view {
@@ -981,42 +474,6 @@
   justify-content: end;
   margin-right: 20px;
 }
-=======
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-
-.search-user__container .searched-user__box .searched-user__view {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  width: auto;
-  margin-left: 20px;
-}
-
-.search-user__container .searched-user__box .searched-user__view .searched-dp {
-  width: auto;
-}
-
-.search-user__container .searched-user__box .searched-user__view .searched-view {
-  width: 300px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: end;
-  margin-right: 20px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .search-user__container .searched-user__box .searched-user__view .searched-view #view-user {
   width: 50px;
   height: 50px;
@@ -1024,7 +481,6 @@
   background-image: url("../components/svg/view-alt-1-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
-<<<<<<< HEAD
   transition: all 0.2s ease-in-out;
 }
 .search-user__container .searched-user__box .searched-user__view .searched-view #view-user:hover {
@@ -1043,62 +499,15 @@
   flex-direction: column;
   align-items: center;
 }
-=======
-  -webkit-transition: all .2s ease-in-out;
-  transition: all .2s ease-in-out;
-}
-
-.search-user__container .searched-user__box .searched-user__view .searched-view #view-user:hover {
-  cursor: pointer;
-  -webkit-transform: scale(0.9);
-          transform: scale(0.9);
-}
-
-.search-user__container .searched-user__view {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-
-.search-user__container .searched-user__view .profile-view__container {
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .search-user__container .searched-user__view .profile-view__container .view-user__profile {
   width: 350px;
   height: 350px;
   border-radius: 50%;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .search-user__container .searched-user__view .profile-view__container .view-user__profile img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-<<<<<<< HEAD
   object-fit: cover;
 }
 .search-user__container .searched-user__view .profile-view__container .view-user__details {
@@ -1108,29 +517,12 @@
   width: 100%;
   display: flex;
   justify-content: space-between;
-=======
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-
-.search-user__container .searched-user__view .profile-view__container .view-user__details {
-  width: 500px;
-}
-
-.search-user__container .searched-user__view .profile-view__container .search-buttons__container {
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
->>>>>>> 58f1642 (group chat path added)
   margin-top: 20px;
 }
 
 *::-webkit-scrollbar {
   width: 10px;
+  display: none;
 }
 
 *::-webkit-scrollbar-track {
@@ -1140,78 +532,43 @@
 *::-webkit-scrollbar-thumb {
   background-color: rgba(205, 87, 255, 0.6);
   border-radius: 2px;
-  border: 0px solid #ffffff;
 }
 
 .chat-box__container {
   width: 100%;
-  height: 95%;
-  border: 1px solid rgba(205, 87, 255, 0.6);
+  height: 98%;
+  outline: 1px solid rgba(205, 87, 255, 0.6);
   background-color: #121212;
   margin-inline: 10px;
   background-color: rgba(18, 18, 18, 0.6);
-<<<<<<< HEAD
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  border-radius: 20px;
 }
 .chat-box__container h1 {
   color: white;
+  width: 20em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 .chat-box__container .chat__header {
   height: 100%;
   display: flex;
   flex-direction: column;
 }
-=======
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-}
-
-.chat-box__container h1 {
-  color: white;
-}
-
-.chat-box__container .chat__header {
-  height: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .chat__banner {
   width: 100%;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
   height: 10%;
   background-color: #121212;
-<<<<<<< HEAD
   display: flex;
   flex-direction: row;
   align-items: center;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .chat__banner p {
   color: white;
-  margin-left: 10px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .chat__banner .profile__card {
   border: 1px solid rgba(158, 66, 197, 0.8);
   width: 70px;
@@ -1219,23 +576,12 @@
   border-radius: 50%;
   margin-left: 25px;
 }
-<<<<<<< HEAD
 .chat-box__container .chat__header .chat__banner .profile__card img {
   object-fit: cover;
-=======
-
-.chat-box__container .chat__header .chat__banner .profile__card img {
-  -o-object-fit: cover;
-     object-fit: cover;
->>>>>>> 58f1642 (group chat path added)
   height: 100%;
   width: 100%;
   border-radius: 50%;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .chat__banner .profile__card .status {
   width: 20px;
   height: 20px;
@@ -1246,14 +592,7 @@
   border-radius: 50%;
   background-color: #121212;
 }
-<<<<<<< HEAD
 .chat-box__container .chat__header .chat__banner .profile__card .Offline, .chat-box__container .chat__header .chat__banner .profile__card .Online {
-=======
-
-.chat-box__container .chat__header .chat__banner .profile__card .Offline, .chat-box__container .chat__header .chat__banner .profile__card .Online {
-  display: -webkit-box;
-  display: -ms-flexbox;
->>>>>>> 58f1642 (group chat path added)
   display: flex;
   position: relative;
   bottom: 25px;
@@ -1261,7 +600,6 @@
   width: 25px;
   height: 25px;
   background-color: #121212;
-<<<<<<< HEAD
   justify-content: center;
   align-items: center;
   border-radius: 50%;
@@ -1281,50 +619,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-=======
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  border-radius: 50%;
-}
-
-.chat-box__container .chat__header .chat__banner .profile__card .Offline .inner {
-  width: 40%;
-  height: 40%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  border-radius: 50%;
-  border: 2px solid grey;
-}
-
-.chat-box__container .chat__header .chat__banner .profile__card .Online .inner {
-  width: 40%;
-  height: 40%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
->>>>>>> 58f1642 (group chat path added)
   border-radius: 50%;
   border: 2px solid green;
   background-color: green;
 }
-<<<<<<< HEAD
 .chat-box__container .chat__header .chat__banner .header-details {
   width: 95%;
   display: flex;
@@ -1335,61 +633,22 @@
 .chat-box__container .chat__header .chat__banner .header-details h1 {
   font-size: 18px;
 }
-=======
-
-.chat-box__container .chat__header .chat__banner .header-details {
-  width: 95%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  margin-left: 15px;
-}
-
-.chat-box__container .chat__header .chat__banner .header-details h1 {
-  font-size: 18px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .chat__banner .header-details .details {
   font-size: 14px;
   margin: 0;
 }
-<<<<<<< HEAD
 .chat-box__container .chat__header .chat__banner .header-details .details.Online {
   color: green;
 }
 .chat-box__container .chat__header .chat__banner .header-details .details.Offline {
-  color: white;
+  color: #4d4d4d;
 }
 .chat-box__container .chat__header .messages__container {
   flex: 1;
-=======
-
-.chat-box__container .chat__header .chat__banner .header-details .details.Online {
-  color: green;
-}
-
-.chat-box__container .chat__header .chat__banner .header-details .details.Offline {
-  color: white;
-}
-
-.chat-box__container .chat__header .messages__container {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
->>>>>>> 58f1642 (group chat path added)
   overflow-y: auto;
   margin-bottom: 10px;
   padding: 10px;
 }
-<<<<<<< HEAD
 .chat-box__container .chat__header .messages__container .messages__inner {
   flex: 1;
   min-height: 100%;
@@ -1397,85 +656,39 @@
 }
 .chat-box__container .chat__header .messages__container .messages__inner .seen__container {
   width: 100%;
+  height: 40px;
   display: flex;
   justify-content: flex-end;
   font-style: oblique;
 }
-=======
-
-.chat-box__container .chat__header .messages__container .messages__inner {
-  -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
-  min-height: 100%;
-  -ms-flex-line-pack: end;
-      align-content: flex-end;
-}
-
-.chat-box__container .chat__header .messages__container .messages__inner .seen__container {
-  width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
-  font-style: oblique;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .messages__container .messages__inner .seen__container span, .chat-box__container .chat__header .messages__container .messages__inner .seen__container p {
   color: white;
   margin-right: 12px;
 }
-<<<<<<< HEAD
 .chat-box__container .chat__header .messages__container .messages__inner .date-container {
   color: white;
 }
 .chat-box__container .chat__header .messages__container .messages__inner .date-container .date-notify {
   display: flex;
-  border: 2px solid green;
   justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+.chat-box__container .chat__header .messages__container .messages__inner .date-container .date-notify .title-date {
+  padding: 7px;
+  border-radius: 5px;
+  background-color: #4d4d4d;
 }
 .chat-box__container .chat__header .input__container {
   display: flex;
   flex-direction: row;
   width: 100%;
-  height: 40px;
+  height: 50px;
+  position: relative;
   align-items: center;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
 }
-=======
-
-.chat-box__container .chat__header .messages__container .messages__inner .date-container {
-  color: white;
-}
-
-.chat-box__container .chat__header .messages__container .messages__inner .date-container .date-notify {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  border: 2px solid green;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-
-.chat-box__container .chat__header .input__container {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  width: 100%;
-  height: 40px;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .input__container .emoji-button {
   width: 30px;
   height: 30px;
@@ -1484,197 +697,103 @@
   background-size: contain;
   margin-left: 10px;
 }
-<<<<<<< HEAD
 .chat-box__container .chat__header .input__container .emoji-button:hover {
   cursor: pointer;
 }
-=======
-
-.chat-box__container .chat__header .input__container .emoji-button:hover {
-  cursor: pointer;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-box__container .chat__header .input__container .emoji-picker__container {
   position: absolute;
-  bottom: 75px;
+  bottom: 60px;
+  left: 50px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
+.chat-box__container .chat__header .input__container .emoji-picker__container input {
+  width: 95%;
+  padding: 20px;
+}
 .chat-box__container .chat__header .input__container input {
   width: 80%;
   height: 30px;
   padding-inline: 10px;
   margin-inline: 10px;
+  border-radius: 5px;
   background-color: #121212;
   border: 0;
   color: white;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
+.chat-box__container .chat__header .input__container input:focus {
+  border: none;
+  outline: none;
+}
 .chat-box__container .chat__header .input__container #send-button {
-  width: 60px;
-  height: 50px;
+  width: 40px;
+  height: 40px;
   background-image: url("../components/svg/send-alt-svgrepo-com.svg");
   background-repeat: no-repeat;
   background-size: contain;
-<<<<<<< HEAD
   transition: all 0.2s ease-in-out;
 }
 .chat-box__container .chat__header .input__container #send-button:hover {
   cursor: pointer;
-  transform: scale(0.8);
-=======
-  -webkit-transition: all .2s ease-in-out;
-  transition: all .2s ease-in-out;
-}
-
-.chat-box__container .chat__header .input__container #send-button:hover {
-  cursor: pointer;
-  -webkit-transform: scale(0.8);
-          transform: scale(0.8);
->>>>>>> 58f1642 (group chat path added)
+  transform: scale(0.9);
 }
 
 .chat-card__container {
-  width: auto;
-  height: auto;
+  width: 450px;
+  height: 100%;
   max-height: 100%;
-<<<<<<< HEAD
+  max-width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
   background-color: #121212;
   align-self: self-start;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  border-bottom-left-radius: 10px;
-  border-bottom-right-radius: 10px;
-  background-color: #121212;
-  -ms-flex-item-align: self-start;
-      align-self: self-start;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container #chat-card__header {
   color: white;
   margin-block: 12px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container {
   width: 100%;
   max-height: 100%;
   overflow-y: auto;
-<<<<<<< HEAD
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container {
+  outline: 1px solid rgba(205, 89, 255, 0.5);
   width: 90%;
   height: auto;
   padding: 10px;
-<<<<<<< HEAD
   display: flex;
   flex-direction: row;
-  margin-bottom: 22px;
+  margin-block: 15px;
   align-content: center;
   border-radius: 5px;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  margin-bottom: 22px;
-  -ms-flex-line-pack: center;
-      align-content: center;
-  border-radius: 5px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container:hover {
   cursor: pointer;
   opacity: 0.5;
   background-color: #292929;
 }
-<<<<<<< HEAD
 .chat-card__container .chatlist__container .card__container > * {
   pointer-events: none;
 }
-=======
-
-.chat-card__container .chatlist__container .card__container > * {
-  pointer-events: none;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container .profile__card {
-  border: 1px solid rgba(158, 66, 197, 0.8);
   width: 70px;
   height: 70px;
   border-radius: 50%;
   margin-left: 10px;
 }
-<<<<<<< HEAD
 .chat-card__container .chatlist__container .card__container .profile__card img {
   object-fit: cover;
-=======
-
-.chat-card__container .chatlist__container .card__container .profile__card img {
-  -o-object-fit: cover;
-     object-fit: cover;
->>>>>>> 58f1642 (group chat path added)
   height: 100%;
   width: 100%;
   border-radius: 50%;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container .profile__card .status {
   width: 20px;
   height: 20px;
@@ -1685,14 +804,7 @@
   border-radius: 50%;
   background-color: #121212;
 }
-<<<<<<< HEAD
 .chat-card__container .chatlist__container .card__container .profile__card .Offline, .chat-card__container .chatlist__container .card__container .profile__card .Online {
-=======
-
-.chat-card__container .chatlist__container .card__container .profile__card .Offline, .chat-card__container .chatlist__container .card__container .profile__card .Online {
-  display: -webkit-box;
-  display: -ms-flexbox;
->>>>>>> 58f1642 (group chat path added)
   display: flex;
   position: relative;
   bottom: 25px;
@@ -1700,7 +812,6 @@
   width: 25px;
   height: 25px;
   background-color: #121212;
-<<<<<<< HEAD
   justify-content: center;
   align-items: center;
   border-radius: 50%;
@@ -1720,58 +831,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-=======
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  border-radius: 50%;
-}
-
-.chat-card__container .chatlist__container .card__container .profile__card .Offline .inner {
-  width: 40%;
-  height: 40%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  border-radius: 50%;
-  border: 2px solid grey;
-}
-
-.chat-card__container .chatlist__container .card__container .profile__card .Online .inner {
-  width: 40%;
-  height: 40%;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
->>>>>>> 58f1642 (group chat path added)
   border-radius: 50%;
   border: 2px solid green;
   background-color: green;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container h1 {
-  font-size: 20px;
+  font-size: 18px;
   color: white;
 }
-<<<<<<< HEAD
 .chat-card__container .chatlist__container .card__container .inner-card {
   display: flex;
   flex-direction: column;
@@ -1787,42 +854,6 @@
   justify-content: space-between;
   align-items: center;
 }
-=======
-
-.chat-card__container .chatlist__container .card__container .inner-card {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  margin-left: 15px;
-  margin-right: 10px;
-  width: 70%;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
-}
-
-.chat-card__container .chatlist__container .card__container .inner-card .details__card {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  width: 100%;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container .inner-card .details__card p {
   font-size: 16px;
   color: white;
@@ -1830,35 +861,23 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+  margin-right: 5px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container .inner-card .details__card .time-bar {
+  display: flex;
+  flex-direction: row;
   width: auto;
   border-radius: 8px;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container .inner-card .details__card .time-bar p {
   width: auto;
-  margin-right: 10px;
+  margin-right: 15px;
   font-size: 14px;
 }
-<<<<<<< HEAD
 .chat-card__container .chatlist__container .card__container.false {
   background-color: #292929;
+  border: 1px solid rgba(205, 89, 255, 0.8);
 }
-=======
-
-.chat-card__container .chatlist__container .card__container.false {
-  background-color: #292929;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .chat-card__container .chatlist__container .card__container.true {
   background-color: #121212;
 }
@@ -1867,7 +886,6 @@
   color: white;
   width: auto;
   height: auto;
-<<<<<<< HEAD
   display: flex;
   align-items: end;
   flex-direction: column;
@@ -1877,52 +895,18 @@
 .user-message .message_header, .message .message_header {
   margin-bottom: 5px;
 }
-=======
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: end;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  padding-right: 10px;
-}
-
-.user-message .message_header, .message .message_header {
-  margin-bottom: 5px;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .user-message .message_header #message__time-sent, .message .message_header #message__time-sent {
-  font-size: 14px;
+  font-size: 12px;
   margin-left: 5px;
 }
-<<<<<<< HEAD
 .user-message .message-box, .message .message-box {
   display: flex;
   justify-content: flex-end;
 }
-=======
-
-.user-message .message-box, .message .message-box {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
-}
-
->>>>>>> 58f1642 (group chat path added)
 .user-message .message-box p, .message .message-box p {
   padding-block: 6px;
   padding-inline: 15px;
   border-radius: 10px;
-<<<<<<< HEAD
   border: 1px solid rgb(205, 89, 255);
   font-size: 20px;
   margin-bottom: 15px;
@@ -1934,38 +918,11 @@
   align-items: end;
   width: 100%;
   justify-content: flex-end;
-=======
-  border: 1px solid #cd59ff;
-  font-size: 20px;
-  margin-bottom: 15px;
-  background-color: #CD59FFB3;
-  text-align: center;
-}
-
-.user-message .message-box .message-time, .message .message-box .message-time {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: end;
-      -ms-flex-align: end;
-          align-items: end;
-  width: 100%;
-  -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
->>>>>>> 58f1642 (group chat path added)
   font-size: 14px;
 }
 
 .message {
-<<<<<<< HEAD
   align-items: start;
-  padding-left: 10px;
-}/*# sourceMappingURL=style.css.map */
-=======
-  -webkit-box-align: start;
-      -ms-flex-align: start;
-          align-items: start;
   padding-left: 10px;
 }
 
@@ -1974,75 +931,50 @@
   height: 50%;
   top: 50%;
   left: 50%;
-  -webkit-transform: translate(-50%, -50%);
-          transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
   border: 2px solid pink;
   background-color: aqua;
   position: absolute;
   z-index: 2;
 }
-
 .createGroupChat__modal .searched-user__box {
   border: 2px solid green;
   width: 250px;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
+  flex-direction: row;
   margin-block: 20px;
   padding: 10px;
   font-size: 14px;
 }
-
 .createGroupChat__modal .searched-user__box .searched-user__profile {
   width: 50px;
   height: 50px;
   border: 1px solid white;
   border-radius: 50%;
 }
-
 .createGroupChat__modal .searched-user__box .searched-user__profile img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
-
 .createGroupChat__modal .searched-user__box .searched-user__view {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: row;
-          flex-direction: row;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  flex-direction: row;
+  align-items: center;
   width: 100%;
   margin-left: 20px;
 }
-
 .createGroupChat__modal .searched-user__box .searched-user__view .searched-dp {
   width: 100%;
   border: 2px solid black;
 }
-
 .createGroupChat__modal .searched-user__box .searched-user__view .searched-view {
   width: 100%;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  justify-content: flex-start;
   margin-right: 20px;
 }
-
 .createGroupChat__modal .searched-user__box .searched-user__view .searched-view #view-user {
   width: 50px;
   height: 50px;
@@ -2050,14 +982,26 @@
   background-image: url("../components/svg/view-alt-1-svgrepo-com.svg");
   background-size: contain;
   background-repeat: no-repeat;
-  -webkit-transition: all .2s ease-in-out;
-  transition: all .2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
-
 .createGroupChat__modal .searched-user__box .searched-user__view .searched-view #view-user:hover {
   cursor: pointer;
-  -webkit-transform: scale(0.9);
-          transform: scale(0.9);
+  transform: scale(0.9);
 }
-/*# sourceMappingURL=style.css.map */
->>>>>>> 58f1642 (group chat path added)
+
+.groupchat__container {
+  width: 60px;
+  margin-block: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(205, 89, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.groupchat__container:hover {
+  cursor: pointer;
+}
+.groupchat__container img {
+  width: 100%;
+  height: 100%;
+}/*# sourceMappingURL=style.css.map */

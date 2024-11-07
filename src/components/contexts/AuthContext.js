@@ -3,7 +3,7 @@ import { auth } from '../../firebase';
 import { actionTypes } from '../../reducers/userReducer';
 import { useStateValue } from "./StateProvider";
 import { db } from '../../firebase';
-import { child, get } from "firebase/database";
+import { child, get, serverTimestamp } from "firebase/database";
 
 const AuthContext = React.createContext();
 
@@ -29,7 +29,8 @@ export function AuthProvider({ children }) {
                       Bio: "",
                       Gender: "Prefer not to say",
                       email: email,
-                      uid: result.user.uid
+                      uid: result.user.uid,
+                      joined: serverTimestamp()
                     })
                   }
                 })

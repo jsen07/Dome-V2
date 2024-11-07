@@ -4,12 +4,16 @@ import { useNavigate } from "react-router-dom";
 import Profile from './Profile';
 import SearchUser from './SearchUser';
 import ChatList from './ChatList';
+import GroupList from './GroupList';
 
 const Sidebar = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
     const [activeComponent, setActiveComponent] = useState(null);
     const MemoizedChatList = React.memo(ChatList);
+
+
+    const isActive = (component) => activeComponent === component;
 
     const handleLogout = async () => {
         try {
@@ -33,18 +37,23 @@ const Sidebar = () => {
         <div className='home__container'>
             <div className='side-menu__bar'>
                 <div className='side-bar__top'>
-                    <div className='side-bar__icon' 
+                    <h1 id="side-bar__header" onClick={()=> navigate('/home')}>Dome</h1>
+
+                    <div className={`side-bar__icon ${isActive('profile') ? 'active' : ''}`} 
                          title="Profile" 
                          id="profile__icon" 
                          onClick={toggleProfileHandler} 
                          aria-label="Toggle Profile">
                     </div>
-                    <div className='side-bar__icon' 
+                    <div className={`side-bar__icon ${isActive('addFriend') ? 'active' : ''}`}  
                          title="Search users" 
                          id="add-friend__icon" 
                          onClick={toggleAddFriendHandler} 
                          aria-label="Search Users">
                     </div>
+                </div>
+                <div className='groupchat__list'>
+                    <GroupList />
                 </div>
                 <div className='side-bar__icon' 
                      title="Logout" 
