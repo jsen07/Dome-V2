@@ -263,44 +263,51 @@ const handleEmoji =(e)=> {
 
 }
 
-const generateMessages = () => {
-  const dateMap = {};
+ const generateMessages = () => {
+    const dateMap = {};
 
-  chat.forEach(chatData => {
+    const now = new Date();
+    const currentDay = now.getDay();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
 
-    if(chatData.chatId === chatId){
-      const timestamp = chatData.sentAt;
-     
-     
-      if (timestamp) {
-          const date = new Date(timestamp);
-          if (!isNaN(date)) {
-              const dateString = date.toISOString().split('T')[0]; // format: YYYY-MM-DD
+    const today = now.toISOString().split('T')[0];
+    const startOfWeekString = startOfWeek.toISOString().split('T')[0];
 
-              const today = new Date().toISOString().split('T')[0]; 
-              const now = new Date();
-              const todayStart = new Date(now.setHours(0, 0, 0, 0));
-              const yesterdayStart = new Date(todayStart);
-              yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+    chat.forEach(chatData => {
+        if (chatData.chatId === chatId) {
+            const timestamp = chatData.sentAt;
 
-              // Set the dateMap entry if it doesn't exist
-              if (!dateMap[dateString]) {
-                  dateMap[dateString] = { label: dateString, messages: [] };
-              }
+            if (timestamp) {
+                const date = new Date(timestamp);
+                if (!isNaN(date)) {
+                    const dateString = date.toISOString().split('T')[0];
 
-              // Check if the date is today
-              if (dateString === today) {
-                  dateMap[dateString].label = "Today"; 
-              } else if (dateString === yesterdayStart.toISOString().split('T')[0]) {
-                  dateMap[dateString].label = "Yesterday";
-              }
-              dateMap[dateString].messages.push(chatData);
-          } else {
-              console.error("Invalid date:", timestamp);
-          }
-      } 
-    }
-  });
+                    if (!dateMap[dateString]) {
+                        dateMap[dateString] = { label: dateString, messages: [] };
+                    }
+
+                    if (dateString === today) {
+                        dateMap[dateString].label = "Today";
+                    } else if (dateString >= startOfWeekString && dateString < today) {
+                        const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
+                        dateMap[dateString].label = dayOfWeek;
+                    } else {
+                        const formattedDate = date.toLocaleDateString("en-US", { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric' 
+                        });
+                        dateMap[dateString].label = formattedDate;
+                    }
+
+                    dateMap[dateString].messages.push(chatData);
+                } else {
+                    console.error("Invalid date:", timestamp);
+                }
+            }
+        }
+    });
 
   return Object.keys(dateMap).map(date => (
       <div key={date} className='date-container'>
