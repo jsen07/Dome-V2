@@ -226,7 +226,7 @@ useEffect(() => {
 
     function formatTimestamp(timestamp) {
         const timestampDate = new Date(timestamp);
-        const hours = timestampDate.getHours();       // Get hours
+        let hours = timestampDate.getHours();       // Get hours
         const minutes = timestampDate.getMinutes()
         let dayOrNight = "";
         const now = new Date();
@@ -242,6 +242,9 @@ useEffect(() => {
         }
         if(hours === 0 || hours < 12) {
             dayOrNight ="AM"
+        }
+        if( hours === 0 ) {
+            hours = 12;
         }
 
         const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;

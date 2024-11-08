@@ -32,12 +32,10 @@ const Profile = () => {
   // console.log(queryParams.get('userId'));
 
 
-
   function fetchUserProfile(userId) {
     return new Promise((resolve, reject) => {
       const db_ref = db.ref();
-      get(child(db_ref, `users/${userId}`))
-        .then((snapshot) => {
+      get(child(db_ref, `users/${userId}`)).then((snapshot) => {
           setLoading(true);
           if (snapshot.exists()) {
             const userData = snapshot.val();
@@ -65,7 +63,6 @@ const Profile = () => {
         .then((snapshot) => {
           if (snapshot.exists()) {
             const userData = snapshot.val();
-            console.log(userData)
             setBackground(userData.profileBackground)
             resolve(userData);
  
@@ -81,7 +78,7 @@ const Profile = () => {
         });
     });
   }
-  
+
   useEffect(() => {
   
     fetchUserProfile(userId)
@@ -437,7 +434,7 @@ const Profile = () => {
   )}
       </div>
 <div className='posts__container' >
-      <ProfilePosts />
+      <ProfilePosts user={userDetails}/>
       </div>
     </div>
   );

@@ -116,7 +116,7 @@ useEffect(() => {
                     setLastMessage(newMessage)
      
                       if (newMessage.uid !== user.uid && newMessage.chatId === chatId){
-                        if(newMessage.type == 'group') {
+                        if(newMessage.type === 'group') {
                           receiveSend.play();
                         }
 

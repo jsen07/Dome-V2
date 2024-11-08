@@ -167,7 +167,7 @@ useEffect(() => {
                       setLastMessage(newMessage)
                         if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
 
-                            if(newMessage.type == 'direct') {
+                            if(newMessage.type === 'direct') {
                                 receiveSend.play();
                               }
                               
