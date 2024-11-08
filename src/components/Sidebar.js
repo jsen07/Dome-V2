@@ -1,16 +1,19 @@
 import React, { useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Profile from './Profile';
 import SearchUser from './SearchUser';
 import ChatList from './ChatList';
 import GroupList from './GroupList';
+import { useStateValue } from './contexts/StateProvider';
 
 const Sidebar = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const [{ user }] = useStateValue();
     const [activeComponent, setActiveComponent] = useState(null);
     const MemoizedChatList = React.memo(ChatList);
+
 
 
     const isActive = (component) => activeComponent === component;
@@ -40,9 +43,9 @@ const Sidebar = () => {
                     <h1 id="side-bar__header" onClick={()=> navigate('/home')}>Dome</h1>
 
                     <div className={`side-bar__icon ${isActive('profile') ? 'active' : ''}`} 
-                         title="Profile" 
+                         title="Profile"
                          id="profile__icon" 
-                         onClick={toggleProfileHandler} 
+                         onClick={()=> navigate(`/home/profile?userId=${user.uid}`)} 
                          aria-label="Toggle Profile">
                     </div>
                     <div className={`side-bar__icon ${isActive('addFriend') ? 'active' : ''}`}  
@@ -62,14 +65,14 @@ const Sidebar = () => {
                      aria-label="Logout">
                 </div>
             </div>
-
-            {activeComponent === 'profile' && <Profile />}
+{/* 
+            {activeComponent === 'profile' && <Profile />} */}
             {activeComponent === 'addFriend' && <SearchUser />}
-            {!activeComponent && (
+            {/* {!activeComponent && (
                 <div className={`chat-list-container ${activeComponent ? 'hidden' : ''}`}>
                     <MemoizedChatList />
                 </div>
-            )}
+            )} */}
         </div>
     );
 };

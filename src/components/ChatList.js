@@ -267,6 +267,7 @@ const createGroupChatToggle = () => {
     };
     return (
         <div className='chat-card__container'>
+            
                  {groupChatToggle && (
                       <CreateGroupChat createGroupChatToggle={createGroupChatToggle} />
                  )}

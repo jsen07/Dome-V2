@@ -11,6 +11,7 @@ import { useStateValue } from './components/contexts/StateProvider';
 import Chat from './components/Chat';
 import Sidebar from './components/Sidebar';
 import ChatList from './components/ChatList';
+import Profile from './components/Profile';
 import ChatRoute from './components/ChatRoute';
 import GroupChat from './components/GroupChat';
 import { db } from './firebase';
@@ -63,6 +64,7 @@ function App() {
                 <PrivateRoute>
                       <ChatRoute>
                   <Sidebar/>
+                  <ChatList />
                     <Chat />
                     </ChatRoute>
                 </PrivateRoute>
@@ -71,6 +73,7 @@ function App() {
                 <PrivateRoute>
                       <GroupchatRoute>
                   <Sidebar/>
+                  <ChatList />
                     <GroupChat />
                     </GroupchatRoute>
                 </PrivateRoute>
@@ -78,6 +81,14 @@ function App() {
             <Route path="/home" element={
                 <PrivateRoute>
                         <Sidebar/>
+                        <ChatList />
+                </PrivateRoute>
+            } />
+
+<Route path="/home/profile" element={
+                <PrivateRoute>
+                        <Sidebar/>
+                        <Profile />
                 </PrivateRoute>
             } />
 

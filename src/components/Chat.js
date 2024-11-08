@@ -8,7 +8,7 @@ import receivingSoundEffect from '../components/sound/receivingSound.mp3';
 import { Howl } from 'howler';
 import Placeholder from '../components/images/avatar_placeholder.png';
 import EmojiPicker from 'emoji-picker-react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Chat = () => {
 
@@ -20,6 +20,7 @@ const Chat = () => {
     const [isTyping, setIsTyping] = useState(false);
     const [typingUsers, setTypingUsers] = useState({});
     const [path, setPath] = useState();
+    const navigate = useNavigate();
 
 
     const messagesEndRef = useRef(null);
@@ -503,7 +504,7 @@ useEffect(() => {
 
         ) : (
           <div className='chat__banner'>
-              <div className='profile__card'>
+              <div className='profile__card' onClick={()=> navigate(`/home/profile?userId=${recieverData?.uid}`)}>
                         <img alt='user-avatar' src={ recieverData?.photoUrl || Placeholder} />
                         <div className={ status ? status : "status"} ><div className='inner'>
                        
