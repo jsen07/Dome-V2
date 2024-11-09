@@ -166,15 +166,19 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
     return (
     <div className="comment">
     <div className="comment-body">
-    <div className='comment-profile'>
+
+    <div className="comment-header">
+    
+    <span className="comment-author"> {displayName}</span> 
+    <span className="comment-time"> {formatTimestamp(timestamp)}</span>
+</div>
+    
+        <div className='comment__wrapper'>
+
+        <div className='comment-profile'>
             <img src={photoUrl} />
         </div>
-        <div className='comment__wrapper'>
-        <div className="comment-header">
-    
-            <span className="comment-author"> {displayName}</span> 
-            <span className="comment-time"> {formatTimestamp(timestamp)}</span>
-        </div>
+        <div className='comment-text__wrapper'>
         <p className="comment-text">{comment}</p>
         <div className="comment-actions">
             <button className="like-btn" onClick={() => toggleLike(id)}>
@@ -184,6 +188,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
             {currentUser.uid === user.uid && (
       <button className="remove-btn" onClick={() => deleteComment(id)}>Remove</button>
             )}
+        </div>
         </div>
     </div>
 </div>
