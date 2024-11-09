@@ -374,8 +374,11 @@ set(newPostRef, {
                     if (!dateMap[dateString]) {
                         dateMap[dateString] = { label: dateString, messages: [] };
                     }
+                    if (dateString === today) {
+                        dateMap[dateString].label = "Today"; 
+                    }
 
-                    if (dateString >= startOfWeekString && dateString <= today) {
+                    else if (dateString >= startOfWeekString && dateString <= today) {
                         const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
                         dateMap[dateString].label = dayOfWeek;
                     } else {

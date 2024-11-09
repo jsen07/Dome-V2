@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, get, set, push, serverTimestamp, runTransaction, onValue } from "firebase/database";
+import { getDatabase, ref, get, set, push, serverTimestamp, runTransaction, onValue, remove } from "firebase/database";
 import { useAuth } from './contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 
 const ProfilePosts = ({ user }) => {
     const [comments, setComments] = useState([]);
     const [text, setText] = useState();
     const { currentUser } = useAuth();
+    const navigate = useNavigate();
 
     useEffect(() => {
     if(!user?.uid) return
@@ -45,6 +47,7 @@ const postComment = async () => {
 
     const comment = {
         displayName: currentUser.displayName,
+        photoUrl: currentUser.photoURL,
         uid: currentUser.uid,
         comment: text,
         timestamp: serverTimestamp(),
@@ -90,7 +93,7 @@ catch (error) {
 
   function formatTimestamp(timestamp) {
     const timestampDate = new Date(timestamp);
-    const hours = timestampDate.getHours();       // Get hours
+    let hours = timestampDate.getHours();       // Get hours
     const minutes = timestampDate.getMinutes()
     let dayOrNight = "";
     const now = new Date();
@@ -106,6 +109,9 @@ catch (error) {
     }
     if(hours === 0 || hours < 12) {
         dayOrNight ="AM"
+    }
+    if(hours === 0 ) {
+        hours = 12;
     }
 
     const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
@@ -143,11 +149,29 @@ useEffect(() => {
 
     return () => unsubscribe();
 }, [user]);
-const Comment = ( {id, displayName, timestamp, comment, likes=[]} ) => {
+
+const deleteComment = async (commentId) => {
+    const commentToDelete = ref(getDatabase(), `profile/${user.uid}/comments/${commentId}`);
+try {
+    await remove(commentToDelete).then(()=> {
+        setComments((prevComments) => prevComments.filter((comment) => comment.id !== commentId));
+    })
+}
+catch (error) {
+    console.log(error);
+}
+}
+// onClick={()=> navigate(`/home/profile?userId=${uid}`)}
+const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]} ) => {
     return (
     <div className="comment">
     <div className="comment-body">
+    <div className='comment-profile'>
+            <img src={photoUrl} />
+        </div>
+        <div className='comment__wrapper'>
         <div className="comment-header">
+    
             <span className="comment-author"> {displayName}</span> 
             <span className="comment-time"> {formatTimestamp(timestamp)}</span>
         </div>
@@ -158,10 +182,11 @@ const Comment = ( {id, displayName, timestamp, comment, likes=[]} ) => {
             Like </button>
             <button className="reply-btn">Reply</button>
             {currentUser.uid === user.uid && (
-      <button className="remove-btn">Remove</button>
+      <button className="remove-btn" onClick={() => deleteComment(id)}>Remove</button>
             )}
         </div>
     </div>
+</div>
 </div>
  )}
 
@@ -171,7 +196,12 @@ const Comment = ( {id, displayName, timestamp, comment, likes=[]} ) => {
 
     <div className="comment-input-container">
         <textarea value={text} onChange={handleTextChange} placeholder="Write a comment..." rows="4"></textarea>
+<div className='post__action'>
+        <div className='comment-profile'>
+            <img src={currentUser.photoURL} />
+        </div>
         <button className="comment-submit-btn" onClick={postComment}>Post Comment</button>
+    </div>
     </div>
 
     <div className="comment-list">
@@ -179,8 +209,10 @@ const Comment = ( {id, displayName, timestamp, comment, likes=[]} ) => {
     comments.map((comment) => (
       <Comment
         key={comment.id}
+        uid={comment.uid}
         id={comment.id}
-        displayName={comment.user}
+        displayName={comment.displayName}
+        photoUrl={comment.photoUrl}
         timestamp={comment.timestamp}
         comment={comment.comment}
         likes={comment.likes}

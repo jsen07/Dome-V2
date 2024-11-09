@@ -328,7 +328,7 @@ const notifyTyping = (chatId, userId, typing, displayName) => {
 const handleInputChange = (e) => {
   setText(e.target.value);
 
-  // Notify typing status for the recipient
+
   if (typingTimeoutRef.current) clearTimeout(typingTimeoutRef.current);
   
   if (!isTyping) {
@@ -342,23 +342,22 @@ const handleInputChange = (e) => {
   }, 1000); 
 };
 useEffect(() => {
-  // Listen for typing status updates in Firebase
+
   const typingRef = ref(getDatabase(), `typingStatus/${chatId}`);
   const unsubscribe = onValue(typingRef, async (snapshot) => {
-    const usersTyping = {};  // To store users who are typing
+    const usersTyping = {};  
     
-    const typingData = snapshot.val(); // Get the data from Firebase
-
-    if (typingData) {  // Ensure there is data to iterate over
-      // Iterate over the keys of the typing data object
+    const typingData = snapshot.val();
+    if (typingData) { 
+ 
       for (const userId in typingData) {
-        if (typingData[userId]) {  // If the user is typing (true)
-          // Only process if the user is in the reciever list
+        if (typingData[userId]) { 
+
           if (reciever && reciever.includes(userId)) {
             try {
               const displayName = await getUserDisplayName(userId);
               if (displayName) {
-                usersTyping[userId] = displayName;  // Add user to typing list with their displayName
+                usersTyping[userId] = displayName;  
               }
             } catch (error) {
               console.error("Error fetching displayName for user:", userId, error);
