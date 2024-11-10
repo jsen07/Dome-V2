@@ -215,8 +215,7 @@
   font-weight: bold;
 }
 .home__container {
-  max-width: 50%;
-  height: 98%;
+  height: 100%;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
@@ -230,9 +229,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-inline: 10px;
-  border-top-left-radius: 20px;
-  border-bottom-left-radius: 20px;
   background-color: #121212;
   justify-content: space-between;
 }
@@ -309,7 +305,7 @@
 
 .profile__background {
   width: 100%;
-  height: 98%;
+  height: 100%;
   display: flex;
   justify-content: flex-start;
   flex-direction: row;
@@ -319,7 +315,7 @@
 }
 .profile__background .profile__page {
   min-width: auto;
-  width: 60vw;
+  width: 40vw;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -327,7 +323,6 @@
   background-color: #121212;
   color: white;
   margin-left: 10px;
-  border-radius: 15px;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
   box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px, rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px, rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
 }
@@ -440,6 +435,11 @@
   width: 600px;
   display: flex;
   justify-content: flex-start;
+}
+.profile__background .posts__container {
+  width: calc(35vw - 10%);
+  margin-inline: 10px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .search-user__container {
@@ -786,7 +786,7 @@
 }
 
 .chat-card__container {
-  width: 450px;
+  width: 400px;
   height: 100%;
   max-height: 100%;
   max-width: 100%;
@@ -794,10 +794,11 @@
   flex-direction: column;
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  border-top-right-radius: 20px;
-  border-bottom-right-radius: 20px;
   background-color: #121212;
   align-self: self-start;
+}
+.chat-card__container h1, .chat-card__container p {
+  color: white;
 }
 .chat-card__container #chat-card__header {
   color: white;
@@ -813,7 +814,6 @@
   align-items: center;
 }
 .chat-card__container .chatlist__container .card__container {
-  outline: 1px solid rgba(205, 89, 255, 0.5);
   width: 90%;
   height: auto;
   padding: 10px;
@@ -925,7 +925,6 @@
 }
 .chat-card__container .chatlist__container .card__container.false {
   background-color: #292929;
-  border: 1px solid rgba(205, 89, 255, 0.8);
 }
 .chat-card__container .chatlist__container .card__container.true {
   background-color: #121212;
@@ -1055,55 +1054,48 @@
   height: 100%;
 }
 
-.posts__container {
-  flex-grow: 1;
-  margin-inline: 10px;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-.posts__container .comment-section {
-  width: 100%;
+.comment-section {
   height: auto;
   padding: 20px;
-  background-color: #2e2f3c;
   border-radius: 15px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   background-color: #121212;
   margin-top: 20px;
   box-sizing: border-box;
 }
-.posts__container .comment-section .comment-section-title {
+.comment-section .comment-section-title {
   font-size: 1.5rem;
   color: #fff;
   margin-bottom: 15px;
   font-weight: bold;
 }
-.posts__container .comment-section .comment-input-container {
+.comment-section .comment-input-container {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 20px;
 }
-.posts__container .comment-section .comment-input-container textarea {
+.comment-section .comment-input-container textarea {
   padding: 5px;
 }
-.posts__container .comment-section .comment-input-container .post__action {
+.comment-section .comment-input-container .post__action {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
 }
-.posts__container .comment-section .comment-input-container .post__action .comment-profile {
+.comment-section .comment-input-container .post__action .comment-profile {
   width: 40px;
   height: 40px;
   border: 1px solid black;
 }
-.posts__container .comment-section .comment-input-container .post__action .comment-profile img {
+.comment-section .comment-input-container .post__action .comment-profile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.posts__container .comment-section .comment-input-container .post__action .comment-submit-btn {
+.comment-section .comment-input-container .post__action .comment-submit-btn {
   flex-grow: 1;
   padding: 10px;
   background-color: #7e00e6;
@@ -1115,15 +1107,15 @@
   text-align: center;
   margin-inline: 10px;
 }
-.posts__container .comment-section .comment-input-container .post__action .comment-submit-btn:hover {
+.comment-section .comment-input-container .post__action .comment-submit-btn:hover {
   opacity: 0.8;
 }
-.posts__container .comment-section .comment-list {
+.comment-section .comment-list {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
-.posts__container .comment-section .comment {
+.comment-section .comment {
   display: flex;
   gap: 15px;
   padding: 15px;
@@ -1131,13 +1123,13 @@
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
-.posts__container .comment-section .comment .comment-body {
+.comment-section .comment .comment-body {
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.posts__container .comment-section .comment .comment-body .comment-header {
+.comment-section .comment .comment-body .comment-header {
   display: flex;
   width: 100%;
   justify-content: space-between;
@@ -1145,26 +1137,26 @@
   color: #ccc;
   margin-bottom: 6px;
 }
-.posts__container .comment-section .comment .comment-body .comment-header .comment-author {
+.comment-section .comment .comment-body .comment-header .comment-author {
   font-weight: bold;
   color: #fff;
 }
-.posts__container .comment-section .comment .comment-body .comment-header .comment-time {
+.comment-section .comment .comment-body .comment-header .comment-time {
   color: #888;
   font-size: 0.8rem;
 }
-.posts__container .comment-section .comment .comment-body .comment-profile {
+.comment-section .comment .comment-body .comment-profile {
   width: 50px;
   height: 50px;
   border: 2px solid grey;
   margin-right: 10px;
 }
-.posts__container .comment-section .comment .comment-body .comment-profile img {
+.comment-section .comment .comment-body .comment-profile img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.posts__container .comment-section .comment .comment-body .comment__wrapper {
+.comment-section .comment .comment-body .comment__wrapper {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -1172,13 +1164,13 @@
   overflow-y: auto;
   margin-inline: 10px;
 }
-.posts__container .comment-section .comment .comment-body .comment__wrapper .comment-text__wrapper {
+.comment-section .comment .comment-body .comment__wrapper .comment-text__wrapper {
   width: 80%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
-.posts__container .comment-section .comment .comment-body .comment__wrapper .comment-text__wrapper .comment-text {
+.comment-section .comment .comment-body .comment__wrapper .comment-text__wrapper .comment-text {
   font-size: 1rem;
   color: #ddd;
   margin-bottom: 5px;
@@ -1186,22 +1178,129 @@
   overflow-wrap: break-word;
   white-space: normal;
 }
-.posts__container .comment-section .comment .comment-body .comment__wrapper .comment-actions {
+.comment-section .comment .comment-body .comment__wrapper .comment-actions {
   display: flex;
   gap: 10px;
 }
-.posts__container .comment-section .comment .comment-body .comment__wrapper .comment-actions .like-btn,
-.posts__container .comment-section .comment .comment-body .comment__wrapper .comment-actions .reply-btn {
+.comment-section .comment .comment-body .comment__wrapper .comment-actions .like-btn,
+.comment-section .comment .comment-body .comment__wrapper .comment-actions .reply-btn {
   background-color: transparent;
   border: none;
   cursor: pointer;
   color: #7e00e6;
   font-size: 0.7rem;
 }
-.posts__container .comment-section .comment .comment-body .comment__wrapper .comment-actions .like-btn:hover,
-.posts__container .comment-section .comment .comment-body .comment__wrapper .comment-actions .reply-btn:hover {
+.comment-section .comment .comment-body .comment__wrapper .comment-actions .like-btn:hover,
+.comment-section .comment .comment-body .comment__wrapper .comment-actions .reply-btn:hover {
   text-decoration: underline;
 }
-.posts__container .comment-section .comment:hover {
+.comment-section .comment:hover {
   opacity: 0.8;
+}
+
+.notifications__container {
+  display: flex;
+  flex-direction: column;
+  background-color: #121212;
+  border-radius: 15px;
+  padding: 20px;
+  color: white;
+  font-size: 0.8rem;
+}
+.notifications__container h3 {
+  color: #7e00e6;
+}
+.notifications__container .notification-header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+.notifications__container .notification-header .notification__tabs {
+  display: flex;
+  justify-content: flex-start;
+}
+.notifications__container .notification-header .notification__tabs h3 {
+  margin-inline: 10px;
+}
+.notifications__container .notification__content {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+}
+.notifications__container .notification__content .request__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-inline: 10px;
+  border: 2px solid black;
+  margin-block: 5px;
+}
+.notifications__container .notification__content .request__container .time__header {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
+.notifications__container .notification__content .request__container .request__action-buttons {
+  display: inline;
+  margin-block: 10px;
+}
+.notifications__container .notification__content .request__container .request__action-buttons button {
+  margin-right: 10px;
+}
+
+.friends-list__container {
+  margin-top: 40px;
+  background-color: #121212;
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  font-size: 0.8rem;
+}
+.friends-list__container .friends-list__header {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 20px;
+  color: #7e00e6;
+  border-bottom: 2px solid #7e00e6;
+}
+.friends-list__container .friends-list__header h1 {
+  margin-bottom: 10px;
+}
+.friends-list__container .friends__container {
+  display: flex;
+  flex-direction: rpw;
+}
+.friends-list__container .friends__container .friend {
+  font-size: 0.6rem;
+  margin-right: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  width: 90px;
+}
+.friends-list__container .friends__container .friend p {
+  width: 6em;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.friends-list__container .friends__container .friend .profile {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 5px;
+}
+.friends-list__container .friends__container .friend .profile img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: rgba(0, 0, 0, 0.9) 0px 19px 38px, rgba(0, 0, 0, 0.7) 0px 15px 12px;
+}
+.friends-list__container .friends__container .friend .profile img:hover {
+  cursor: pointer;
 }/*# sourceMappingURL=style.css.map */

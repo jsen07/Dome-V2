@@ -9,6 +9,9 @@ import { useStateValue } from './contexts/StateProvider';
 import { actionTypes } from '../reducers/userReducer';
 import { useNavigate, useLocation } from 'react-router-dom';
 import ProfilePosts from './ProfilePosts';
+import ProfileActionButtons from './ProfileActionButtons';
+import Notifications from './Notifications';
+import FriendsList from './FriendsList';
 
 const Profile = () => {
   const [userDetails, setUserDetails] = useState(null);
@@ -241,102 +244,6 @@ const Profile = () => {
     setChangeAvatarToggled(false)
   }
 
-      const createChat = async () => {
-        const db = getDatabase();
-        const chatId = generateChatId(user.uid, userDetails.uid);
-        
-
-        try {
-            const chatSnapshot = await get(child(ref(db), `chat/${chatId}`));
-            const chatListRef = ref(db, 'chatList');
-            const newChatListRef = push(chatListRef);
-            const chatListId = newChatListRef.key;
-
-            const userNotificationKey = push(ref(db, `chatList/${user.uid}/notifications`)).key
-            const recieverNotificationKey = push(ref(db, `chatList/${userDetails.uid}/notifications`)).key
-
-            // Check if chat already exists
-            if (!chatSnapshot.exists()) {
-                const chatData = {
-                    createdAt: serverTimestamp(),
-                    messages: {},
-                    allowedUsers: [user.uid, userDetails.uid]
-                };
-
-          //create a new chat if a chat doesnt exist
-         await set(ref(db, `chat/${chatId}`), chatData);
-
-                // Update chat lists for both users
-                    await Promise.all([
-                    set(child(ref(db), `chatList/${userDetails.uid}/${user.uid}`), {
-                        chatId: chatId,
-                        displayName: user.displayName,
-                        lastMessage: "",
-                        receiverId: user.uid,
-                        updatedAt: serverTimestamp(),
-                        isSeen: false,
-                        id: chatListId
-                    }),
-                    set(child(ref(db), `chatList/${user.uid}/${userDetails.uid}`), {
-                        chatId: chatId,
-                        displayName: userDetails.displayName,
-                        lastMessage: "",
-                        receiverId: userDetails.uid,
-                        updatedAt: serverTimestamp(),
-                        isSeen: false,
-                        id: chatListId
-                    }),
-
-                    //set notification 
-                    set(child(ref(db), `chatList/${user.uid}/notifications/${userDetails.uid}`),
-                     {
-                        messages: {}
-                    }),
-                    set(child(ref(db), `chatList/${userDetails.uid}/notifications/${user.uid}`),
-                     {
-                        messages: {}
-                    })
-                ]);
-
-                // navigate to the new chat
-                console.log("Chat created successfully!");
-                navigate(`/home/${chatId}`);
-            } else {
-                console.log("Chat already exists.");
-                navigate(`/home/${chatId}`);
-     
-            }
-        } catch (error) {
-            console.error("Error creating chat:", error);
-            alert("Failed to create chat. Please try again.");
-        }
-    };
-
-  
-    const generateChatId = (userId1, userId2) => {
-        return [userId1, userId2].sort().join('_');
-    }
-
-    const handleFriendRequest = async ()=> {
-      if(!user) return
-
-      const friendRequest = {
-          displayName: currentUser.displayName,
-          uid: currentUser.uid,
-          timestamp: serverTimestamp(),
-      }
-      try {
-          const friendRequestRef = ref(getDatabase(), `friendRequests/${userDetails.uid}`);
-          const newFriendRequestRef = push(friendRequestRef);
-          
-          await set(newFriendRequestRef, friendRequest);
-  
-      }
-      catch (error) {
-          console.log(error)
-      }
-    }
-
   if (loading) return <div className="loading">LOADING...</div>;
 
   return (
@@ -366,10 +273,7 @@ const Profile = () => {
               <div className="profile-details">{userDetails?.displayName}</div>
               <p>Email: {userDetails?.email}</p>
               {!isCurrentUser && (   
-                <div>
-              <button onClick={createChat}>Message</button>
-              <button onClick={handleFriendRequest}> send friend request</button>
-              </div>
+                <ProfileActionButtons userDetails={userDetails}/>
               )}
 
               {isCurrentUser && (   
@@ -457,7 +361,11 @@ const Profile = () => {
   )}
       </div>
 <div className='posts__container' >
+  {isCurrentUser && (
+          <Notifications />
+  )}
       <ProfilePosts user={userDetails}/>
+      <FriendsList  user ={userDetails?.uid}/>
       </div>
     </div>
   );
