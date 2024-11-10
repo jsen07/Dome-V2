@@ -317,6 +317,26 @@ const Profile = () => {
         return [userId1, userId2].sort().join('_');
     }
 
+    const handleFriendRequest = async ()=> {
+      if(!user) return
+
+      const friendRequest = {
+          displayName: currentUser.displayName,
+          uid: currentUser.uid,
+          timestamp: serverTimestamp(),
+      }
+      try {
+          const friendRequestRef = ref(getDatabase(), `friendRequests/${userDetails.uid}`);
+          const newFriendRequestRef = push(friendRequestRef);
+          
+          await set(newFriendRequestRef, friendRequest);
+  
+      }
+      catch (error) {
+          console.log(error)
+      }
+    }
+
   if (loading) return <div className="loading">LOADING...</div>;
 
   return (
@@ -346,7 +366,10 @@ const Profile = () => {
               <div className="profile-details">{userDetails?.displayName}</div>
               <p>Email: {userDetails?.email}</p>
               {!isCurrentUser && (   
+                <div>
               <button onClick={createChat}>Message</button>
+              <button onClick={handleFriendRequest}> send friend request</button>
+              </div>
               )}
 
               {isCurrentUser && (   
