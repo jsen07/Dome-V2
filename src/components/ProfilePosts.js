@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { getDatabase, ref, get, set, push, serverTimestamp, runTransaction, onValue, remove } from "firebase/database";
 import { useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Placeholder from '../components/images/avatar_placeholder.png';
 
 
 const ProfilePosts = ({ user }) => {
@@ -176,7 +177,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
         <div className='comment__wrapper'>
 
         <div className='comment-profile'>
-            <img src={photoUrl} />
+            <img src={photoUrl ? photoUrl : Placeholder} />
         </div>
         <div className='comment-text__wrapper'>
         <p className="comment-text">{comment}</p>
@@ -203,7 +204,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
         <textarea value={text} onChange={handleTextChange} placeholder="Write a comment..." rows="4"></textarea>
 <div className='post__action'>
         <div className='comment-profile'>
-            <img src={currentUser.photoURL} />
+            <img src={currentUser.photoURL? currentUser.photoURL : Placeholder} />
         </div>
         <button className="comment-submit-btn" onClick={postComment}>Post Comment</button>
     </div>
