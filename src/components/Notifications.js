@@ -146,35 +146,39 @@ const handleAccept = async (userId, displayName, photoURL) => {
     }
 
 }
-  return (
-    <div className="notifications__container">
-        <div className='notification-header'>
-            <h1> Notifications </h1>
-            <div className='notification__tabs'>
-                <h3> Friend Requests </h3>
-                <h3> All </h3>
-                </div>
+return (
+    requestList && requestList.length > 0 ? (
+      <div className="notifications__container">
+        <div className="notification-header">
+          <h1> Notifications </h1>
+          <div className="notification__tabs">
+            <h3> Friend Requests </h3>
+            <h3> All </h3>
+          </div>
         </div>
-        <div className='notification__content'>
-
-            {requestList && requestList.map((requests, index) => {
-                 return (
-                <div key={index} className='request__container'>
-                    <div className='time__header'>
-                    <p>{formatTimestamp(requests.timestamp)}</p>
-                    </div>
-                    <p>{requests.displayName} would like to send you a friend request</p>
-                    <div className='request__action-buttons'>
-                        <button onClick={()=> {handleAccept(requests.uid, requests.displayName, requests?.photoUrl || "")}}> Accept </button>
-                        <button onClick={() => {handleReject(requests.uid)}}> Reject </button>
-                    </div>
-                </div>
-            );
-        })}
-    
+        <div className="notification__content">
+          {requestList.map(({ uid, displayName, timestamp, photoUrl }, index) => (
+            <div key={uid} className="request__container">
+              <div className="time__header">
+                <p>{formatTimestamp(timestamp)}</p>
+              </div>
+              <p>{displayName} would like to send you a friend request</p>
+              <div className="request__action-buttons">
+                <button onClick={() => handleAccept(uid, displayName, photoUrl || "")}> Accept </button>
+                <button onClick={() => handleReject(uid)}> Reject </button>
+              </div>
+            </div>
+          ))}
         </div>
-    </div>
-  )
+      </div>
+    ) : (
+      <div className="notifications__container">
+        <h1> Notifications </h1>
+        <p>No new notifications at the moment.</p>
+      </div>
+    )
+  );
+  
 }
 
 export default Notifications

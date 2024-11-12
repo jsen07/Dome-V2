@@ -6,7 +6,7 @@ import ChatMessage from './ChatMessage';
 import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from './sound/new-notification-7-210334.mp3';
 import { Howl } from 'howler';
-import Placeholder from '../components/images/avatar_placeholder.png';
+import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import EmojiPicker from 'emoji-picker-react';
 
 const GroupChat = () => {
@@ -93,7 +93,7 @@ const GroupChat = () => {
 }
 
 useEffect(() => {
-  setLoading(true); 
+  setLoading(true);
   fetchChatData(chatId, user).then(result => {
         setChat(result.messages);
 
@@ -117,7 +117,8 @@ useEffect(() => {
      
                       if (newMessage.uid !== user.uid && newMessage.chatId === chatId){
                         if(newMessage.type === 'group') {
-                          receiveSend.play();
+                          // receiveSend.play();
+                          console.log('group message')
                         }
 
 
@@ -172,27 +173,6 @@ chatId: chatId,
 type: 'group'
 });
 
-      //   set(child(chatRef, "chatList/"+ reciever +"/"+ user.uid), {
-
-      //     chatId: chatId,
-      //     lastMessage: text,
-      //     receiverId: user.uid,
-      //     updatedAt: serverTimestamp(),
-      //     isSeen: false,
-      //     id: uniqueId
-      
-      // });
-
-      // const notificationRef = ref(db, `chatList/${reciever}/notifications/${user.uid}/messages`);
-      // const newNotifRef = push(notificationRef);
-      // set(newNotifRef, {
-      //     message: text,
-      //     displayName: user.uid,
-      //     sentAt: serverTimestamp(),
-      //     isSeen: false,
-      //     chatId: chatId,
-      //     id: uniqueId,
-      // });   
      
       const input = document.getElementById("send-message__input");
 

@@ -14,6 +14,7 @@ import ChatList from './components/ChatList';
 import Profile from './components/Profile';
 import ChatRoute from './components/ChatRoute';
 import GroupChat from './components/GroupChat';
+import Posts from './components/Posts';
 import { db } from './firebase';
 import { child, get, serverTimestamp } from "firebase/database";
 
@@ -49,7 +50,7 @@ function App() {
     <div className="home">
 
 {isLoading &&(
-      <div className='loading'> LOADING... </div>
+      <div className='loading'> Loading .. </div>
     )}
 
 <Router>
@@ -82,6 +83,8 @@ function App() {
                 <PrivateRoute>
                         <Sidebar/>
                         <ChatList />
+                        <Posts />
+
                 </PrivateRoute>
             } />
 

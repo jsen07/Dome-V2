@@ -3,12 +3,12 @@ import { useAuth } from './contexts/AuthContext';
 import { ref, set, child, get, getDatabase, onValue, serverTimestamp, push } from 'firebase/database';
 import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { db } from '../firebase';
-import Placeholder from './images/avatar_placeholder.png';
+import Placeholder from './images/profile-placeholder-2.jpg';
 import { updateProfile } from 'firebase/auth';
 import { useStateValue } from './contexts/StateProvider';
 import { actionTypes } from '../reducers/userReducer';
 import { useNavigate, useLocation } from 'react-router-dom';
-import ProfilePosts from './ProfilePosts';
+import ProfileComments from './ProfileComments';
 import ProfileActionButtons from './ProfileActionButtons';
 import Notifications from './Notifications';
 import FriendsList from './FriendsList';
@@ -247,12 +247,15 @@ const Profile = () => {
   if (loading) return <div className="loading">LOADING...</div>;
 
   return (
-    <div className="profile__background" style={background ? { backgroundImage: `url(${background})` } : {}}>
+    // <div className="profile__background" style={background ? { backgroundImage: `url(${background})` } : {}}>
+    <div className="profile__background">
       <div className="profile__page">
         {/* Profile View */}
         {!editProfileToggled && (
           <div className="profile__view">
-            <h1>{userDetails?.displayName}</h1>
+
+            <div className='header__banner'style={background ? { backgroundImage: `url(${background})` } : {}}>
+            <div className='profile-header'>
             <div className="avatar__container">
               <img
                 alt="avatar"
@@ -261,8 +264,41 @@ const Profile = () => {
               />
               <div className={status ? `status ${status}` : 'status'}></div>
             </div>
+          <div className='header__container'>
+            <div className='header__text'>
+            <h1>{userDetails?.displayName}</h1>
+            {isCurrentUser && (   
+                <button onClick={() => setEditProfileToggled(true)}>
+                Edit Profile
+              </button>
+            )}
+                     {!isCurrentUser && (   
+                <ProfileActionButtons userDetails={userDetails}/>
+              )}
+            </div>
+          </div>
+            </div>
+            </div>
 
-            <div className="user-profile__details">
+        <div className="profile-contents">
+          <div className='main__left'>
+          <div className='profile-bio'>
+            <h3>About me </h3>
+              <p>{userDetails?.Bio || 'This poohead has not set up their bio '}</p>
+              </div>
+
+              <FriendsList  user ={userDetails?.uid}/>
+
+              </div>
+            
+            <div className='main__right'>
+              {/* <h1> POSTS ARE HERE </h1> */}
+              </div>
+
+              
+          </div>
+
+            {/* <div className="user-profile__details">
               <p>Unique ID:</p>
               <div className="profile-details">{userDetails?.uid}</div>
               <p>Bio:</p>
@@ -281,7 +317,7 @@ const Profile = () => {
                 Edit Profile
               </button>
             )}
-            </div>
+            </div> */}
           </div>
      )}
      {editProfileToggled && isCurrentUser && (
@@ -364,8 +400,7 @@ const Profile = () => {
   {isCurrentUser && (
           <Notifications />
   )}
-      <ProfilePosts user={userDetails}/>
-      <FriendsList  user ={userDetails?.uid}/>
+      <ProfileComments user={userDetails}/>
       </div>
     </div>
   );

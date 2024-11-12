@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { getDatabase, ref, get, set, push, serverTimestamp, runTransaction, onValue, remove } from "firebase/database";
 import { useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Placeholder from '../components/images/avatar_placeholder.png';
+import Placeholder from '../components/images/profile-placeholder-2.jpg';
+import Trash from '../components/svg/bin-svgrepo-com.svg';
 
 
-const ProfilePosts = ({ user }) => {
+const ProfileComments = ({ user }) => {
     const [comments, setComments] = useState([]);
     const [text, setText] = useState();
     const { currentUser } = useAuth();
@@ -170,7 +171,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
 
     <div className="comment-header">
     
-    <span className="comment-author"> {displayName}</span> 
+    <span className="comment-author" onClick={()=> navigate(`/home/profile?userId=${uid}`)}> {displayName} </span> 
     <span className="comment-time"> {formatTimestamp(timestamp)}</span>
 </div>
     
@@ -181,17 +182,18 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
         </div>
         <div className='comment-text__wrapper'>
         <p className="comment-text">{comment}</p>
-        <div className="comment-actions">
+        </div>
+    </div>
+    <div className="comment-actions">
             <button className="like-btn" onClick={() => toggleLike(id)}>
      {likes && likes.length > 0 &&(<span className="like-count"> {likes.length} </span>)}
             Like </button>
-            <button className="reply-btn">Reply</button>
+            {/* <button className="reply-btn">Reply</button> */}
             {currentUser.uid === user.uid && (
-      <button className="remove-btn" onClick={() => deleteComment(id)}>Remove</button>
+    //   <button className="remove-btn" onClick={() => deleteComment(id)}>Remove</button>
+      <img src={Trash}  onClick={() => deleteComment(id)} alt="Description of the image" />
             )}
         </div>
-        </div>
-    </div>
 </div>
 </div>
  )}
@@ -234,4 +236,4 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
   )
 }
 
-export default ProfilePosts
+export default ProfileComments

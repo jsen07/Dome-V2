@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useStateValue } from './contexts/StateProvider';
 import { ref, child, get, getDatabase, onValue } from "firebase/database";
-import Placeholder from './images/avatar_placeholder.png';
+import Placeholder from './images/profile-placeholder-2.jpg';
 import { useNavigate } from 'react-router-dom';
 
 

@@ -11,12 +11,13 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: center;
+    // align-items: center;
     // background-image: url('../components/images/solo-leveling-game-3840x2160-17908.jpeg');
-    background-color: black;
+    background-color: #f5f6fa;
     background-repeat: no-repeat;
     background-size: cover;
-
+    overflow-y: hidden;
+    overflow-x: hidden;
     .loading {
         width: 48px;
         height: 48px;

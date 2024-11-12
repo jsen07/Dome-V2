@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { ref, child, get, getDatabase, onValue } from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
-import Placeholder from './images/avatar_placeholder.png';
+import Placeholder from './images/profile-placeholder-2.jpg';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { useAuth } from './contexts/AuthContext';
@@ -254,7 +254,7 @@ useEffect(() => {
 
         } else if (timestampDate >= yesterdayStart) {
             return "Yesterday";
-        } else if (timestampDate >= startOfWeek) {
+        } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
             const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
             return dayOfWeek;
         } else {
@@ -298,20 +298,20 @@ const createGroupChatToggle = () => {
                                 </div>
                         </div>
                         <div className='inner-card'>
+                            <div className='card-title'>
                         <h1>{chat.displayName}</h1>
-                     
+                        <div className='time-bar'>
+                                <p>{formatTimestamp(chat?.updatedAt)}</p>
+                        </div>
+                        </div>
+    
                         <div className='details__card'>
                         {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
   <p className="typing-indicator">is typing...</p>
 ) : (
   <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
 )}
-                                <div className='time-bar'>
-                                <p>{formatTimestamp(chat?.updatedAt)}</p>
-                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
-                        
-                                </div>
-                    
+                         {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                         </div>
                     </div>
                     </div>
@@ -335,18 +335,20 @@ const createGroupChatToggle = () => {
                                 </div>
                         </div>
                         <div className='inner-card'>
+                            <div className='card-title'>
                         <h1>{chat.displayName}</h1>
-                     
-                        <div className='details__card'>
-                 
-                            <p>{chat?.lastMessage || "Start sending a message to this user"}
-                                </p>
-                        
-                                <div className='time-bar'>
-                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
+                        <div className='time-bar'>
                                 <p>{formatTimestamp(chat?.updatedAt)}</p>
-                                </div>
-                    
+                        </div>
+                        </div>
+    
+                        <div className='details__card'>
+                        {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
+  <p className="typing-indicator">is typing...</p>
+) : (
+  <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+)}
+                         {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                         </div>
                     </div>
                     </div>
@@ -372,18 +374,20 @@ const createGroupChatToggle = () => {
                                 </div>
                         </div>
                         <div className='inner-card'>
+                            <div className='card-title'>
                         <h1>{chat.displayName}</h1>
-                     
-                        <div className='details__card'>
-                 
-                            <p>{chat?.lastMessage || "Start sending a message to this user"}
-                                </p>
-                        
-                                <div className='time-bar'>
+                        <div className='time-bar'>
                                 <p>{formatTimestamp(chat?.updatedAt)}</p>
-                                {Object.keys(chat?.messages).length > 0  && <p>{Object.keys(chat?.messages).length }</p>}
-                                </div>
-                    
+                        </div>
+                        </div>
+    
+                        <div className='details__card'>
+                        {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
+  <p className="typing-indicator">is typing...</p>
+) : (
+  <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+)}
+                         {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                         </div>
                     </div>
                     </div>

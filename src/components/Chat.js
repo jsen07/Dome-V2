@@ -503,7 +503,8 @@ useEffect(() => {
               {/* <button onClick={closeChat}> Close Chat</button> */}
         <div className='chat__header'>
         { loading ?  (
-          <h1></h1>
+   
+   <div className='loading'></div>
 
         ) : (
           <div className='chat__banner'>

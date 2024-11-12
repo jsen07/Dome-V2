@@ -164,7 +164,7 @@ const friendsCheck = async () => {
   }, [currentUser, userDetails]);
 
   return (
-<div>
+<div className='profile__action-buttons'>
   <button onClick={createChat}>Message</button>
 
   {isFriends ? (
