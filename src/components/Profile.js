@@ -396,7 +396,7 @@ const Profile = () => {
           </div>
   )}
       </div>
-<div className='posts__container' >
+<div className='profile-panel__container' >
   {isCurrentUser && (
           <Notifications />
   )}

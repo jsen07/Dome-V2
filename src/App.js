@@ -20,7 +20,7 @@ import { child, get, serverTimestamp } from "firebase/database";
 
 function App() {
 
-  const [{isLoading, user}] = useStateValue();
+  const [{ user}] = useStateValue();
 
   useEffect(() =>{
   
@@ -48,10 +48,6 @@ function App() {
 
   return (
     <div className="home">
-
-{isLoading &&(
-      <div className='loading'> Loading .. </div>
-    )}
 
 <Router>
 <AuthProvider>

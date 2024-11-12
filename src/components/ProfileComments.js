@@ -191,7 +191,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
             {/* <button className="reply-btn">Reply</button> */}
             {currentUser.uid === user.uid && (
     //   <button className="remove-btn" onClick={() => deleteComment(id)}>Remove</button>
-      <img src={Trash}  onClick={() => deleteComment(id)} alt="Description of the image" />
+      <img src={Trash}  onClick={() => deleteComment(id)} alt="Deletes" />
             )}
         </div>
 </div>
