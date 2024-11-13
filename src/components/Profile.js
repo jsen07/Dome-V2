@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
-import { ref, set, child, get, getDatabase, onValue, serverTimestamp, push } from 'firebase/database';
+import { ref, set, child, get, getDatabase, onValue } from 'firebase/database';
 import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { db } from '../firebase';
 import Placeholder from './images/profile-placeholder-2.jpg';
 import { updateProfile } from 'firebase/auth';
 import { useStateValue } from './contexts/StateProvider';
 import { actionTypes } from '../reducers/userReducer';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import ProfileComments from './ProfileComments';
 import ProfileActionButtons from './ProfileActionButtons';
 import Notifications from './Notifications';
@@ -26,14 +26,10 @@ const Profile = () => {
   const [isCurrentUser, setCurrentUser] = useState();
 
   const { currentUser } = useAuth();
-  const navigate = useNavigate();
   const storage = getStorage();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get('userId');
-
-  // console.log(location.search);
-  // console.log(queryParams.get('userId'));
 
 
   function fetchUserProfile(userId) {

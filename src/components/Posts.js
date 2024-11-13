@@ -5,6 +5,8 @@ import { getDatabase, ref, get, set, push,  child, runTransaction } from "fireba
 import { useStateValue } from './contexts/StateProvider';
 import LikeIcon from './svg/heart-svgrepo-com.svg';
 import LikeButton from './svg/like-svgrepo-com.svg';
+import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
+import { useNavigate } from 'react-router-dom';
 
 const Posts = () => {
 
@@ -18,13 +20,41 @@ const Posts = () => {
   const [posts, setPosts] = useState([]);
   const [friendPosts, setFriendPosts] = useState([]);
   const [publicPosts, setPublicPosts] = useState([]);
-  const [likedBy, setLikedBy] = useState();
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageUrl, setImageUrl] = useState();
+  const storage = getStorage();
+  const navigate = useNavigate();
+
+
   const handleTextChange = (e) => {
-    setText(e.target.value)
+    setText(e.target.value); 
   }
   const handleChange = (e) => {
     setOption(e.target.value)
   }
+  const handleImageChange = (e) => {
+    if (e.target.files[0]) {
+      const previewUrl = URL.createObjectURL(e.target.files[0]);
+      setImagePreview(previewUrl);
+      handleFileUpload(e.target.files[0]);
+    }
+  };
+
+  const handleFileUpload = async (photo) => {
+    setIsLoading(true);
+    const fileRef = sRef(storage, `${photo.name}`);
+
+    try {
+      await uploadBytes(fileRef, photo);
+      const photoURL = await getDownloadURL(fileRef);
+      setImageUrl(photoURL);
+      setIsLoading(false);
+
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      setIsLoading(false);
+    }
+  };
 const fetchFriends = async () => {
   if(!currentUser) return
 try {
@@ -81,12 +111,17 @@ const post = async () => {
       return;
     }
 }
+if(imageUrl) {
+  Post.imageUrl = imageUrl;
+}
 
   try {
       
       await set(newPostRef, Post);
       setText('');
       setPosts(prev=>[...prev, Post])
+      setImagePreview(null); 
+      setImageUrl(null);
       console.log('Posted');
     }
     catch (error) {
@@ -170,8 +205,9 @@ useEffect(() => {
   useEffect(() => {
     if (friendPosts.length > 0 || publicPosts.length > 0) {
       const combinedPosts = [...friendPosts, ...publicPosts];
-      setPosts(combinedPosts);
-      console.log(posts)
+
+      const sortedPosts = combinedPosts.sort((a, b) => b.timestamp - a.timestamp);
+      setPosts(sortedPosts);
     }
   }, [friendPosts, publicPosts]);
 
@@ -208,7 +244,6 @@ const likePost = async (type, uid, postId ) => {
     setError(error)
   }
 }
-
   return (
     <div className='posts__container'>
       <h1>{error || 'Community Posts'}</h1>
@@ -216,9 +251,17 @@ const likePost = async (type, uid, postId ) => {
         <div className='top__header'>
           <img src={currentUser.photoURL || Placeholder } alt='avatar'/>
           <textarea value={text} onChange={handleTextChange} placeholder="What's on your mind baby gorl?" rows="4"></textarea>
+          {/* {imagePreview && (
+        <div className="image-preview">
+          <img src={imagePreview} alt="Preview" />
+          <p>Image Preview</p>
+        </div>
+      )} */}
+
         </div>
         <div className='posts__action-buttons'>
-        <select
+          <div className='action__options'>
+            <select
                 defaultValue="Public"
                 disabled={!currentUser}
                 onChange={handleChange}
@@ -226,9 +269,12 @@ const likePost = async (type, uid, postId ) => {
                 <option value="Public">Public</option>
                 <option value="Friends">Friends</option>
               </select>
+              <input type="file" onChange={handleImageChange}></input>
+          </div>
           <button disabled={!currentUser || isLoading} onClick={post}> post </button>
         </div>
       </div>
+
       {isLoading ? (
         <div className='loading'></div>
       ) : (
@@ -243,12 +289,19 @@ const likePost = async (type, uid, postId ) => {
                     <img src={post.photoUrl || Placeholder} alt={post.displayName} />
 
                     <div className='header__title'>
-                      <h2>{post.displayName}</h2>
+                      <h2 onClick={()=> navigate(`/home/profile?userId=${post.uid}`)}>{post.displayName}</h2>
                       <span>{new Date(post.timestamp).toLocaleString()}</span>
                     </div>
                   </div>
                   <div className='post__content' >
+                    <div className='post-text'>
                   <p>{post.post || 'No content available.'}</p>
+                  </div>
+                  <div className='image-container'>
+                  {post.imageUrl && (
+                    <img src={post.imageUrl} alt='post-image' />
+                  )}
+                  </div>
                   </div>
                   <div className='post__action-stats'>
                     <div className='likes-wrapper'>

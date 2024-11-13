@@ -62,7 +62,6 @@ const checkForFriendRequests = async () => {
             return data;
 
         } else {
-            console.log(' no data found');
             return null;
 
         }

@@ -1,17 +1,17 @@
-*::-webkit-scrollbar {
-    width: 7px;
-    display: flex;
-  }
-  *::-webkit-scrollbar-track {
-    // background: #242424;
-    opacity: 0;
-  }
+// *::-webkit-scrollbar {
+//     width: 7px;
+//     display: flex;
+//   }
+//   *::-webkit-scrollbar-track {
+//     // background: #242424;
+//     opacity: 0;
+//   }
 
-  *::-webkit-scrollbar-thumb {
-    background-color: #7e00e6;
-    border-radius: 2px;
-    // border: 0px solid #ffffff;
-  }
+//   *::-webkit-scrollbar-thumb {
+//     background-color: #7e00e6;
+//     border-radius: 2px;
+//     // border: 0px solid #ffffff;
+//   }
 .comment-section {
     height: calc(100% - 100px);
     padding: 20px;
