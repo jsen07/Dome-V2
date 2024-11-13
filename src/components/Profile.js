@@ -12,6 +12,7 @@ import ProfileComments from './ProfileComments';
 import ProfileActionButtons from './ProfileActionButtons';
 import Notifications from './Notifications';
 import FriendsList from './FriendsList';
+import ProfilePosts from './ProfilePosts';
 
 const Profile = () => {
   const [userDetails, setUserDetails] = useState(null);
@@ -292,7 +293,7 @@ const Profile = () => {
               </div>
             
             <div className='main__right'>
-              {/* <h1> POSTS ARE HERE </h1> */}
+              <ProfilePosts  user={userDetails?.uid}/>
               </div>
 
               

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from './contexts/AuthContext';
 import Placeholder from './images/profile-placeholder-2.jpg';
-import { getDatabase, ref, get, set, push, serverTimestamp, onValue, child, remove } from "firebase/database";
+import { getDatabase, ref, get, set, push,  child, runTransaction } from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
+import LikeIcon from './svg/heart-svgrepo-com.svg';
+import LikeButton from './svg/like-svgrepo-com.svg';
 
 const Posts = () => {
 
@@ -14,7 +16,9 @@ const Posts = () => {
   const [isLoading, setIsLoading] = useState(true); 
   const [error, setError] = useState('');
   const [posts, setPosts] = useState([]);
-
+  const [friendPosts, setFriendPosts] = useState([]);
+  const [publicPosts, setPublicPosts] = useState([]);
+  const [likedBy, setLikedBy] = useState();
   const handleTextChange = (e) => {
     setText(e.target.value)
   }
@@ -27,14 +31,16 @@ try {
   setIsLoading(true);
     const friendRequestRef = ref(getDatabase());
     const snapshot = await get(child(friendRequestRef, `friendsList/${currentUser.uid}`))
-
+    let friendslist = [];
     const data = snapshot.val();
     if(data) {
-      const friendsObject = Object.keys(data).reduce((acc, key) => {
-        acc[key] = data[key];
-        return acc;
-      }, {});
-      setFriends(friendsObject)
+      const friends = Object.values(data);
+      for (let i = 0; i < friends.length; i++) {
+        const id = friends[i].uid
+        friendslist.push(id)
+      }
+      friendslist.push(currentUser.uid);
+      setFriends(friendslist);
     } 
     else {
       setFriends([]);
@@ -51,6 +57,10 @@ catch (error) {
 const post = async () => {
   if(!text) return
 
+  const postRef = ref(getDatabase(), `${option}Posts/${currentUser.uid}`);
+  const newPostRef = push(postRef);
+  const key = newPostRef.key
+
   const Post = {
     displayName: currentUser.displayName,
     photoUrl: currentUser.photoURL,
@@ -58,6 +68,7 @@ const post = async () => {
     post: text,
     timestamp: Date.now(),
     type: option,
+    postKey: key,
     likes: [],
   }
 
@@ -66,27 +77,24 @@ const post = async () => {
       Post.friendsList = friends;
     }
     else {
-      setError('You have no friends!')
+      setError('You have no friends you fking loner');
+      return;
     }
 }
 
   try {
-      const postRef = ref(getDatabase(), `${option}Posts/${currentUser.uid}`);
-      const newPostRef = push(postRef);
       
       await set(newPostRef, Post);
       setText('');
       setPosts(prev=>[...prev, Post])
       console.log('Posted');
-
-  }
-  catch (error) {
+    }
+    catch (error) {
       console.log(error)
+    }
   }
 
-}
-
-const fetchPosts = async () => {
+const fetchPublicPosts = async () => {
   if (!currentUser) return;
 setIsLoading(true);
   try {
@@ -103,7 +111,46 @@ setIsLoading(true);
 
      }
      const flatArray = array.flat()
-     setPosts(flatArray)
+
+     setPublicPosts([...flatArray]);
+    } else {
+      setPosts(prev => [...prev]);
+    }
+  } catch (error) {
+    console.log('Error fetching posts:', error);
+  }
+  finally {
+    setIsLoading(false);
+  }
+};
+
+const fetchPrivatePosts = async () => {
+  if (!currentUser) return;
+setIsLoading(true);
+  try {
+    const postsRef = ref(getDatabase(), `FriendsPosts`);
+    const snapshot = await get(postsRef);
+    const postsData = snapshot.val();
+    let array = [];
+    let friendsPosts = []
+
+    if (postsData) {
+      const postsArray = Object.values(postsData);
+
+     for(let i = 0; i < postsArray.length; i++) {
+       array.push(Object.values(postsArray[i]));
+
+     }
+     const flatArray = array.flat()
+    //  console.log(flatArray)
+     flatArray.forEach(post => {
+      const friendsList = Object.values(post.friendsList)
+
+      if(friendsList.includes(currentUser.uid)) {
+        friendsPosts.push(post)
+      }
+     })
+     setFriendPosts([...friendsPosts]);
     } else {
       setPosts([]);
     }
@@ -116,8 +163,51 @@ setIsLoading(true);
 };
 useEffect(() => {
   fetchFriends();
-  fetchPosts();
+  fetchPublicPosts()
+  fetchPrivatePosts();
+
   },[currentUser]) 
+  useEffect(() => {
+    if (friendPosts.length > 0 || publicPosts.length > 0) {
+      const combinedPosts = [...friendPosts, ...publicPosts];
+      setPosts(combinedPosts);
+      console.log(posts)
+    }
+  }, [friendPosts, publicPosts]);
+
+const likePost = async (type, uid, postId ) => {
+
+  const postRef = ref(getDatabase(), `${type}Posts/${uid}/${postId}/likes`);
+  try {
+      await runTransaction(postRef, (likes) => {
+  
+          if (!likes) {
+              likes = [];
+          }
+          const userLiked = likes.includes(currentUser.uid);
+          if (userLiked) {
+              likes = likes.filter(uid => uid !== currentUser.uid);
+          } else {
+              likes.push(currentUser.uid);
+          }
+          return likes;
+      });
+      const updatedPostRef = ref(getDatabase(), `${type}Posts/${uid}/${postId}`);
+      const snapshot = await get(updatedPostRef);
+      const updatedPost = snapshot.val();
+  
+      if (updatedPost) {
+        setPosts(prevPosts => {
+          return prevPosts.map(post => 
+            post.postKey === postId ? { ...post, likes: updatedPost.likes } : post
+          );
+        });
+      }
+  }
+  catch(error) {
+    setError(error)
+  }
+}
 
   return (
     <div className='posts__container'>
@@ -145,14 +235,39 @@ useEffect(() => {
         <div className="post__entries">
           {posts.length > 0 ? (
             posts.map((post, index) => {
+              const userLiked = post.likes && post.likes.includes(currentUser.uid);
+
               return (
                 <div key={index} className="post-entry">
                   <div className="post-header">
                     <img src={post.photoUrl || Placeholder} alt={post.displayName} />
-                    <h3>{post.displayName}</h3>
+
+                    <div className='header__title'>
+                      <h2>{post.displayName}</h2>
+                      <span>{new Date(post.timestamp).toLocaleString()}</span>
+                    </div>
                   </div>
+                  <div className='post__content'>
                   <p>{post.post || 'No content available.'}</p>
-                  <span>{new Date(post.timestamp).toLocaleString()}</span>
+                  </div>
+                  <div className='post__action-stats'>
+                    <div className='likes-wrapper'>
+                    <img src={LikeIcon} alt="like-button"/>
+                    {post.likes && post.likes.length > 0 && (
+                      <span>{post.likes.length}</span>
+                    )}
+                    </div>
+                    <p> comments </p>
+                    </div>
+                    <div className='post__action-buttons'>
+                    {!userLiked ? (
+                      <p onClick={() => { likePost(post.type, post.uid, post.postKey); }}>Like</p>
+                    ) : (
+                    <img src={LikeIcon} onClick={() => { likePost(post.type, post.uid, post.postKey)} }alt="like-button" />
+                    )}
+                    <p> comment </p>
+                      </div>
+                 
                 </div>
               );
             })

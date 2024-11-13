@@ -178,7 +178,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
         <div className='comment__wrapper'>
 
         <div className='comment-profile'>
-            <img src={photoUrl ? photoUrl : Placeholder} />
+            <img src={photoUrl ? photoUrl : Placeholder} alt="user-profile" />
         </div>
         <div className='comment-text__wrapper'>
         <p className="comment-text">{comment}</p>
@@ -206,7 +206,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
         <textarea value={text} onChange={handleTextChange} placeholder="Write a comment..." rows="4"></textarea>
 <div className='post__action'>
         <div className='comment-profile'>
-            <img src={currentUser.photoURL? currentUser.photoURL : Placeholder} />
+            <img src={currentUser.photoURL? currentUser.photoURL : Placeholder} alt="user-profile" />
         </div>
         <button className="comment-submit-btn" onClick={postComment}>Post Comment</button>
     </div>

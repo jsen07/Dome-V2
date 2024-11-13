@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { db } from '../firebase';
 import { useAuth } from './contexts/AuthContext';
 import CreateGroupChat from './CreateGroupChat';
+import CreateChatIcon from './svg/groupchat-svg.svg';
 
 const ChatList = () => {
 
@@ -270,16 +271,21 @@ const createGroupChatToggle = () => {
     };
     return (
         <div className='chat-card__container'>
-            
-                 {groupChatToggle && (
-                      <CreateGroupChat createGroupChatToggle={createGroupChatToggle} />
-                 )}
-<h1> Messages </h1>
-<h2 onClick={createGroupChatToggle}> Create group chat </h2>
+            {groupChatToggle && (
+                <CreateGroupChat createGroupChatToggle={createGroupChatToggle} />
+                )}
+                <div className='chat__top'>
+                    <div className='chat__header'>
+<h1> Active chats </h1>
+<img onClick={createGroupChatToggle} src={CreateChatIcon} title="Create a group chat" alt="create group chat"/>
+</div>
+<div className='chat__filter-buttons'>
             {/* <p> Online {onlineUsersCount}</p> */}
             <p onClick={handleAllFilter}>All</p>
             {onlineUsersCount > 0 &&  <p onClick={handleOnlineFilter}>Online ({onlineUsersCount})</p>}
-            {notificationList.length > 0 && <p onClick={handleNotificationsFilter} style={{ cursor: 'pointer' }}> Unread</p>}
+            {notificationList.length > 0 && <p onClick={handleNotificationsFilter}> Unread</p>}
+            </div>
+            </div>
      
             
             {!onlineToggle && !notificationToggle && (
