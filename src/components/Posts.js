@@ -7,6 +7,7 @@ import LikeIcon from './svg/heart-svgrepo-com.svg';
 import LikeButton from './svg/like-svgrepo-com.svg';
 import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
+import PostsComment from './PostsComment';
 
 const Posts = () => {
 
@@ -22,6 +23,7 @@ const Posts = () => {
   const [publicPosts, setPublicPosts] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageUrl, setImageUrl] = useState();
+  const [toggleComment, setToggleComment] = useState(false);
   const storage = getStorage();
   const navigate = useNavigate();
 
@@ -39,6 +41,10 @@ const Posts = () => {
       handleFileUpload(e.target.files[0]);
     }
   };
+
+  const handleCommentToggle = () => {
+    setToggleComment(prev=> !prev);
+  }
 
   const handleFileUpload = async (photo) => {
     setIsLoading(true);
@@ -297,11 +303,13 @@ const likePost = async (type, uid, postId ) => {
                     <div className='post-text'>
                   <p>{post.post || 'No content available.'}</p>
                   </div>
+
                   <div className='image-container'>
                   {post.imageUrl && (
                     <img src={post.imageUrl} alt='post-image' />
                   )}
                   </div>
+
                   </div>
                   <div className='post__action-stats'>
                     <div className='likes-wrapper'>
@@ -312,15 +320,19 @@ const likePost = async (type, uid, postId ) => {
                     </div>
                     <p> comments </p>
                     </div>
+
                     <div className='post__action-buttons'>
                     {!userLiked ? (
                       <p onClick={() => { likePost(post.type, post.uid, post.postKey); }}>Like</p>
                     ) : (
                     <img src={LikeIcon} onClick={() => { likePost(post.type, post.uid, post.postKey)} }alt="like-button" />
                     )}
-                    <p> comment </p>
+                    <p onClick={handleCommentToggle}> comment </p>
                       </div>
-                 
+                 {/* COMMNENTS */}
+                 {toggleComment && (
+                        <PostsComment postKey={post.postKey} type={post.type} uid={post.uid}/>
+                    )}
                 </div>
               );
             })

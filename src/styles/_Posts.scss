@@ -61,6 +61,13 @@
             justify-content: space-between;
             padding-inline: 10px;
             margin-top: 5px;
+
+            .action__options {
+                select {
+                    margin-right: 6px;
+                }
+            }
+
             button {
                 width: 60px;
                 height: 20px;
@@ -87,7 +94,8 @@
         .post-entry {
             display: flex;
             flex-direction: column;
-            width: 70%;
+            width: 800px;
+            // min-width: 70%;
             border: 1px solid #8c7ae6;
             border-radius: 10px;
             padding: 20px;
@@ -126,6 +134,7 @@
                 word-wrap: break-word;
                 align-items: center;
                 margin-bottom: 10px;
+                // border: 2px solid red;
 
                 .post-text {
                     display: flex;
@@ -139,9 +148,11 @@
                         background-color: white;
                     }
                 }
+
                 .image-container {
                     // border: 2px solid black;
-                    max-width: 100%;
+                    max-width: 80%;
+                    max-height: 100%;
                     // max-height: 400px;
                     object-fit: contain;
   
@@ -152,6 +163,7 @@
                         
                     }
                 }
+            
             }
             .post__action-stats {
                 display: flex;

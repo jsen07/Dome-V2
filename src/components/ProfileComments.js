@@ -51,7 +51,7 @@ const postComment = async () => {
         photoUrl: currentUser.photoURL,
         uid: currentUser.uid,
         comment: text,
-        timestamp: serverTimestamp(),
+        timestamp: Date.now(),
         likes: []
     }
     try {

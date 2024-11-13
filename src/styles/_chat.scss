@@ -31,10 +31,18 @@
         height: 100%;
         display: flex;
         flex-direction: column;
+        position: relative;
         
         // align-items: center;
         // justify-content: end;
         // padding-block: 10px;
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
 
         .chat__banner {
             width: 100%;
@@ -186,7 +194,7 @@
 
 
                 .date-container {
-                    color: white;
+                    color: black;
                     .date-notify{
                         display: flex;
                         // border: 2px solid green;
@@ -196,7 +204,8 @@
                         .title-date {
                             padding:7px;
                             border-radius: 5px;
-                            background-color: #4d4d4d;
+                            // background-color: #4d4d4d;
+                            
                         }
                     }
                 }

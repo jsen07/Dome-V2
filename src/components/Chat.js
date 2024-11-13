@@ -247,6 +247,7 @@ useEffect(() => {
 const postMessagesRef = ref(db, `chat/${chatId}/messages`);
 const newPostRef = push(postMessagesRef);
 const uniqueId = newPostRef.key;
+const UserMessage = `${user.displayName}: ${text}`;
 set(newPostRef, {
 
   serverTime: serverTimestamp(),
@@ -262,8 +263,20 @@ set(newPostRef, {
           set(child(chatRef, "chatList/"+ reciever +"/"+ user.uid), {
  
             chatId: chatId,
-            lastMessage: text,
+            lastMessage: UserMessage,
             receiverId: user.uid,
+            updatedAt: serverTimestamp(),
+            isSeen: false,
+            id: uniqueId
+        
+        });
+
+        // const RecieverMessage = `${recieverData?.displayName}: ${text}`; 
+        set(child(chatRef, "chatList/"+ user.uid +"/"+ reciever), {
+ 
+            chatId: chatId,
+            lastMessage: UserMessage,
+            receiverId: reciever,
             updatedAt: serverTimestamp(),
             isSeen: false,
             id: uniqueId
