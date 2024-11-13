@@ -3,8 +3,7 @@ import { getDatabase, ref, get, set, push, serverTimestamp, runTransaction, onVa
 import { useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Placeholder from '../components/images/profile-placeholder-2.jpg';
-import Trash from '../components/svg/bin-svgrepo-com.svg';
-
+import Trash from './svg/bin-svgrepo-com.svg';
 
 const ProfileComments = ({ user }) => {
     const [comments, setComments] = useState([]);
@@ -191,7 +190,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
             {/* <button className="reply-btn">Reply</button> */}
             {currentUser.uid === user.uid && (
     //   <button className="remove-btn" onClick={() => deleteComment(id)}>Remove</button>
-      <img src={Trash}  onClick={() => deleteComment(id)} alt="Deletes" />
+      <img src={Trash}  onClick={() => deleteComment(id)} alt="Delete" />
             )}
         </div>
 </div>

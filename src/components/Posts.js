@@ -247,7 +247,7 @@ const likePost = async (type, uid, postId ) => {
                       <span>{new Date(post.timestamp).toLocaleString()}</span>
                     </div>
                   </div>
-                  <div className='post__content'>
+                  <div className='post__content' >
                   <p>{post.post || 'No content available.'}</p>
                   </div>
                   <div className='post__action-stats'>

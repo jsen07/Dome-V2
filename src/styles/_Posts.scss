@@ -97,6 +97,8 @@
             .post__content {
                 display: flex;
                 flex-direction: column;
+                white-space: pre-wrap;
+                word-wrap: break-word;
 
                 p {
                     padding: 10px;

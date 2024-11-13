@@ -1348,6 +1348,8 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 .comment-section .comment .comment-body .comment__wrapper .comment-text__wrapper .comment-text {
   font-size: 0.9rem;
@@ -1355,7 +1357,7 @@
   margin-bottom: 5px;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  white-space: normal;
+  white-space: pre-wrap;
 }
 .comment-section .comment .comment-body .comment-actions {
   display: flex;
@@ -1583,6 +1585,8 @@
 .posts__container .post__entries .post-entry .post__content {
   display: flex;
   flex-direction: column;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 .posts__container .post__entries .post-entry .post__content p {
   padding: 10px;
