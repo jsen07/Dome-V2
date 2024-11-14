@@ -6,7 +6,7 @@ import ChatMessage from './ChatMessage';
 import sendSoundEffect from '../components/sound/sendingSound.mp3';
 import receivingSoundEffect from '../components/sound/receivingSound.mp3';
 import { Howl } from 'howler';
-import Placeholder from '../components/images/avatar_placeholder.png';
+import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import EmojiPicker from 'emoji-picker-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -165,10 +165,11 @@ useEffect(() => {
                     if (messagesArray.length > result.messages.length) {
                       const newMessage = messagesArray[messagesArray.length - 1];
                       setLastMessage(newMessage)
+                      console.log( messagesArray.length, result.messages.length)
                         if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
 
                             if(newMessage.type === 'direct') {
-                                // receiveSend.play();
+                                receiveSend.play();
                               }
                               
                         }
@@ -549,7 +550,7 @@ useEffect(() => {
         { seen && Object.keys(typingUsers).length === 0 && ( <span ref={seenEndRef}> Seen </span>)}
         </div>
  
-        {chat.length === 0 && <p>No messages</p>}
+        {chat.length === 0 && <p>You have started a chat.</p>}
     
   </div>
   <div ref={messagesEndRef} /></div> 

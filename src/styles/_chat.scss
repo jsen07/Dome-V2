@@ -3,7 +3,7 @@
     display:none;
   }
 .chat-box__container {
-    flex-grow: 1;
+    width: calc(100% - 400px);
     height: 95%;
     border-radius: 14px;
     outline: 1px solid #2f3640;
@@ -22,6 +22,7 @@
     h1 {
         color: black;
         width: 20em;
+        border: 2px solid black;
         overflow: hidden; 
         white-space: nowrap; 
         text-overflow: ellipsis;

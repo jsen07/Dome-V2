@@ -29,10 +29,10 @@ const ChatList = () => {
     const [dropDownToggle, setDropDownToggle] = useState(false);
     const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
     const [chatListRecieverId, setChatListRecieverId] = useState(null);
-
     const location = useLocation();
     const [path, setPath] = useState();
     const { currentUser } = useAuth();
+
 
   
     const handleDropdown = (e, chatListUserId) => {
@@ -175,6 +175,7 @@ useEffect(() => {
         })
         useEffect(() => {
             const chatRef = ref(getDatabase(), `chatList/${user.uid}`);
+            const chatListIDS = [];
             const unsubscribe = onValue(chatRef, (snapshot) => {
                 snapshot.forEach((childSnapshot) => {
                     const chatData = childSnapshot.val();
@@ -205,6 +206,7 @@ useEffect(() => {
                     const userId = childSnapshot.key;
                     const userStatus = childSnapshot.val();
                     if (userStatus === 'Online' && userId !== currentUser.uid) {
+
                         onlineUsersTemp.add(userId); 
                     }
                 });
@@ -344,7 +346,7 @@ const createGroupChatToggle = () => {
                         {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
   <p className="typing-indicator">is typing...</p>
 ) : (
-  <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+  <p>{chat?.lastMessage || "You have started a chat."}</p>
 )}
                          {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                         </div>
@@ -393,7 +395,7 @@ const createGroupChatToggle = () => {
                     {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
 <p className="typing-indicator">is typing...</p>
 ) : (
-<p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+<p>{chat?.lastMessage || "You have started a chat."}</p>
 )}
                      {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                     </div>
@@ -418,9 +420,7 @@ const createGroupChatToggle = () => {
                         <div className='chat-details__wrapper' onClick={() => navigate(`/home/${chat.chatId}`)}>
                     <div className='profile__card'>
                         <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
-                        <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
-                       
-                            </div>
+                        <div className={ chat?.status ? `${chat?.status}` : "status"} >
                             </div>
                     </div>
                     <div className='inner-card'>
@@ -435,7 +435,7 @@ const createGroupChatToggle = () => {
                     {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
 <p className="typing-indicator">is typing...</p>
 ) : (
-<p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+<p>{chat?.lastMessage || "You have started a chat."}</p>
 )}
                      {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                     </div>
