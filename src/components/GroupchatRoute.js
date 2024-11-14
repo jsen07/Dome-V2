@@ -37,7 +37,7 @@ const GroupchatRoute = ({ children }) => {
 
     // Loading state
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <div className='loading'></div>;
     }
 
 

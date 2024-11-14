@@ -168,7 +168,7 @@ useEffect(() => {
                         if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
 
                             if(newMessage.type === 'direct') {
-                                receiveSend.play();
+                                // receiveSend.play();
                               }
                               
                         }
@@ -278,7 +278,7 @@ set(newPostRef, {
             lastMessage: UserMessage,
             receiverId: reciever,
             updatedAt: serverTimestamp(),
-            isSeen: false,
+            isSeen: true,
             id: uniqueId
         
         });
@@ -441,8 +441,6 @@ set(newPostRef, {
             const chatData = snapshot.val();
                 if (chatData && !chatData.isSeen) {
                     update(chatListRef, { isSeen: true });
-
-                    console.log("Deleting from path:", messageToDelete.toString());
 
                 remove(messageToDelete).catch(error => {
                     console.error('Error deleting message:', error);

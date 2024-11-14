@@ -8,14 +8,20 @@ const ChatMessage = ({ data }) => {
     const [{user}, dispatch] = useStateValue();
 
 
-    const formatTimestamp = (timestamp) => {
-      const date = new Date(timestamp);
-      return date.toLocaleTimeString('en-US', {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-      });
-    };
+    function formatTimestamp(timestamp) {
+      const date = new Date(timestamp); 
+      let options = {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true, 
+      };
+
+      let timeString = date.toLocaleString('en-US', options);
+      timeString = timeString.replace(/^0/, '');
+  
+      return timeString;
+        
+}
   return (
     <div className={data.uid === user?.uid ? "user-message" : "message"}>
         <div className='message_header'>

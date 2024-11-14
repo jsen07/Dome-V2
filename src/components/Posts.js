@@ -8,7 +8,7 @@ import LikeButton from './svg/like-svgrepo-com.svg';
 import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import PostsComment from './PostsComment';
-
+import CommentIcon from './svg/comment-alt-lines-svgrepo-com.svg';
 const Posts = () => {
 
   const { currentUser } = useAuth();
@@ -250,6 +250,23 @@ const likePost = async (type, uid, postId ) => {
     setError(error)
   }
 }
+function formatTimestamp(timestamp) {
+  const date = new Date(timestamp);
+  
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  
+  let hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+  hours = hours % 12;
+  hours = hours ? hours : 12;
+  
+  return `${day}/${month}/${year} at ${hours}:${minutes} ${ampm}`;
+}
+
   return (
     <div className='posts__container'>
       <h1>{error || 'Community Posts'}</h1>
@@ -296,7 +313,7 @@ const likePost = async (type, uid, postId ) => {
 
                     <div className='header__title'>
                       <h2 onClick={()=> navigate(`/home/profile?userId=${post.uid}`)}>{post.displayName}</h2>
-                      <span>{new Date(post.timestamp).toLocaleString()}</span>
+                      <span>{formatTimestamp(post.timestamp)}</span>
                     </div>
                   </div>
                   <div className='post__content' >
@@ -318,16 +335,21 @@ const likePost = async (type, uid, postId ) => {
                       <span>{post.likes.length}</span>
                     )}
                     </div>
-                    <p> comments </p>
+                    <div className='comments-wrapper'>
+                    <img src={CommentIcon} alt="comment-icon"/>
+                    {post.comments && (
+                    <span>{Object.keys(post.comments).length}</span>
+                  )}
+                  </div>
                     </div>
 
                     <div className='post__action-buttons'>
                     {!userLiked ? (
                       <p onClick={() => { likePost(post.type, post.uid, post.postKey); }}>Like</p>
                     ) : (
-                    <img src={LikeIcon} onClick={() => { likePost(post.type, post.uid, post.postKey)} }alt="like-button" />
+                      <p onClick={() => { likePost(post.type, post.uid, post.postKey); }}>Unlike</p>
                     )}
-                    <p onClick={handleCommentToggle}> comment </p>
+                   <p onClick={handleCommentToggle}> Comment </p>
                       </div>
                  {/* COMMNENTS */}
                  {toggleComment && (

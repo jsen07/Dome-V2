@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ref, child, get, getDatabase, onValue } from "firebase/database";
+import { ref, child, get, getDatabase, onValue, remove } from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
 import Placeholder from './images/profile-placeholder-2.jpg';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { db } from '../firebase';
 import { useAuth } from './contexts/AuthContext';
 import CreateGroupChat from './CreateGroupChat';
 import CreateChatIcon from './svg/groupchat-svg.svg';
+import dropdownIcon from './svg/menu-dropdown.svg';
 
 const ChatList = () => {
 
@@ -16,7 +17,7 @@ const ChatList = () => {
     const [{ user }] = useStateValue();
     const navigate = useNavigate();
     const [onlineUsersCount, setOnlineUsersCount] = useState(0);
-    const [onlineUsers, setOnlineUsers] = useState(new Set()); // Track online users
+    const [onlineUsers, setOnlineUsers] = useState(new Set());
     const [filter, setFilter] = useState('chatList');
     const [onlineUserList,  setOnlineUserList] = useState([]);
     const [notificationList,  setNotificationList] = useState([]);
@@ -25,13 +26,47 @@ const ChatList = () => {
     const [allToggle, setAllToggle] = useState(false);
     const [typingStatus, setTypingStatus] = useState({});
     const [groupChatToggle, setGroupChatToggle] = useState(false);
+    const [dropDownToggle, setDropDownToggle] = useState(false);
+    const [dropdownPosition, setDropdownPosition] = useState({ top: 0, left: 0 });
+    const [chatListRecieverId, setChatListRecieverId] = useState(null);
+
     const location = useLocation();
     const [path, setPath] = useState();
     const { currentUser } = useAuth();
 
+  
+    const handleDropdown = (e, chatListUserId) => {
+      const rect = e.target.getBoundingClientRect();  //get drop down position
+      setDropdownPosition({
+        top: rect.bottom + window.scrollY, //position
+        left: rect.left + window.scrollX, 
+      });
+      setChatListRecieverId(chatListUserId);
+      setDropDownToggle(!dropDownToggle); 
+    };
+  
+    const closeDropdown = (e) => {
+      if (!e.target.closest('.card__container')) {
+        setDropDownToggle(false); 
+      }
+    };
+  
+    useEffect(() => {
+      document.addEventListener('click', closeDropdown);
+      return () => document.removeEventListener('click', closeDropdown);
+    }, []);
 
-
-
+const deleteChat = async () => {
+    const chatToDelete = ref(getDatabase(), `chatList/${user.uid}/${chatListRecieverId}`);
+    try {
+        await remove(chatToDelete).then(()=> {
+            
+        })
+    }
+    catch (error) {
+        console.log(error);
+    }
+}
     useEffect(() => {
         setPath(location.pathname)
           
@@ -66,7 +101,6 @@ const ChatList = () => {
                                 messages
                             };
                         } else {
-                            // console.log("No data for user:", childData.receiverId);
                             return null;
                         }
                             }));
@@ -191,20 +225,14 @@ useEffect(() => {
 
     const handleOnlineFilter = () => {
         setNotificationToggle(false);
-        // const onlineChats = AllChatList.filter(chat => onlineUsers.has(chat.receiverId));
-        // setChatList(onlineChats);
         setOnlineToggle(true);
-
-
-        
         const onlineChats = AllChatList.filter(chat => onlineUsers.has(chat.receiverId));
         setOnlineUserList(onlineUsers.size > 0 ? onlineChats : AllChatList)
-
     };
+
     const handleAllFilter = () => {
         setOnlineToggle(false);
         setNotificationToggle(false);
-
     }
 
     useEffect(() => {
@@ -294,8 +322,9 @@ const createGroupChatToggle = () => {
                     <div 
                         className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
                         key={key} 
-                        data-userid={user.uid} 
-                        onClick={() => navigate(`/home/${chat.chatId}`)}>
+                        data-userid={user.uid}>
+                            
+                            <div className='chat-details__wrapper' onClick={() => navigate(`/home/${chat.chatId}`)}>
                         <div className='profile__card'>
                             <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
                             <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
@@ -321,43 +350,57 @@ const createGroupChatToggle = () => {
                         </div>
                     </div>
                     </div>
+                    <img src={dropdownIcon} onClick={(e) => handleDropdown(e, chat?.uid)}alt="drop-down-menu" />
+                    </div>
                 ))}
+
                 </div>
             )}
 
+{dropDownToggle && (
+                        <div className={dropDownToggle ? 'delete-chatlist active' : 'delete-chatlist'} style={{
+                            top: `${dropdownPosition.top}px`, // Dynamic position
+                            left: `${dropdownPosition.left}px`,
+                          }}>
+                            <p onClick={deleteChat}> Delete </p>
+                            </div>
+                    )}
             {onlineToggle && (
                 <div className='chatlist__container'>
                 {onlineUserList.map((chat, key) => (
                     <div 
-                        className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
-                        key={key} 
-                        data-userid={user.uid} 
-                        onClick={() => navigate(`/home/${chat.chatId}`)}>
-                        <div className='profile__card'>
-                            <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
-                            <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
-                           
-                                </div>
-                                </div>
-                        </div>
-                        <div className='inner-card'>
-                            <div className='card-title'>
-                        <h1>{chat.displayName}</h1>
-                        <div className='time-bar'>
-                                <p>{formatTimestamp(chat?.updatedAt)}</p>
-                        </div>
-                        </div>
-    
-                        <div className='details__card'>
-                        {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
-  <p className="typing-indicator">is typing...</p>
+                    className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
+                    key={key} 
+                    data-userid={user.uid}>
+                        
+                        <div className='chat-details__wrapper' onClick={() => navigate(`/home/${chat.chatId}`)}>
+                    <div className='profile__card'>
+                        <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
+                        <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
+                       
+                            </div>
+                            </div>
+                    </div>
+                    <div className='inner-card'>
+                        <div className='card-title'>
+                    <h1>{chat.displayName}</h1>
+                    <div className='time-bar'>
+                            <p>{formatTimestamp(chat?.updatedAt)}</p>
+                    </div>
+                    </div>
+
+                    <div className='details__card'>
+                    {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
+<p className="typing-indicator">is typing...</p>
 ) : (
-  <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+<p>{chat?.lastMessage || "Start sending a message to this user"}</p>
 )}
-                         {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
-                        </div>
+                     {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                     </div>
-                    </div>
+                </div>
+                </div>
+                <img src={dropdownIcon} onClick={(e) => handleDropdown(e, chat?.uid)}alt="drop-down-menu" />
+                </div>
                 ))}
                 </div>
             )}
@@ -368,35 +411,38 @@ const createGroupChatToggle = () => {
                     
                 {notificationList.map((chat, key) => (
                     <div 
-                        className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
-                        key={key} 
-                        data-userid={user.uid} 
-                        onClick={() => navigate(`/home/${chat.chatId}`)}>
-                        <div className='profile__card'>
-                            <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
-                            <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
-                           
-                                </div>
-                                </div>
-                        </div>
-                        <div className='inner-card'>
-                            <div className='card-title'>
-                        <h1>{chat.displayName}</h1>
-                        <div className='time-bar'>
-                                <p>{formatTimestamp(chat?.updatedAt)}</p>
-                        </div>
-                        </div>
-    
-                        <div className='details__card'>
-                        {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
-  <p className="typing-indicator">is typing...</p>
+                    className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
+                    key={key} 
+                    data-userid={user.uid}>
+                        
+                        <div className='chat-details__wrapper' onClick={() => navigate(`/home/${chat.chatId}`)}>
+                    <div className='profile__card'>
+                        <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
+                        <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>
+                       
+                            </div>
+                            </div>
+                    </div>
+                    <div className='inner-card'>
+                        <div className='card-title'>
+                    <h1>{chat.displayName}</h1>
+                    <div className='time-bar'>
+                            <p>{formatTimestamp(chat?.updatedAt)}</p>
+                    </div>
+                    </div>
+
+                    <div className='details__card'>
+                    {typingStatus[chat.chatId]?.filter(userId => userId !== currentUser.uid).length > 0 ? (
+<p className="typing-indicator">is typing...</p>
 ) : (
-  <p>{chat?.lastMessage || "Start sending a message to this user"}</p>
+<p>{chat?.lastMessage || "Start sending a message to this user"}</p>
 )}
-                         {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
-                        </div>
+                     {Object.keys(chat?.messages).length > 0  && <span>{Object.keys(chat?.messages).length }</span>}
                     </div>
-                    </div>
+                </div>
+                </div>
+                <img src={dropdownIcon} onClick={(e) => handleDropdown(e, chat?.uid)}alt="drop-down-menu" />
+                </div>
                 ))}
                 </div>
             )}
