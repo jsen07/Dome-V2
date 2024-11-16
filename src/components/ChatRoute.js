@@ -37,7 +37,7 @@ const ChatRoute = ({ children }) => {
 
     // Loading state
     if (isLoading) {
-        return <div>Loading...</div>;
+        return null;
     }
 
 

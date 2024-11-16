@@ -23,7 +23,7 @@ const Posts = () => {
   const [publicPosts, setPublicPosts] = useState([]);
   const [imagePreview, setImagePreview] = useState(null);
   const [imageUrl, setImageUrl] = useState();
-  const [toggleComment, setToggleComment] = useState(false);
+  const [toggleComment, setToggleComment] = useState({});
   const storage = getStorage();
   const navigate = useNavigate();
 
@@ -42,9 +42,12 @@ const Posts = () => {
     }
   };
 
-  const handleCommentToggle = () => {
-    setToggleComment(prev=> !prev);
-  }
+  const handleCommentToggle = (postKey) => {
+    setToggleComment((prevState) => ({
+      ...prevState,
+      [postKey]: !prevState[postKey], // Toggle the visibility for this specific post
+    }));
+  };
 
   const handleFileUpload = async (photo) => {
     setIsLoading(true);
@@ -349,12 +352,12 @@ function formatTimestamp(timestamp) {
                     ) : (
                       <p onClick={() => { likePost(post.type, post.uid, post.postKey); }}>Unlike</p>
                     )}
-                   <p onClick={handleCommentToggle}> Comment </p>
+                   <p onClick={() => handleCommentToggle(post.postKey)}> Comment </p>
                       </div>
                  {/* COMMNENTS */}
-                 {toggleComment && (
-                        <PostsComment postKey={post.postKey} type={post.type} uid={post.uid}/>
-                    )}
+                 {toggleComment[post.postKey] && (
+                  <PostsComment postKey={post.postKey} type={post.type} uid={post.uid} />
+                  )}
                 </div>
               );
             })

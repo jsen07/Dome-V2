@@ -230,6 +230,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  border-right: 2px solid #e8e8e8;
   background-color: #f5f6fa;
   justify-content: space-between;
 }
@@ -320,7 +321,6 @@
   align-items: center;
   background-color: #f5f6fa;
   color: black;
-  margin-left: 10px;
   background-color: white;
   overflow-y: auto;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
@@ -439,6 +439,7 @@
   background-color: white;
   border: 1px solid #dcdde1;
   border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 1px;
 }
 .profile__background .profile__page .profile__view .profile-contents .main__left .profile-bio h3 {
   margin-bottom: 10px;
@@ -678,7 +679,6 @@
 .chat-box__container h1 {
   color: black;
   width: 20em;
-  border: 2px solid black;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -872,28 +872,36 @@
 }
 
 .chat-card__container {
-  width: 400px;
-  height: 100%;
+  width: 450px;
   max-height: 100%;
   max-width: 100%;
   display: flex;
-  margin-left: 30px;
+  background-color: #9c88ff;
+  background-image: url("../components//svg/stacked-steps-haikei.svg");
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: contain;
   flex-direction: column;
   align-items: center;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-  background-color: #f5f6fa;
   margin-right: 10px;
+  padding-inline: 18px;
 }
 .chat-card__container .chat__top {
   display: flex;
-  width: 100%;
+  width: 93%;
   flex-direction: column;
   justify-content: space-between;
   margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #dcdde1;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: rgba(106, 0, 204, 0.4) -2px 2px;
 }
 .chat-card__container .chat__top h1, .chat-card__container .chat__top p {
-  color: black;
-  margin-inline: 10px;
+  color: #6a00cc;
+  margin-inline: 5px;
 }
 .chat-card__container .chat__top .chat__header {
   flex-grow: 1;
@@ -901,6 +909,9 @@
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
+  background-color: white;
+  border-radius: 10px;
+  padding: 10px;
   margin-bottom: 35px;
 }
 .chat-card__container .chat__top .chat__header img {
@@ -916,42 +927,51 @@
   display: flex;
   flex-direction: row;
   align-items: center;
+  background-color: #b3a6ff;
+  border-radius: 12px;
+  padding: 5px;
+  text-align: center;
 }
 .chat-card__container .chat__top .chat__filter-buttons p {
-  padding: 5px;
+  padding-block: 6px;
   padding-inline: 10px;
-  background-color: #dcdde1;
-  border-radius: 15px;
+  background-color: white;
+  border-radius: 10px;
 }
 .chat-card__container .chat__top .chat__filter-buttons p:hover {
   cursor: pointer;
   opacity: 0.7;
 }
 .chat-card__container .chatlist__container {
-  width: 100%;
+  width: calc(100% - 30px);
   max-height: 100%;
-  padding-bottom: 20px;
+  border: 2px solid #dcdde1;
+  margin-block: 20px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 10px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   position: relative;
+  box-shadow: rgba(0, 0, 0, 0.3) 0px 5px 5px;
 }
 .chat-card__container .chatlist__container .card__container {
   width: calc(100% - 20px);
   height: auto;
   display: flex;
   flex-direction: row;
-  margin-top: 20px;
-  padding: 5px;
+  margin: 10px;
+  padding: 8px;
   align-content: center;
   border-radius: 5px;
 }
 .chat-card__container .chatlist__container .card__container:hover {
   cursor: pointer;
   opacity: 0.85;
-  outline: 1px solid #2f3640;
+  outline: 1px solid #8c7ae6;
 }
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper {
   display: flex;
@@ -1002,7 +1022,6 @@
 }
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper h1 {
   font-size: 1.1rem;
-  color: black;
 }
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper .inner-card {
   display: flex;
@@ -1022,9 +1041,6 @@
   display: flex;
   flex-direction: row;
 }
-.chat-card__container .chatlist__container .card__container .chat-details__wrapper .inner-card .card-title .time-bar p {
-  color: black;
-}
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper .inner-card .details__card {
   display: flex;
   width: 100%;
@@ -1040,15 +1056,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: black;
-  font-size: 0.7rem;
-  background-color: white;
+  color: white;
+  font-size: 0.8rem;
+  background-color: #fa7248;
   text-align: center;
   border-radius: 50%;
 }
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper .inner-card .details__card p {
   font-size: 0.9rem;
-  color: black;
   width: 14em;
   overflow: hidden;
   white-space: nowrap;
@@ -1065,15 +1080,18 @@
   transform: scale(0.9);
 }
 .chat-card__container .chatlist__container .card__container.false {
-  background-color: #9c88ff;
+  background-color: #6c5cd1;
   outline: 2px solid #8c7ae6;
   transition: outline 0.1s ease-in-out;
+}
+.chat-card__container .chatlist__container .card__container.false p, .chat-card__container .chatlist__container .card__container.false h1 {
+  color: white;
 }
 .chat-card__container .chatlist__container .card__container.false:hover {
   outline: 2px solid #8c7ae6;
 }
 .chat-card__container .chatlist__container .card__container.true {
-  background-color: #f5f6fa;
+  background-color: white;
 }
 .chat-card__container .delete-chatlist {
   position: absolute;

@@ -1,26 +1,36 @@
 .chat-card__container {
-    width: 400px;
-    height: 100%;
+    width: 450px;
     max-height: 100%;
     max-width: 100%;
     display: flex;
-    margin-left: 30px;
+    // margin-left: 30px;
+    background-color: #9c88ff;
+    background-image: url('../components//svg/stacked-steps-haikei.svg');
+    background-repeat: no-repeat;
+    background-position: bottom;
+    background-size: contain;
     flex-direction: column;
     align-items: center;
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-    background-color: #f5f6fa;
     margin-right: 10px;
-    // border: 2px solid green;
+    padding-inline: 18px;
+
 .chat__top {
     display: flex;
-    width: 100%;
+    width: 93%;
     flex-direction: column;
     justify-content: space-between;
     margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #dcdde1;
+    background-color: white;
+    border-radius: 10px;
+    // box-shadow: rgba(0, 0, 0, 0.30) 0px 1px 1px;
+    box-shadow: rgba(106, 0, 204, 0.4) -2px 2px;
 
     h1, p {
-        color: black;
-        margin-inline: 10px;
+        color:#6a00cc;
+        margin-inline: 5px;
     }
     .chat__header {
         flex-grow: 1;
@@ -28,6 +38,10 @@
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        // border: 2px solid green;
+        background-color: white;;
+        border-radius: 10px;
+        padding: 10px;
         // border: 1px solid blue;
         margin-bottom: 35px;
 
@@ -45,12 +59,17 @@
         display:flex;
         flex-direction: row;
         align-items: center;
+        // border: 1px solid #9c88ff;
+        background-color: #b3a6ff;
+        border-radius: 12px;
+        padding: 5px;
+        text-align: center;
 
         p {
-            padding: 5px;
+            padding-block: 6px;
             padding-inline: 10px;
-            background-color: #dcdde1;
-            border-radius: 15px;
+            background-color: white;
+            border-radius: 10px;
             &:hover {
                 cursor: pointer;
                 opacity: 0.7;
@@ -62,16 +81,22 @@
 
 
  .chatlist__container {
-    width: 100%;
+    // flex-grow: 1;
+    width: calc(100% - 30px);
     max-height: 100%;
-    // border: 2px solid red;
-    padding-bottom: 20px;
+    border: 2px solid #dcdde1;
+    margin-block: 20px;
+    background-color: white;
+    // padding-bottom: 20px;
+    padding: 15px;
+    border-radius:10px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     position: relative;
+    box-shadow: rgba(0, 0, 0, 0.30) 0px 5px 5px;
 
     .card__container {
         // outline : 3px solid rgba(205, 89, 255, 0.5);
@@ -79,8 +104,8 @@
         height: auto;
         display: flex;
         flex-direction: row;
-        margin-top: 20px;
-        padding:5px;
+        margin: 10px;
+        padding:8px;
         align-content: center;
         border-radius: 5px;
         // transition: all 0.1s ease-in-out;
@@ -88,7 +113,7 @@
         &:hover {
             cursor: pointer;
             opacity: 0.85;
-            outline: 1px solid #2f3640;
+            outline: 1px solid #8c7ae6;
             // background-color: #292929;
             // outline: 2px solid rgba(205, 89, 255, 0.8);
         }
@@ -166,7 +191,7 @@
 
         h1 {
             font-size: 1.1rem;
-            color: black;
+            // color: black;
         }
        
         .inner-card {
@@ -188,9 +213,9 @@
                     display: flex;
                     flex-direction: row;
                     
-                    p {
-                        color: black;
-                    }
+                    // p {
+                    //     color: black;
+                    // }
                 }
             }
 
@@ -211,15 +236,16 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                color: black;
-                font-size: 0.7rem;
-                background-color: white;
+                color: white;
+
+                font-size: 0.8rem;
+                background-color: #fa7248;
                 text-align: center;
                 border-radius: 50%;
             }
             p{
                 font-size: 0.9rem;
-                color: black;
+       
                 width: 14em;
                 overflow: hidden; 
                 white-space: nowrap; 
@@ -248,9 +274,12 @@
     }
 }
     .card__container.false { //Notificatons styling
-        background-color: #9c88ff;
+        background-color: #6c5cd1;
         outline: 2px solid #8c7ae6;
         transition: outline 0.1s ease-in-out;
+        p, h1 {
+            color: white;
+        }
         &:hover {
              outline: 2px solid #8c7ae6;
         }
@@ -258,7 +287,7 @@
     }
 
     .card__container.true {
-        background-color: #f5f6fa;
+        background-color: white;
         
 
     }
