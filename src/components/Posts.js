@@ -3,12 +3,12 @@ import { useAuth } from './contexts/AuthContext';
 import Placeholder from './images/profile-placeholder-2.jpg';
 import { getDatabase, ref, get, set, push,  child, runTransaction } from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
-import LikeIcon from './svg/heart-svgrepo-com.svg';
-import LikeButton from './svg/like-svgrepo-com.svg';
+import LikeIcon from './svg/LikeIcon.svg';
+import LikeIconActive from './svg/LikeIconActive.svg';
+import CommentIcon from './svg/CommentIcon.svg';
 import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import PostsComment from './PostsComment';
-import CommentIcon from './svg/comment-alt-lines-svgrepo-com.svg';
 import FullscreenPost from './FullscreenPost';
 const Posts = () => {
 
@@ -385,7 +385,10 @@ const handlePostClick = (post) => {
                   </div>
                   <div className='post__action-stats'>
                     <div className='likes-wrapper'>
-                    <img src={LikeIcon} alt="like-button"/>
+                    {userLiked ?  (
+                      <img src={LikeIconActive} alt="like" />
+                    ) : (<img src={LikeIcon} alt="like-button"/> )}
+
                     {post.likes && post.likes.length > 0 && (
                       <span>{post.likes.length}</span>
                     )}

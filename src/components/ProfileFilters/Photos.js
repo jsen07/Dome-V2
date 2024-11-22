@@ -118,6 +118,12 @@ console.log(isFriend)
         {postsWithImagesPublic.length > 0 && postsWithImagesPublic.map((post, key) => (
             <div className='img_container' key={key}>
                 <img src={post.imageUrl} />
+                <div className='like-comment'>
+                    <div className='icons'>
+                    <p>Like</p>
+                    <p> Comment </p>
+                    </div>
+                    </div>
              </div>
         ))}
 
@@ -125,6 +131,12 @@ console.log(isFriend)
   postsWithImagesFriends.map((post, key) => (
     <div className='img_container' key={key}>
       <img src={post.imageUrl} alt="Post" />
+      <div className='like-comment'>
+                    <div className='icons'>
+                    <p>{post?.likes?.length || 0}</p>
+                    <p> Comment </p>
+                    </div>
+                    </div>
     </div>
   ))
 ) : null}

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from './contexts/AuthContext';
 import Placeholder from './images/profile-placeholder-2.jpg';
 import { getDatabase, ref, get, runTransaction } from "firebase/database";
-import LikeIcon from './svg/heart-svgrepo-com.svg';
+import LikeIcon from './svg/LikeIcon.svg';
 
 const ProfilePosts = ( { user }) => {
 
