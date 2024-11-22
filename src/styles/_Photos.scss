@@ -1,0 +1,31 @@
+.profile-photos__container {
+    width: 100%;
+    border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .photos__container {
+        max-width: 100%;
+        width: 80%;
+        border: 2px solid blue;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+
+        .img_container {
+            width: 300px;
+            height: 300px;
+            margin:10px;
+        
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                aspect-ratio: 1 / 1; 
+            }
+        }
+    }
+}

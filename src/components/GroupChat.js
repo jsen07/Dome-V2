@@ -8,7 +8,7 @@ import receivingSoundEffect from './sound/new-notification-7-210334.mp3';
 import { Howl } from 'howler';
 import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import EmojiPicker from 'emoji-picker-react';
-
+import ChatInfo from './ChatInfo';
 const GroupChat = () => {
 
   const [ {user} ] = useStateValue();
@@ -18,6 +18,7 @@ const GroupChat = () => {
   const [seen, setSeen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [typingUsers, setTypingUsers] = useState({});
+  const [isComponentActive, setIsComponentActive] = useState(false);
 
 
   const messagesEndRef = useRef(null);
@@ -31,6 +32,7 @@ const GroupChat = () => {
   const [emojiToggle, setEmojiToggle] = useState(false);
   const [lastMessage, setLastMessage] = useState();
   const [unseenMessages, setUnseenMessages] = useState({});
+  const [chatInfoToggle, setChatInfoToggle] = useState(false);
   const inputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
@@ -45,6 +47,22 @@ const GroupChat = () => {
     src: [receivingSoundEffect]
   });
  
+const chatInfoToggleHnadler = () => {
+  setChatInfoToggle(prev=> !prev);
+}
+
+useEffect(()=> {
+  setChatInfoToggle(false);
+  setIsComponentActive(true);
+  const chatRef = ref(getDatabase(), `groupChat/${chatId}`);
+      onValue(chatRef,(snapshot) =>{
+
+          if(snapshot.exists()) {
+            const data = snapshot.val()
+            setGroupChat(data)
+          } 
+      })
+},[chatId])
 
   function fetchChatData(chatId, user) {
 
@@ -118,7 +136,7 @@ useEffect(() => {
                       if (newMessage.uid !== user.uid && newMessage.chatId === chatId){
                         if(newMessage.type === 'group') {
                           // receiveSend.play();
-                          console.log('group message')
+                          // console.log('group message')
                         }
 
 
@@ -346,14 +364,12 @@ useEffect(() => {
         }
       }
     }
-
-    // Update the typing users state
     setTypingUsers(usersTyping);
-    console.log("Users typing:", usersTyping);  // Log for debugging
+ 
   });
 
-  return () => unsubscribe();  // Cleanup the listener when the component unmounts
-}, [chatId, reciever]);  // Dependencies: chatId and reciever
+  return () => unsubscribe();  
+}, [chatId, reciever]);  
 
 
 
@@ -364,24 +380,23 @@ const getUserDisplayName = async (userId) => {
   try {
     const snapshot = await get(userRef);
     if (snapshot.exists()) {
-      return snapshot.val().displayName; // Return displayName of the user
+      return snapshot.val().displayName; 
     } 
   } catch (error) {
     console.error("Error fetching user displayName:", error);
-    return null; // Handle error or return a default value
+    return null; 
   }
 };
 
-
     return (
-      <div className='chat-box__container'>
+      <div className={`chat-box__container ${isComponentActive ? 'active' : ''}`}>
       {/* <button onClick={closeChat}> Close Chat</button> */}
 <div className='chat__header'>
 { loading ?  (
   <h1></h1>
 
 ) : (
-  <div className='chat__banner'>
+  <div className='chat__banner' onClick={chatInfoToggleHnadler}>
       <div className='profile__card'>
                 <img alt='user-avatar' src={ groupChat?.photoUrl || Placeholder} />
 
@@ -416,7 +431,7 @@ const getUserDisplayName = async (userId) => {
 { seen && Object.keys(typingUsers).length === 0 && ( <span ref={seenEndRef}> Seen </span>)}
 </div>
 
-{chat.length === 0 && <p>No messages</p>}
+{/* {chat.length === 0 && <p>No messages</p>} */}
 
 </div>
 <div ref={messagesEndRef} /></div> 
@@ -429,6 +444,12 @@ const getUserDisplayName = async (userId) => {
 <div id="send-button" onClick={sendMessage}></div>
 </div>
 </div>
+
+
+  <div className={`chat-info ${chatInfoToggle ? 'active' : ''}`}>
+  {chatInfoToggle && ( <ChatInfo groupChat={groupChat}/> )}
+  </div>
+
 
 </div>
 

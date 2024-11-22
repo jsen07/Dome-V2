@@ -9,16 +9,20 @@ import { useStateValue } from './contexts/StateProvider';
 import { actionTypes } from '../reducers/userReducer';
 import { useLocation } from 'react-router-dom';
 import ProfileComments from './ProfileComments';
-import ProfileActionButtons from './ProfileActionButtons';
 import Notifications from './Notifications';
-import FriendsList from './FriendsList';
-import ProfilePosts from './ProfilePosts';
+import ProfileMainContent from './ProfileMainContent';
+import ImageCropper from './ImageCropper';
+import ProfileBanner from './ProfileBanner';
+import Photos from './ProfileFilters/Photos';
 
 const Profile = () => {
+  const [isComponentActive, setIsComponentActive] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   const [editProfileToggled, setEditProfileToggled] = useState(false);
   const [changeAvatarToggled, setChangeAvatarToggled] = useState(false);
+  const [photosToggle, setPhotosToggle] = useState(false);
   const [background, setBackground] = useState();
+  const [activeSection, setActiveSection] = useState('Posts');
 
   const [loading, setLoading] = useState(false);
   const [{ user }, dispatch] = useStateValue();
@@ -31,6 +35,9 @@ const Profile = () => {
   const queryParams = new URLSearchParams(location.search);
   const userId = queryParams.get('userId');
 
+  const handleSectionToggle = (section) => {
+    setActiveSection(section);
+  };
 
   function fetchUserProfile(userId) {
     return new Promise((resolve, reject) => {
@@ -79,6 +86,10 @@ const Profile = () => {
     });
   }
 
+  useEffect(()=> {
+    setActiveSection('Posts');
+  },[userId])
+  
   useEffect(() => {
   
     fetchUserProfile(userId)
@@ -189,6 +200,7 @@ const Profile = () => {
   }
 
   useEffect(() => {
+    setIsComponentActive(true);
     const backgroundRef = ref(getDatabase(), `users/${userId}/background`);
     onValue(backgroundRef, (snapshot) => {
       if(snapshot.exists()) {
@@ -240,85 +252,39 @@ const Profile = () => {
     setEditProfileToggled(false)
     setChangeAvatarToggled(false)
   }
-
+const toggleProfileEdit = () => {
+  setEditProfileToggled(true);
+}
   if (loading) return <div className="loading">LOADING...</div>;
 
   return (
     // <div className="profile__background" style={background ? { backgroundImage: `url(${background})` } : {}}>
-    <div className="profile__background">
+    // <div className="profile__background">
+       <div className={`profile__background ${isComponentActive ? 'active' : ''}`}>
       <div className="profile__page">
         {/* Profile View */}
         {!editProfileToggled && (
           <div className="profile__view">
+            <ProfileBanner background={background} status={status} isCurrentUser={isCurrentUser} userDetails={userDetails} toggleProfileEdit={toggleProfileEdit}/>
 
-            <div className='header__banner'style={background ? { backgroundImage: `url(${background})` } : {}}>
-            <div className='profile-header'>
-            <div className="avatar__container">
-              <img
-                alt="avatar"
-                src={userDetails?.photoUrl || Placeholder}
-                className="profile__icon"
-              />
-              <div className={status ? `status ${status}` : 'status'}></div>
+            <div className='profile-links'>
+          <p onClick={()=>handleSectionToggle('Posts')}> Posts </p>
+          <p> About </p>
+          <p> Friends </p>
+          <p onClick={()=>handleSectionToggle('Photos')}> Photos</p>
+
             </div>
-          <div className='header__container'>
-            <div className='header__text'>
-            <h1>{userDetails?.displayName}</h1>
-            {isCurrentUser && (   
-                <button onClick={() => setEditProfileToggled(true)}>
-                Edit Profile
-              </button>
+            {activeSection ==='Posts'  && (
+                <ProfileMainContent userDetails={userDetails} />
             )}
-                     {!isCurrentUser && (   
-                <ProfileActionButtons userDetails={userDetails}/>
-              )}
-            </div>
-          </div>
-            </div>
-            </div>
 
-        <div className="profile-contents">
-          <div className='main__left'>
-          <div className='profile-bio'>
-            <h3>About me </h3>
-              <p>{userDetails?.Bio || 'This poohead has not set up their bio '}</p>
-              </div>
-
-              <FriendsList  user ={userDetails?.uid}/>
-
-              </div>
-            
-            <div className='main__right'>
-              <ProfilePosts  user={userDetails?.uid}/>
-              </div>
-
-              
-          </div>
-
-            {/* <div className="user-profile__details">
-              <p>Unique ID:</p>
-              <div className="profile-details">{userDetails?.uid}</div>
-              <p>Bio:</p>
-              <div className="profile-details">{userDetails?.Bio}</div>
-              <p>Gender:</p>
-              <div className="profile-details">{userDetails?.Gender}</div>
-              <p>Display name:</p>
-              <div className="profile-details">{userDetails?.displayName}</div>
-              <p>Email: {userDetails?.email}</p>
-              {!isCurrentUser && (   
-                <ProfileActionButtons userDetails={userDetails}/>
-              )}
-
-              {isCurrentUser && (   
-                <button onClick={() => setEditProfileToggled(true)}>
-                Edit Profile
-              </button>
+            {activeSection ==='Photos' && (
+                <Photos userId={userId}/>
             )}
-            </div> */}
           </div>
      )}
+
      {editProfileToggled && isCurrentUser && (
-          /* Edit Profile View */
           <div className="edit-profile__view">
             <div className="close-button">
               <button onClick={closeButton}>Close</button>
@@ -361,7 +327,9 @@ const Profile = () => {
               </select>
               <p>Email: {userDetails?.email}</p>
               <p> change profile background </p>
-              <input type="file" disabled={!isCurrentUser}onChange={handleBackgroundChange} />
+              <ImageCropper handleBackgroundChange={handleBackgroundChange
+              }/>
+              
             </div>
             {isCurrentUser && (
               <div className="edit-buttons__container">

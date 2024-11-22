@@ -8,10 +8,10 @@ import receivingSoundEffect from '../components/sound/receivingSound.mp3';
 import { Howl } from 'howler';
 import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import EmojiPicker from 'emoji-picker-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const Chat = () => {
-
+    const [isComponentActive, setIsComponentActive] = useState(false);
     const [ {user} ] = useStateValue();
     const [text, setText] =useState("");
     const [reciever, setReceiver] = useState();
@@ -19,7 +19,6 @@ const Chat = () => {
     const [seen, setSeen] = useState(false);
     const [isTyping, setIsTyping] = useState(false);
     const [typingUsers, setTypingUsers] = useState({});
-    const [path, setPath] = useState();
     const navigate = useNavigate();
 
 
@@ -37,7 +36,6 @@ const Chat = () => {
     const inputRef = useRef(null);
     const notificationSentRef = useRef(false);
     const typingTimeoutRef = useRef(null);
-    const location = useLocation();
 
     var soundSend = new Howl({
       src: [sendSoundEffect]
@@ -47,6 +45,10 @@ const Chat = () => {
       src: [receivingSoundEffect]
     });
 
+//     useEffect(()=> {
+//         setIsComponentActive(false);
+ 
+//   },[chatId])
 //create a promise to ensure that chatdata is fetched 
     function fetchChatData(chatId, user) {
 
@@ -96,6 +98,7 @@ const Chat = () => {
   const fetchUserProfile = (reciever) => {
     return new Promise((resolve, reject) => {
         setLoading(true);
+        setIsComponentActive(true);
         const dbRef = ref(getDatabase());
         const profileRef = child(dbRef, `users/${reciever}`);
 
@@ -119,7 +122,7 @@ const Chat = () => {
 useEffect(() => {
   setLoading(true);
   const getUserProfile = () => {
-      const profilePromise = fetchUserProfile(reciever);
+      const profilePromise = fetchUserProfile(reciever);;
       profilePromise.then(profileData => {
               if (profileData) {
                   setLoading(false);
@@ -130,15 +133,13 @@ useEffect(() => {
           });
   };
   if (reciever) {
-    getUserProfile();
+   getUserProfile();
 }
 
 }, [reciever]);
 
- 
   useEffect(() => {
     setLoading(true); 
-    setPath(location.pathname)
 //fetch chat data everytime user changes chat
 
     fetchChatData(chatId, user).then(result => {
@@ -511,7 +512,7 @@ useEffect(() => {
 
 
   return (
-    <div className='chat-box__container'>
+    <div className={`chat-box__container ${isComponentActive ? 'active' : ''}`}>
               {/* <button onClick={closeChat}> Close Chat</button> */}
         <div className='chat__header'>
         { loading ?  (
@@ -520,7 +521,7 @@ useEffect(() => {
 
         ) : (
           <div className='chat__banner'>
-              <div className='profile__card' onClick={()=> navigate(`/home/profile?userId=${recieverData?.uid}`)}>
+              <div className='profile__card' onClick={()=> navigate(`/profile?userId=${recieverData?.uid}`)}>
                         <img alt='user-avatar' src={ recieverData?.photoUrl || Placeholder} />
                         <div className={ status ? status : "status"} ><div className='inner'>
                        

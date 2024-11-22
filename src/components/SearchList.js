@@ -101,7 +101,7 @@ const SearchList = ({ results, key }) => {
                             <p>{results.displayName}</p>
                         </div>
                         <div className='searched-view'>
-                            <div onClick={()=> navigate(`/home/profile?userId=${results.uid}`)}id="view-user"></div>
+                            <div onClick={()=> navigate(`/profile?userId=${results.uid}`)}id="view-user"></div>
                         </div>
                     </div>
                 </div>

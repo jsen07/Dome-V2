@@ -9,6 +9,7 @@ import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/s
 import { useNavigate } from 'react-router-dom';
 import PostsComment from './PostsComment';
 import CommentIcon from './svg/comment-alt-lines-svgrepo-com.svg';
+import FullscreenPost from './FullscreenPost';
 const Posts = () => {
 
   const { currentUser } = useAuth();
@@ -24,6 +25,9 @@ const Posts = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [imageUrl, setImageUrl] = useState();
   const [toggleComment, setToggleComment] = useState({});
+  const [toggleFullscreen, setToggleFullscreen] = useState(false);
+  const [clickTimeout, setClickTimeout] = useState(null);
+  const [selectedPost, setSelectedPost] = useState();
   const storage = getStorage();
   const navigate = useNavigate();
 
@@ -45,7 +49,7 @@ const Posts = () => {
   const handleCommentToggle = (postKey) => {
     setToggleComment((prevState) => ({
       ...prevState,
-      [postKey]: !prevState[postKey], // Toggle the visibility for this specific post
+      [postKey]: !prevState[postKey], 
     }));
   };
 
@@ -66,8 +70,8 @@ const Posts = () => {
   };
 const fetchFriends = async () => {
   if(!currentUser) return
-try {
   setIsLoading(true);
+try {
     const friendRequestRef = ref(getDatabase());
     const snapshot = await get(child(friendRequestRef, `friendsList/${currentUser.uid}`))
     let friendslist = [];
@@ -94,17 +98,19 @@ catch (error) {
 }
 
 const post = async () => {
-  if(!text) return
+  if (!text && !imageUrl) {
+    return;
+  }
 
-  const postRef = ref(getDatabase(), `${option}Posts/${currentUser.uid}`);
+  const postRef = ref(getDatabase(), `${option}Posts/${user.uid}`);
   const newPostRef = push(postRef);
   const key = newPostRef.key
 
   const Post = {
-    displayName: currentUser.displayName,
-    photoUrl: currentUser.photoURL,
-    uid: currentUser.uid,
-    post: text,
+    displayName: user.displayName,
+    photoUrl: user.photoURL,
+    uid: user.uid,
+    post: text || "",
     timestamp: Date.now(),
     type: option,
     postKey: key,
@@ -157,9 +163,7 @@ setIsLoading(true);
      const flatArray = array.flat()
 
      setPublicPosts([...flatArray]);
-    } else {
-      setPosts(prev => [...prev]);
-    }
+    } 
   } catch (error) {
     console.log('Error fetching posts:', error);
   }
@@ -195,8 +199,6 @@ setIsLoading(true);
       }
      })
      setFriendPosts([...friendsPosts]);
-    } else {
-      setPosts([]);
     }
   } catch (error) {
     console.log('Error fetching posts:', error);
@@ -205,6 +207,7 @@ setIsLoading(true);
     setIsLoading(false);
   }
 };
+
 useEffect(() => {
   fetchFriends();
   fetchPublicPosts()
@@ -212,11 +215,13 @@ useEffect(() => {
 
   },[currentUser]) 
   useEffect(() => {
-    if (friendPosts.length > 0 || publicPosts.length > 0) {
-      const combinedPosts = [...friendPosts, ...publicPosts];
-
+    const combinedPosts = [...friendPosts, ...publicPosts];
+  
+    if (combinedPosts.length > 0) {
       const sortedPosts = combinedPosts.sort((a, b) => b.timestamp - a.timestamp);
       setPosts(sortedPosts);
+    } else {
+      setPosts([]);
     }
   }, [friendPosts, publicPosts]);
 
@@ -269,6 +274,36 @@ function formatTimestamp(timestamp) {
   
   return `${day}/${month}/${year} at ${hours}:${minutes} ${ampm}`;
 }
+const handleDoubleClick = (e, type, uid, postKey) => {
+  e.preventDefault();
+  likePost(type, uid, postKey);
+};
+const handleDoubleClickImage = (e, type, uid, postKey) => {
+  // Clear the click timeout to prevent the single-click handler from firing
+  if (clickTimeout) {
+    clearTimeout(clickTimeout);
+    setClickTimeout(null);
+  }
+  // Handle double-click logic (e.g., like or expand post)
+  handleDoubleClick(e, type, uid, postKey);
+};
+
+
+const handleClick = (e) => {
+
+  if (clickTimeout) return;
+
+  const timeoutId = setTimeout(() => {
+    setToggleFullscreen((prev) => !prev);
+    setClickTimeout(null); 
+  }, 200);
+
+  setClickTimeout(timeoutId);
+};
+
+const handlePostClick = (post) => {
+  setSelectedPost(post);
+};
 
   return (
     <div className='posts__container'>
@@ -309,26 +344,43 @@ function formatTimestamp(timestamp) {
             posts.map((post, index) => {
               const userLiked = post.likes && post.likes.includes(currentUser.uid);
 
+
               return (
+                
                 <div key={index} className="post-entry">
+                      {toggleFullscreen && selectedPost && selectedPost.postKey === post.postKey && (
+                <FullscreenPost
+                  handleClick={handleClick}
+                  post={selectedPost}
+                />
+              )}
                   <div className="post-header">
                     <img src={post.photoUrl || Placeholder} alt={post.displayName} />
 
                     <div className='header__title'>
-                      <h2 onClick={()=> navigate(`/home/profile?userId=${post.uid}`)}>{post.displayName}</h2>
+                      <h2 onClick={()=> navigate(`/profile?userId=${post.uid}`)}>{post.displayName}</h2>
                       <span>{formatTimestamp(post.timestamp)}</span>
                     </div>
                   </div>
-                  <div className='post__content' >
-                    <div className='post-text'>
-                  <p>{post.post || 'No content available.'}</p>
-                  </div>
+                  <div className='post__content' onDoubleClick={handleDoubleClick} >
+                    {post.post && (
+                        <div className='post-text' onDoubleClick={(e)=>handleDoubleClick(e, post.type, post.uid, post.postKey)}>
+                        <p>{post.post}</p>
+                        </div>
+                    )}
 
-                  <div className='image-container'>
+
                   {post.imageUrl && (
-                    <img src={post.imageUrl} alt='post-image' />
-                  )}
+                  <div className='image-container'>
+      
+                    <img src={post.imageUrl} alt='post-image' 
+                    onDoubleClick={ (e)=> handleDoubleClickImage(e, post.type, post.uid, post.postKey)}
+                    onClick={() => {handleClick();
+                    handlePostClick(post);}}
+                    />
+           
                   </div>
+                )}
 
                   </div>
                   <div className='post__action-stats'>
@@ -356,7 +408,11 @@ function formatTimestamp(timestamp) {
                       </div>
                  {/* COMMNENTS */}
                  {toggleComment[post.postKey] && (
+      
+                  <div className="comment-p_container">
                   <PostsComment postKey={post.postKey} type={post.type} uid={post.uid} />
+                  </div>
+
                   )}
                 </div>
               );

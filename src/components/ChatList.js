@@ -7,7 +7,7 @@ import { db } from '../firebase';
 import { useAuth } from './contexts/AuthContext';
 import CreateGroupChat from './CreateGroupChat';
 import CreateChatIcon from './svg/groupchat-svg.svg';
-import dropdownIcon from './svg/menu-dropdown.svg';
+import dropdownIcon from './svg/triple-dot.svg';
 
 const ChatList = () => {
 
@@ -298,16 +298,20 @@ useEffect(() => {
         }
 const createGroupChatToggle = () => {
     setGroupChatToggle(prev => !prev);
-    };
+};
+
+
     return (
         <div className='chat-card__container'>
             {groupChatToggle && (
+   
                 <CreateGroupChat createGroupChatToggle={createGroupChatToggle} />
+      
                 )}
                 <div className='chat__top'>
                     <div className='chat__header'>
 <h1> Active chats </h1>
-<img onClick={createGroupChatToggle} src={CreateChatIcon} title="Create a group chat" alt="create group chat"/>
+<img className="groupchat" onClick={createGroupChatToggle} src={CreateChatIcon} title="Create a group chat" alt="create group chat"/>
 </div>
 <div className='chat__filter-buttons'>
             {/* <p> Online {onlineUsersCount}</p> */}
@@ -361,7 +365,7 @@ const createGroupChatToggle = () => {
 
 {dropDownToggle && (
                         <div className={dropDownToggle ? 'delete-chatlist active' : 'delete-chatlist'} style={{
-                            top: `${dropdownPosition.top}px`, // Dynamic position
+                            top: `${dropdownPosition.top}px`,
                             left: `${dropdownPosition.left}px`,
                           }}>
                             <p onClick={deleteChat}> Delete </p>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from './contexts/AuthContext';
-import { ref, set, child, get, getDatabase, onValue, serverTimestamp, push } from 'firebase/database';
+import { ref, child, get, getDatabase } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 import Placeholder from './images/avatar_placeholder.png';
 
@@ -43,7 +43,7 @@ fetchFriends();
                     return (
                         <div key={index} className='friend'>
                             <div className='profile'>
-                                <img src={friend.photoUrl || Placeholder} alt="avatar" onClick={()=> navigate(`/home/profile?userId=${friend.uid}`)}/>
+                                <img src={friend.photoUrl || Placeholder} alt="avatar" onClick={()=> navigate(`/profile?userId=${friend.uid}`)}/>
                                 </div>
                                 <p> {friend.displayName} </p>
                             </div>

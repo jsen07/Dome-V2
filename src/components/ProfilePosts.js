@@ -110,7 +110,7 @@ const likePost = async (type, uid, postId ) => {
 }
   return (
     <div className='user__posts'>
-      <h1> Your posts </h1>
+      {/* <h1> Your posts </h1> */}
       {loading ? (
         <div className='loading'></div>
       ) : (

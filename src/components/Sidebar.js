@@ -45,7 +45,7 @@ const Sidebar = () => {
                     <div className={`side-bar__icon ${isActive('profile') ? 'active' : ''}`} 
                          title="Profile"
                          id="profile__icon" 
-                         onClick={()=> navigate(`/home/profile?userId=${user.uid}`)} 
+                         onClick={()=> navigate(`/profile?userId=${user.uid}`)} 
                          aria-label="Toggle Profile">
                     </div>
                     <div className={`side-bar__icon ${isActive('addFriend') ? 'active' : ''}`}  

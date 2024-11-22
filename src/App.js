@@ -1,4 +1,5 @@
 import './styles/style.css';
+import 'react-image-crop/src/ReactCrop.scss';
 import React, { useEffect } from 'react'
 import Login from './components/Login';
 import Home from './components/Home';
@@ -84,7 +85,7 @@ function App() {
                 </PrivateRoute>
             } />
 
-<Route path="/home/profile" element={
+<Route path="/profile" element={
                 <PrivateRoute>
                         <Sidebar/>
                         <Profile />

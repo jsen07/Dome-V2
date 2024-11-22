@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, get, set, push, serverTimestamp, runTransaction, onValue, remove } from "firebase/database";
+import { getDatabase, ref, get, set, push } from "firebase/database";
 import { useAuth } from './contexts/AuthContext';
 
 const PostsComment = ( { postKey, type, uid }) => {
@@ -83,9 +83,9 @@ useEffect(() => {
 }, [postKey]);
 return (
     <div className='post-comment__container'>
+         <div className='post__comment'>
         {comments.length > 0 && (
     comments.map((comment) => (
-      <div className='post__comment'>
         <div className='comment__container'>
             <div className='post-comment__header'>
                 <h4> {comment.displayName}</h4>
@@ -93,9 +93,10 @@ return (
             </div>
                 <p> {comment.comment}</p>
                 </div>  
-                </div>
+           
             ))
         )}
+        </div>
             
             <div className='comment__input'>
             <textarea value={text} onChange={handleTextChange} placeholder="Write a comment..." rows="1"></textarea>

@@ -170,7 +170,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
 
     <div className="comment-header">
     
-    <span className="comment-author" onClick={()=> navigate(`/home/profile?userId=${uid}`)}> {displayName} </span> 
+    <span className="comment-author" onClick={()=> navigate(`/profile?userId=${uid}`)}> {displayName} </span> 
     <span className="comment-time"> {formatTimestamp(timestamp)}</span>
 </div>
     

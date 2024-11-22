@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ref, onValue, getDatabase, get, push, set, serverTimestamp } from "firebase/database";
 import {  useStateValue } from './contexts/StateProvider';
 import Placeholder from './images/avatar_placeholder.png';
@@ -12,6 +12,7 @@ const CreateGroupChat = ({createGroupChatToggle}) => {
   const navigate = useNavigate();
 
   const [{ user }] = useStateValue();
+
 
 
   const searchUserByID = async () => {
@@ -69,11 +70,12 @@ const createGroupChat = async () => {
 
   const chatData = {
     name: groupChatName,
-    createdAt: serverTimestamp(),
+    createdAt: serverTimestamp(), 
+    admin: [user.uid],
     messages: {},
     allowedUsers: searchedIDs
 };
-if(userList.length > 2 && searchedIDs.length !== 0 ) {
+if(userList.length >= 2 && searchedIDs.length !== 0 ) {
   if(chatSnapshot.exists()) {
 
     await set(ref(getDatabase(), `groupChat/${chatKey}`), chatData);

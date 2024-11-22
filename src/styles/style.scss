@@ -11,11 +11,11 @@
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    // align-items: center;
-    // background-image: url('../components/images/solo-leveling-game-3840x2160-17908.jpeg');
-    background-color: #f5f6fa;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-color: #1B1D21;
+    // background-image: url('../components/svg/polygon-scatter-haikei.svg');
+    // // background-position: bottom;
+    // // background-repeat: repeat-y;
+    // background-size: contain;
     overflow-y: hidden;
     overflow-x: hidden;
     .loading {
@@ -68,3 +68,6 @@
 @import './Posts';
 @import './profilePosts';
 @import './postComments';
+@import './fullscreenPost';
+@import './chatInfo';
+@import './Photos';
