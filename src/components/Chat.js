@@ -50,6 +50,8 @@ const Chat = () => {
  
 //   },[chatId])
 //create a promise to ensure that chatdata is fetched 
+
+
     function fetchChatData(chatId, user) {
 
 
@@ -141,7 +143,9 @@ useEffect(() => {
   useEffect(() => {
     setLoading(true); 
 //fetch chat data everytime user changes chat
-
+// const handleIsUser = () => {
+//     isUser = true
+// }
     fetchChatData(chatId, user).then(result => {
           setChat(result.messages);
 
@@ -159,9 +163,7 @@ useEffect(() => {
                     if(messagesArray[messagesArray.length-1].chatId === chatId) {
                     setChat(messagesArray);
                     setLastMessage(messagesArray[messagesArray.length-1])
-          
                     
-
                     // Check for new messages
                     if (messagesArray.length > result.messages.length) {
                       const newMessage = messagesArray[messagesArray.length - 1];
@@ -389,11 +391,10 @@ set(newPostRef, {
                     if (!dateMap[dateString]) {
                         dateMap[dateString] = { label: dateString, messages: [] };
                     }
+
                     if (dateString === today) {
                         dateMap[dateString].label = "Today"; 
-                    }
-
-                    else if (dateString >= startOfWeekString && dateString <= today) {
+                    } else if (dateString >= startOfWeekString && dateString <= today) {
                         const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
                         dateMap[dateString].label = dayOfWeek;
                     } else {
@@ -414,20 +415,91 @@ set(newPostRef, {
     });
 
     return Object.keys(dateMap).map(date => (
-        <div key={date} className='date-container'>
-            <div className='date-notify'>
-                <div className='title-date'>
+        <div key={date} className="date-container">
+            <div className="date-notify">
+                <div className="title-date">
                     <h4>{dateMap[date].label}</h4>
+                </div>
+            </div>
+            {dateMap[date].messages.map((message, index) => {
+                const isUserMessage = message.uid === user?.uid;
+                const isFirstMessageOfDay = index === 0 || message.uid !== dateMap[date].messages[index - 1].uid;
+    
+                const previousMessageTimestamp = index > 0 ? dateMap[date].messages[index - 1].sentAt : null; // Timestamp of  previous message
+                const currentMessageTimestamp = message.sentAt;
+
+                const timeDifference = previousMessageTimestamp ? (currentMessageTimestamp - previousMessageTimestamp) / (1000 * 60) : 0; // in minutes
+    
+                const shouldShowDisplayName =
+                    isFirstMessageOfDay || 
+                    timeDifference >= 15 || 
+                    message.uid !== dateMap[date].messages[index - 1].uid;
+    
+                return (
+                    <div key={message.id} className={isUserMessage ? "user-message" : "message"}>
+   
+                        {shouldShowDisplayName && (
+                            <div className="message_header">
+                                <span>{message.displayName}</span>
+                                {shouldShowDisplayName && (
+  <span id="time-header"> {HeaderformatTimestamp(message.sentAt)}</span>
+)}
+                            </div>
+                        )}
+                        <ChatMessage data={message} isFirstMessageOfDay={isFirstMessageOfDay} shouldShowDisplayName={shouldShowDisplayName}/>
+                       
+
                     </div>
-            </div> 
-            {dateMap[date].messages.map((message, index) => (
-                <ChatMessage key={index} data={message} />
-            ))}
+                );
+            })}
         </div>
     ));
-};
-
-
+    
+}
+    
+function HeaderformatTimestamp(timestamp) {
+    const timestampDate = new Date(timestamp);
+    let hours = timestampDate.getHours();       // Get hours
+    const minutes = timestampDate.getMinutes()
+    let dayOrNight = "";
+    const now = new Date();
+    const todayStart = new Date(now.setHours(0, 0, 0, 0));
+    const yesterdayStart = new Date(todayStart);
+    yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+    const currentDay = now.getDay();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+    const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
+  
+    if(hours >= 12) {
+        dayOrNight = "PM"
+    }
+    if(hours === 0 || hours < 12) {
+        dayOrNight ="AM"
+    }
+    if( hours === 0 ) {
+        hours = 12;
+    }
+  
+    const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
+    if (timestampDate >= todayStart) {
+        
+        
+        return `Today at ${timeOfMessage}`;
+  
+    } else if (timestampDate >= yesterdayStart) {
+        return `Yesterday at ${timeOfMessage}`;
+    } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
+    
+        return `${dayOfWeek} at ${timeOfMessage}`
+    } else {
+        return `${dayOfWeek}, ${timestampDate.toLocaleDateString("en-US", { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        })} at ${timeOfMessage}`
+        }
+    }
 
         useEffect(() => {
             const db = getDatabase();

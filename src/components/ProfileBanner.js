@@ -1,6 +1,9 @@
 import React from 'react'
 import ProfileActionButtons from './ProfileActionButtons';
 import Placeholder from './images/profile-placeholder-2.jpg';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Box from '@mui/material/Box';
 
 const ProfileBanner = ({background, status, isCurrentUser, userDetails, toggleProfileEdit}) => {
   return (
@@ -18,9 +21,23 @@ const ProfileBanner = ({background, status, isCurrentUser, userDetails, togglePr
     <div className='header__text'>
     <h1>{userDetails?.displayName}</h1>
     {isCurrentUser && (   
-        <button onClick={toggleProfileEdit}>
-        Edit Profile
-      </button>
+      //   <button onClick={toggleProfileEdit}>
+      //   Edit Profile
+      // </button>
+      <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        '& > *': {
+          m: 1,
+        },
+      }}
+    >
+      <ButtonGroup variant="outlined" aria-label="Basic button group">
+  <Button className='edit-profile-button' onClick={toggleProfileEdit}> Edit Profile </Button>
+</ButtonGroup>
+</Box>
     )}
              {!isCurrentUser && (   
         <ProfileActionButtons userDetails={userDetails}/>

@@ -4,6 +4,10 @@ import { useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import Trash from './svg/bin-svgrepo-com.svg';
+import { TransitionGroup } from 'react-transition-group';
+import Collapse from '@mui/material/Collapse';
+import ListItem from '@mui/material/ListItem';
+
 
 const ProfileComments = ({ user }) => {
     const [comments, setComments] = useState([]);
@@ -12,13 +16,13 @@ const ProfileComments = ({ user }) => {
     const navigate = useNavigate();
 
     useEffect(() => {
-    if(!user?.uid) return
+        if (!user?.uid) return;
     
         const fetchComments = async () => {
-          try {
-            const commentsRef = ref(getDatabase(), `profile/${user.uid}/comments`);
-            const snapshot = await get(commentsRef);
+          const commentsRef = ref(getDatabase(), `profile/${user.uid}/comments`);
+          const snapshot = await get(commentsRef);
     
+          try {
             if (snapshot.exists()) {
               const commentData = snapshot.val();
               const commentsArray = Object.keys(commentData).map(key => ({
@@ -26,18 +30,36 @@ const ProfileComments = ({ user }) => {
                 ...commentData[key]
               }));
               setComments(commentsArray);
-            // console.log(commentsArray);
+    
+              if (currentUser?.uid) {
+                const userRef = ref(getDatabase(), `users/${currentUser.uid}`);
+                onValue(userRef, (userSnapshot) => {
+                  if (userSnapshot.exists()) {
+                    const userData = userSnapshot.val();
+                    const updatedDisplayName = userData.displayName;
+                    const updatedPhotoURL = userData.photoUrl;
+    
+                    setComments(prevComments => 
+                      prevComments.map(comment => 
+                        comment.uid === currentUser.uid 
+                          ? { ...comment, displayName: updatedDisplayName, photoUrl: updatedPhotoURL }
+                          : comment
+                      )
+                    );
+                  }
+                });
+              }
             } else {
-              setComments([]); 
+              setComments([]);
             }
           } catch (error) {
-            console.log(error)
-          }    
-        }
-
+            console.log(error);
+          }
+        };
+    
         fetchComments();
-}, [user]);
-
+    
+      }, [user, currentUser]); // Added currentUser to the dependency array
 const handleTextChange = (e) => {
     setText(e.target.value);
 };
@@ -197,42 +219,41 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
 </div>
  )}
 
-  return (
+ return (
     <div className="comment-section">
-    <h3 className="comment-section-title">Comments</h3>
+        <h3 className="comment-section-title">Comments</h3>
 
-    <div className="comment-input-container">
-        <textarea value={text} onChange={handleTextChange} placeholder="Write a comment..." rows="4"></textarea>
-<div className='post__action'>
-        <div className='comment-profile'>
-            <img src={currentUser.photoURL? currentUser.photoURL : Placeholder} alt="user-profile" />
+        <div className="comment-input-container">
+            <textarea value={text} onChange={handleTextChange} placeholder="Write a comment..." rows="4"></textarea>
+            <div className="post__action">
+                <div className="comment-profile">
+                    <img src={currentUser.photoURL || Placeholder} alt="user-profile" />
+                </div>
+                <button className="comment-submit-btn" onClick={postComment}>Post Comment</button>
+            </div>
         </div>
-        <button className="comment-submit-btn" onClick={postComment}>Post Comment</button>
-    </div>
-    </div>
 
-    <div className="comment-list">
-    {comments.length > 0 && (
-    comments.map((comment) => (
-      <Comment
-        key={comment.id}
-        uid={comment.uid}
-        id={comment.id}
-        displayName={comment.displayName}
-        photoUrl={comment.photoUrl}
-        timestamp={comment.timestamp}
-        comment={comment.comment}
-        likes={comment.likes}
-      />
-    ))
-    )}
-    
-  
-
+        <div className="comment-list">
+            <TransitionGroup>
+                {comments.map((comment) => (
+                    <Collapse key={comment.id}>
+                        <ListItem>
+                            <Comment
+                                uid={comment.uid}
+                                id={comment.id}
+                                displayName={comment.displayName}
+                                photoUrl={comment.photoUrl}
+                                timestamp={comment.timestamp}
+                                comment={comment.comment}
+                                likes={comment.likes}
+                            />
+                        </ListItem>
+                    </Collapse>
+                ))}
+            </TransitionGroup>
+        </div>
     </div>
-</div>
-
-  )
-}
+);
+};
 
 export default ProfileComments

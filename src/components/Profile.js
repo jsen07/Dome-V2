@@ -362,9 +362,9 @@ const toggleProfileEdit = () => {
   )}
       </div>
 <div className='profile-panel__container' >
-  {isCurrentUser && (
+  {/* {isCurrentUser && (
           <Notifications />
-  )}
+  )} */}
       <ProfileComments user={userDetails}/>
       </div>
     </div>

@@ -115,14 +115,14 @@ const handleReject = async (userId) => {
 const handleAccept = async (userId, displayName, photoURL) => {
 
     const friendsData = {
-        displayName: displayName,
-        photoUrl: photoURL,
+        // displayName: displayName,
+        // photoUrl: photoURL,
         uid: userId
 
     }
     const currentUserData = {
-        displayName: currentUser.displayName,
-        photoUrl: currentUser.photoURL,
+        // displayName: currentUser.displayName,
+        // photoUrl: currentUser.photoURL,
         uid: currentUser.uid
     }
     try {

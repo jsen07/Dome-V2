@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { getDatabase, ref, get, set, push } from "firebase/database";
 import { useAuth } from './contexts/AuthContext';
+import SendIcon from '@mui/icons-material/Send';
 
 const PostsComment = ( { postKey, type, uid }) => {
     const [comments, setComments] = useState([]);
@@ -100,7 +101,7 @@ return (
             
             <div className='comment__input'>
             <textarea value={text} onChange={handleTextChange} placeholder="Write a comment..." rows="1"></textarea>
-                <button onClick={postComment}> send </button>
+                <SendIcon onClick={postComment} />
                 </div>
                 </div>
   )

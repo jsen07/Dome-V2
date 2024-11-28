@@ -6,18 +6,18 @@
     display: flex;
     justify-content: space-between;
     flex-direction: row;
+    background-color: rgb(21, 23, 27);
     // transition: opacity 0.5s ease-in-out;
     
 .profile__page {
     min-width: auto;
-    width: calc(80% - 100px);
+    width: 100%;
     height: 100%;
     // border-left: 1px solid rgba(205, 89, 255, 0.8);
     // border-right: 1px solid rgba(205, 89, 255, 0.8);
     display: flex; 
     flex-direction: column;
     align-items: center;
-    background-color:  rgb(27, 29, 33);
     color: black;
     // margin-left:10px;
     // background-color: white;
@@ -83,7 +83,7 @@
                 height: 100%;
                 object-fit: cover;
                 border-radius: 50%;
-                border: 5px solid rgb(32, 35, 40);
+                border: 5px solid rgb(21, 23, 27);
             }
 
             .status {
@@ -97,7 +97,7 @@
                 bottom: -10px;
                 border-radius: 50%;
       
-                border: 5px solid rgb(32, 35, 40);
+                border: 5px solid rgb(21, 23, 27);
             }
 
             .status.Online {
@@ -109,8 +109,8 @@
 
             .status.Offline {
                 display: flex;
-                // background-color: white;
-                box-shadow:inset 0px 0px 0px 10px black;
+                background-color: #323232;
+                border: 5px solid rgb(21, 23, 27);
 
             }
         }
@@ -131,10 +131,12 @@
             align-items: center;
             padding-right: 20px;
             margin-bottom: 25px;
-            button {
-                width: 80px;
+            .edit-profile-button {
+                width: auto;
                 height: 30px;
                 margin-inline: 10px;
+                background-color: #121212;
+                text-transform: none;
             }
             .profile__action-buttons {
                 // border: 2px solid green;

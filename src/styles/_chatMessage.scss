@@ -1,3 +1,8 @@
+// #time-header {
+//     display: flex;
+//     font-size: 0.75rem;
+//     margin-bottom: 5px;
+// }
 .user-message, .message {
     color: white;
     width: auto;
@@ -10,41 +15,80 @@
     padding-right: 10px;
 
     .message_header {
-        // border: 2px solid blue;
+        display: flex;
+        flex-direction: row;
         margin-bottom: 5px;
-      
-
-        #message__time-sent{
-            font-size: 12px;
-            margin-left: 5px;
+        position: relative;  
+        justify-content: center;
+        span {
+            margin-inline: 5px; 
+            font-size: 1rem;   
         }
+        #time-header {
+            display: flex;
+            align-items: center;
+            font-size: 0.75rem;
+            color: grey;
+            flex-grow: 1;
+        }
+    }
+.message__container {
+    margin-bottom:20px;
+    position: relative;
+    // border: 1px solid green;
+
+    &:hover {
+        cursor: pointer;
+        #message__time-sent {
+            opacity: 1;
+        }
+
+
     }
 
     .message-box {
         display: flex;
         justify-content: flex-end;
+        flex-direction: column;
+        background-color: #8c7ae6;
+        border-radius: 10px;
+        // padding-block: 1px;
+        padding-inline: 10px;
+        position: relative;
    
 
         p {
-            padding-block: 6px;
-            padding-inline: 15px;
-            border-radius: 10px;
             // border: 1px solid #353b48;
-            font-size: 20px;
-            margin-bottom:15px;
-            background-color: #8c7ae6;
-            text-align: center;
-        }
-
-        .message-time {
-            display: flex;
-            align-items: end;
-            width: 100%;
-            justify-content: flex-end;
-            font-size: 14px;
+            font-size: 20px;;
+            // text-align: center;
+            padding-block: 6px;
+            padding-inline: 2px;
         }
     }
+    #message__time-sent {
+        display: flex;
+        opacity: 0;
+        position: absolute;
+        bottom: -17px;        
+        font-size: 0.65rem;
+        left: 0;
+    }
 }
+}
+
+.user-message {
+    #message__time-sent {
+        justify-content: flex-end;
+        right: 0;
+    }
+    span {
+        margin-bottom: 3px;
+        // align-self: flex-end;
+
+    }
+
+}
+
 .message{
 
     align-items: start;

@@ -330,7 +330,7 @@ const createGroupChatToggle = () => {
                         key={key} 
                         data-userid={user.uid}>
                             
-                            <div className='chat-details__wrapper' onClick={() => navigate(`/home/${chat.chatId}`)}>
+                            <div className='chat-details__wrapper' onClick={() => navigate(`/chats/${chat.chatId}`)}>
                         <div className='profile__card'>
                             <img alt='user-avatar' src={chat.photoUrl || Placeholder} />
                             <div className={ chat?.status ? `${chat?.status}` : "status"} ><div className='inner'>

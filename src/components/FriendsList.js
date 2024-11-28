@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from './contexts/AuthContext';
-import { ref, child, get, getDatabase } from 'firebase/database';
+import { ref, child, get, getDatabase, onValue, update } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
 import Placeholder from './images/avatar_placeholder.png';
 
@@ -17,8 +17,25 @@ if(!currentUser) return
         const snapshot = await get(child(friendsRef, `friendsList/${user}`));
 
         if(snapshot.exists()) {
-            const friendsArray = Object.values(snapshot.val());
-            setFriends(friendsArray)
+            const friendsArr = [];
+
+            snapshot.forEach((childSnapshot) => {
+              const friendIds = childSnapshot.val();
+             
+
+              const userRef = ref(getDatabase(), `users/${friendIds.uid}`);
+ 
+              onValue(userRef, (userSnapshot) => {
+                if (userSnapshot.exists()) {
+                  const userData = userSnapshot.val();
+                  friendsArr.push(userData)
+                }
+                setFriends(friendsArr)
+              });
+  
+              
+          });
+              
         }
         else {
             setFriends([]);
@@ -37,6 +54,7 @@ fetchFriends();
     <div className='friends-list__container'>
         <div className='friends-list__header'>
             <h1> Friends </h1>
+            {/* <p> {friends?.length} friends </p> */}
         </div>
             <div className='friends__container'>
                 {friends && friends.map((friend, index) => {

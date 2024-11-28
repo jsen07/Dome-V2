@@ -16,8 +16,11 @@ import Profile from './components/Profile';
 import ChatRoute from './components/ChatRoute';
 import GroupChat from './components/GroupChat';
 import Posts from './components/Posts';
+import HomeNav from './components/HomeNav';
+import FriendsPanel from './components/FriendsPanel';
 import { db } from './firebase';
 import { child, get, serverTimestamp } from "firebase/database";
+import logo from './components/images/logo-transparent-png.png';
 
 function App() {
 
@@ -58,36 +61,63 @@ function App() {
                     <Login />
                 </ProtectedRoute>
             } />
-            <Route path="/home/:chatId" element={
-                <PrivateRoute>
-                      <ChatRoute>
-                  <Sidebar/>
-                  <ChatList />
-                    <Chat />
-                    </ChatRoute>
-                </PrivateRoute>
-            } />
+
                 <Route path="/home/groupchat/:chatId" element={
                 <PrivateRoute>
                       <GroupchatRoute>
-                  <Sidebar/>
+                  {/* <Sidebar/> */}
+                  <HomeNav />
                   <ChatList />
                     <GroupChat />
                     </GroupchatRoute>
                 </PrivateRoute>
             } />
+
             <Route path="/home" element={
                 <PrivateRoute>
-                        <Sidebar/>
-                        <ChatList />
+                        {/* <Sidebar/>
+                         <ChatList /> */}
+                                                 <HomeNav />
+                         <div className='home-content__container'>
+                          <div className='banner'>
+                            <div className='logo-container'>
+                            <img src={logo} alt="banner-logo"/>
+                            </div>
+                          </div>
+                          <div className='content-wrapper'>
+      
                         <Posts />
+                        <FriendsPanel />
+                        </div>
+                        </div>
+                        {/* <HomeNav /> */}
 
+                </PrivateRoute>
+            } />
+
+<Route path="/chats" element={
+                <PrivateRoute>
+
+                  <HomeNav />
+                  <ChatList />
+
+                </PrivateRoute>
+            } />
+
+<Route path="/chats/:chatId" element={
+                <PrivateRoute>
+                      <ChatRoute>
+                  {/* <Sidebar/> */}
+                  <HomeNav />
+                  <ChatList />
+                    <Chat />
+                    </ChatRoute>
                 </PrivateRoute>
             } />
 
 <Route path="/profile" element={
                 <PrivateRoute>
-                        <Sidebar/>
+                        <HomeNav />
                         <Profile />
                 </PrivateRoute>
             } />

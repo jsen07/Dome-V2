@@ -419,7 +419,7 @@ const getUserDisplayName = async (userId) => {
 <div className='seen__container'>
 {Object.keys(typingUsers).length > 0 && Object.keys(typingUsers).map((userId, index) => {
   return (
-    <p id="typing" key={index}>
+    <p key={index}>
       {typingUsers[userId]} is typing...
     </p>
   );

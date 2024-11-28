@@ -1,15 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import Placeholder from './images/profile-placeholder-2.jpg';
-import { getDatabase, ref, get, set, push,  child, runTransaction } from "firebase/database";
+import { getDatabase, ref, get, set, push,  child, runTransaction, onValue } from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
-import LikeIcon from './svg/LikeIcon.svg';
-import LikeIconActive from './svg/LikeIconActive.svg';
-import CommentIcon from './svg/CommentIcon.svg';
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
+import ModeCommentIcon from '@mui/icons-material/ModeComment';
+import SendIcon from '@mui/icons-material/Send';
+import Button from '@mui/material/Button';
 import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 import PostsComment from './PostsComment';
 import FullscreenPost from './FullscreenPost';
+import Skeleton from '@mui/material/Skeleton'; 
+
 const Posts = () => {
 
   const { currentUser } = useAuth();
@@ -28,9 +32,9 @@ const Posts = () => {
   const [toggleFullscreen, setToggleFullscreen] = useState(false);
   const [clickTimeout, setClickTimeout] = useState(null);
   const [selectedPost, setSelectedPost] = useState();
+  const [postStatus, setPostStatus] = useState('');
   const storage = getStorage();
   const navigate = useNavigate();
-
 
   const handleTextChange = (e) => {
     setText(e.target.value); 
@@ -88,12 +92,15 @@ try {
     else {
       setFriends([]);
     }
-    setIsLoading(false);
-    // console.log(friends);
+
 }
 catch (error) {
-  setIsLoading(false);
+
     console.log(error)
+}
+finally {
+  setIsLoading(false);
+
 }       
 }
 
@@ -107,8 +114,8 @@ const post = async () => {
   const key = newPostRef.key
 
   const Post = {
-    displayName: user.displayName,
-    photoUrl: user.photoURL,
+    // displayName: user.displayName,
+    // photoUrl: user.photoURL,
     uid: user.uid,
     post: text || "",
     timestamp: Date.now(),
@@ -134,7 +141,8 @@ if(imageUrl) {
       
       await set(newPostRef, Post);
       setText('');
-      setPosts(prev=>[...prev, Post])
+      console.log(publicPosts)
+      // setPosts(prev=>[...prev, ...Post])
       setImagePreview(null); 
       setImageUrl(null);
       console.log('Posted');
@@ -143,30 +151,50 @@ if(imageUrl) {
       console.log(error)
     }
   }
-
+ 
 const fetchPublicPosts = async () => {
   if (!currentUser) return;
 setIsLoading(true);
   try {
     const postsRef = ref(getDatabase(), `PublicPosts`);
-    const snapshot = await get(postsRef);
-    const postsData = snapshot.val();
-    let array = [];
+    const userRef = ref(getDatabase(), `users`);
+    const snap = await get(userRef);
 
-    if (postsData) {
-      const postsArray = Object.values(postsData);
+    onValue(postsRef, (snapshot) => {
+      let posts = [];
+      snapshot.forEach((childSnapshot) => {
+   
+          const post = childSnapshot.val()
 
-     for(let i = 0; i < postsArray.length; i++) {
-       array.push(Object.values(postsArray[i]));
-
-     }
-     const flatArray = array.flat()
-
-     setPublicPosts([...flatArray]);
-    } 
-  } catch (error) {
-    console.log('Error fetching posts:', error);
-  }
+          if (snapshot.exists()) {
+                const postsArray = Object.values(post);;
+                posts.push(...postsArray)
+              }
+            })
+            setPublicPosts(posts)
+            
+            snap.forEach((childSnapshot) => {
+              const userId = childSnapshot.key;
+              const userData = childSnapshot.val()
+              
+              setPublicPosts((postData) => {
+                return postData.map(post => {
+                  if(post.uid === userId) {
+                    return { 
+                      ...post,
+                      displayName: userData.displayName,
+                      photoUrl: userData.photoUrl
+                    };
+                  }
+                  return post;
+                })
+              })
+            })
+          })
+        }
+        catch (error) {
+          console.log('Error fetching posts:', error);
+        }
   finally {
     setIsLoading(false);
   }
@@ -177,29 +205,41 @@ const fetchPrivatePosts = async () => {
 setIsLoading(true);
   try {
     const postsRef = ref(getDatabase(), `FriendsPosts`);
-    const snapshot = await get(postsRef);
-    const postsData = snapshot.val();
-    let array = [];
-    let friendsPosts = []
+    const userRef = ref(getDatabase(), `users`);
+    const snap = await get(userRef);
 
-    if (postsData) {
-      const postsArray = Object.values(postsData);
-
-     for(let i = 0; i < postsArray.length; i++) {
-       array.push(Object.values(postsArray[i]));
-
-     }
-     const flatArray = array.flat()
-    //  console.log(flatArray)
-     flatArray.forEach(post => {
-      const friendsList = Object.values(post.friendsList)
-
-      if(friendsList.includes(currentUser.uid)) {
-        friendsPosts.push(post)
-      }
-     })
-     setFriendPosts([...friendsPosts]);
-    }
+    onValue(postsRef, (snapshot) => {
+      let posts = [];
+      snapshot.forEach((childSnapshot) => {
+   
+          const post = childSnapshot.val()
+          
+          if (snapshot.exists()) {
+            const postsArray = Object.values(post);;
+            posts.push(...postsArray)
+          }
+        })
+        
+        setFriendPosts(posts)
+            
+            snap.forEach((childSnapshot) => {
+              const userId = childSnapshot.key;
+              const userData = childSnapshot.val()
+              
+              setFriendPosts((postData) => {
+                return postData.map(post => {
+                  if(post.uid === userId) {
+                    return { 
+                      ...post,
+                      displayName: userData.displayName,
+                      photoUrl: userData.photoUrl
+                    };
+                  }
+                  return post;
+                })
+              })
+            })
+          })
   } catch (error) {
     console.log('Error fetching posts:', error);
   }
@@ -215,14 +255,17 @@ useEffect(() => {
 
   },[currentUser]) 
   useEffect(() => {
+
     const combinedPosts = [...friendPosts, ...publicPosts];
-  
     if (combinedPosts.length > 0) {
       const sortedPosts = combinedPosts.sort((a, b) => b.timestamp - a.timestamp);
       setPosts(sortedPosts);
-    } else {
-      setPosts([]);
-    }
+    } 
+    // else {
+    //   setPosts([]);
+
+    // }
+  
   }, [friendPosts, publicPosts]);
 
 const likePost = async (type, uid, postId ) => {
@@ -259,20 +302,47 @@ const likePost = async (type, uid, postId ) => {
   }
 }
 function formatTimestamp(timestamp) {
-  const date = new Date(timestamp);
+  const timestampDate = new Date(timestamp);
+  let hours = timestampDate.getHours();       // Get hours
+  const minutes = timestampDate.getMinutes()
+  let dayOrNight = "";
+  const now = new Date();
+  const todayStart = new Date(now.setHours(0, 0, 0, 0));
+  const yesterdayStart = new Date(todayStart);
+  yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+  const currentDay = now.getDay();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+  const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
+
+  if(hours >= 12) {
+      dayOrNight = "PM"
+  }
+  if(hours === 0 || hours < 12) {
+      dayOrNight ="AM"
+  }
+  if( hours === 0 ) {
+      hours = 12;
+  }
+
+  const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
+  if (timestampDate >= todayStart) {
+      
+      
+      return `Today at ${timeOfMessage}`;
+
+  } else if (timestampDate >= yesterdayStart) {
+      return `Yesterday at ${timeOfMessage}`;
+  } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
   
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  
-  let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  
-  return `${day}/${month}/${year} at ${hours}:${minutes} ${ampm}`;
+      return `${dayOfWeek} at ${timeOfMessage}`
+  } else {
+      return `${timestampDate.toLocaleDateString("en-US", { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+      })} at ${timeOfMessage}`
+      }
 }
 const handleDoubleClick = (e, type, uid, postKey) => {
   e.preventDefault();
@@ -306,8 +376,9 @@ const handlePostClick = (post) => {
 };
 
   return (
+  <div className='posts__component'>
     <div className='posts__container'>
-      <h1>{error || 'Community Posts'}</h1>
+      {/* <h1>{error || 'Community Posts'}</h1> */}
       <div className='input-container'>
         <div className='top__header'>
           <img src={currentUser.photoURL || Placeholder } alt='avatar'/>
@@ -332,15 +403,29 @@ const handlePostClick = (post) => {
               </select>
               <input type="file" onChange={handleImageChange}></input>
           </div>
-          <button disabled={!currentUser || isLoading} onClick={post}> post </button>
+          {/* <button disabled={!currentUser || isLoading} onClick={post}> post </button> */}
+          <Button variant="contained" endIcon={<SendIcon />} disabled={!currentUser || isLoading} onClick={post}>
+        Send
+      </Button>
         </div>
       </div>
 
       {isLoading ? (
-        <div className='loading'></div>
-      ) : (
+          <>
+             <Skeleton variant="text" width="100%" height={100} />
+             <Skeleton variant="rectangular" width="100%" height={500} />
+          </>
+      ) : 
+      (
         <div className="post__entries">
-          {posts.length > 0 ? (
+
+          {posts.length === 0 ? (
+         <>
+         <Skeleton variant="text" width="100%" height={100} />
+         <Skeleton variant="rectangular" width="100%" height={500} />
+         </>
+                  
+          ) : (
             posts.map((post, index) => {
               const userLiked = post.likes && post.likes.includes(currentUser.uid);
 
@@ -386,15 +471,17 @@ const handlePostClick = (post) => {
                   <div className='post__action-stats'>
                     <div className='likes-wrapper'>
                     {userLiked ?  (
-                      <img src={LikeIconActive} alt="like" />
-                    ) : (<img src={LikeIcon} alt="like-button"/> )}
+                      <FavoriteOutlinedIcon className='post-icon-group' style={{color: '#C04657'}}/>
+                    ) : (
+                      < FavoriteBorderOutlinedIcon className='post-icon-group'/>
+                     )}
 
                     {post.likes && post.likes.length > 0 && (
                       <span>{post.likes.length}</span>
                     )}
                     </div>
                     <div className='comments-wrapper'>
-                    <img src={CommentIcon} alt="comment-icon"/>
+                    <ModeCommentIcon className='post-icon-group'/>
                     {post.comments && (
                     <span>{Object.keys(post.comments).length}</span>
                   )}
@@ -420,13 +507,17 @@ const handlePostClick = (post) => {
                 </div>
               );
             })
-          ) : (
-            <p>No posts available.</p>
+
+          )}
+
+          {friendPosts.length === 0 && publicPosts.length === 0 && friendPosts.length === 0 && (
+            <p> No posts. </p>
           )}
         </div>
 )}
 
     </div>
+</div>
   )
 }
 

@@ -69,10 +69,10 @@ const createChat = async () => {
             ]);
             // navigate to the new chat
             console.log("Chat created successfully!");
-            navigate(`/home/${chatId}`);
+            navigate(`/chats/${chatId}`);
         } else {
             console.log("Chat already exists.");
-            navigate(`/home/${chatId}`);
+            navigate(`/chats/${chatId}`);
  
         }
     } catch (error) {
