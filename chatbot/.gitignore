@@ -1,0 +1,31 @@
+# Python Bytecode files
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+.venv/
+venv/
+ENV/
+env/
+
+# Django settings and secrets
+.env
+
+# Django migration files
+chatbot/chat/migrations/
+chatbot/bot/migrations/
+
+# Static and media files (if using Django's default static handling)
+static/
+media/
+
+# IDE or editor specific files
+.vscode/
+.idea/
+
+# MacOS specific files
+.DS_Store
+
+# Other common files to ignore
+*.log
+*.sqlite3
