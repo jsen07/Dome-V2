@@ -1,3 +1,8 @@
+.main__left-navigation-content {
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    align-items: center;
 .navigation-panel__container  {
     width: 50px;
     min-width: 50px;
@@ -17,6 +22,7 @@
     border: 1px solid rgba(140, 122, 230, 0.6);
     justify-content: space-between;
     align-items: center;
+    position: relative;
 
     .nav__top {
         display: flex;
@@ -126,4 +132,16 @@
             
         }
     }
+}
+
+.notif_container {
+    border: 1px solid blue;
+    width: 400px;
+    height: 90vh;
+    padding-block: 20px;
+    padding-inline: 10px;
+    position: absolute;
+    left: 70px;
+    top: 0;
+}
 }

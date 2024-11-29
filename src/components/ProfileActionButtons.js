@@ -3,6 +3,7 @@ import { useAuth } from './contexts/AuthContext';
 import { ref, set, child, get, getDatabase, onValue, serverTimestamp, push } from 'firebase/database';
 import { useStateValue } from './contexts/StateProvider';
 import { useNavigate } from 'react-router-dom';
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 
 const ProfileActionButtons = ({ userDetails }) => {
 
@@ -168,7 +169,7 @@ const friendsCheck = async () => {
   <button onClick={createChat}>Message</button>
 
   {isFriends ? (
-    <h3>Friends ✅</h3>
+    < HowToRegIcon />
   ) : (
     <>
 

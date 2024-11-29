@@ -87,6 +87,15 @@
 
     }
 
+    .message_header {
+        span {
+            order: 2;
+        }
+    #time-header {
+       order: 1;
+    }
+}
+
 }
 
 .message{

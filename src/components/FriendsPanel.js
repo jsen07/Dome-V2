@@ -103,9 +103,9 @@ useEffect(()=>{
   
                {onlineUsers.map((friend, index) => {
                     return (
-                        <div key={index} className='friend'>
+                        <div key={index} className='friend'  onClick={()=> navigate(`/profile?userId=${friend.uid}`)}>
                             <div className='profile'>           
-                                <img src={friend?.photoUrl || Placeholder} alt="avatar" onClick={()=> navigate(`/profile?userId=${friend.uid}`)}/>
+                                <img src={friend?.photoUrl || Placeholder} alt="avatar"/>
                                 <div className={friend.status ? `status ${friend.status}` : 'status'}></div>
                                 </div>
                                 <p> {friend.displayName} </p>
@@ -121,9 +121,9 @@ useEffect(()=>{
   
                {offlineUsers.map((friend, index) => {
                     return (
-                        <div key={index} className='friend'>
+                        <div key={index} className='friend'  onClick={()=> navigate(`/profile?userId=${friend.uid}`)}>
                             <div className='profile'>
-                                <img src={friend?.photoUrl || Placeholder} alt="avatar" onClick={()=> navigate(`/profile?userId=${friend.uid}`)}/>
+                                <img src={friend?.photoUrl || Placeholder} alt="avatar"/>
                                 <div className={friend.status ? `status ${friend.status}` : 'status'}></div>
                                 </div>
                                 <p> {friend.displayName} </p>

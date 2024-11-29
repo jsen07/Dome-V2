@@ -14,6 +14,7 @@ import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import  logo  from './svg/logo-transparent-cropped-png.png';
+import Notifications from './Notifications';
 
 const HomeNav = () => {
   const navigate = useNavigate();
@@ -27,7 +28,12 @@ const HomeNav = () => {
   //   handleLinkClick('home');
   // },[])
   const handleLinkClick = (link) => {
-    setActiveLink(link);  
+
+    setActiveLink(link);
+
+    if(activeLink === 'notifications') {
+    setActiveLink('');
+    }
   };
 
   const handleLogout = async () => {
@@ -41,6 +47,8 @@ const HomeNav = () => {
 };
 
   return (
+
+    <div className='main__left-navigation-content'>
     <div className='navigation-panel__container'>
 
 <div className='nav__top'>
@@ -154,8 +162,14 @@ const HomeNav = () => {
       </div>
  
  
-    
+      {activeLink === 'notifications' && (
+      <div className='notif_container'>
+        <Notifications />
+        </div>
+    )}
       
+
+    </div>
 
     </div>
   )

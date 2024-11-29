@@ -11,7 +11,6 @@
     width: 100vw;
     display: flex;
     flex-direction: row;
-    justify-content: center;
     background-color: rgb(22, 23, 27);
     position: relative;
     // background-image: url('../components/svg/polygon-scatter-haikei.svg');
@@ -54,11 +53,12 @@
       } 
 
       .home-content__container{
-        width: 100vw;
-        max-height: 100vh;
+        flex-grow: 1;
         display: flex;
         flex-direction: column;
         // align-items: center;
+        // justify-content: center;
+        // border: 2px solid red;
 
         .banner {
           height: 80px;
@@ -91,6 +91,8 @@
         .content-wrapper {
           display: flex;
           height: 100%;
+          align-self: flex-end;
+          width: calc(100% - 55px); //55px size of homeNav 
           flex-direction: row;
           // border: 2px solid blue;
           justify-content: center;

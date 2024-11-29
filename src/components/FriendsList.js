@@ -18,6 +18,7 @@ if(!currentUser) return
 
         if(snapshot.exists()) {
             const friendsArr = [];
+            console.log(snapshot.val())
 
             snapshot.forEach((childSnapshot) => {
               const friendIds = childSnapshot.val();
@@ -28,6 +29,7 @@ if(!currentUser) return
               onValue(userRef, (userSnapshot) => {
                 if (userSnapshot.exists()) {
                   const userData = userSnapshot.val();
+                //   console.log(userData)
                   friendsArr.push(userData)
                 }
                 setFriends(friendsArr)
@@ -36,9 +38,6 @@ if(!currentUser) return
               
           });
               
-        }
-        else {
-            setFriends([]);
         }
     }
     catch(error) {
