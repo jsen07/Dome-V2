@@ -45,9 +45,20 @@ const postComment = async () => {
     }
     try {
         const commentRef = ref(getDatabase(), `${type}Posts/${uid}/${postKey}/comments`);
+        const notifPostRef = ref(getDatabase(), `notifications/posts/${uid}/${postKey}/comments/${currentUser.uid}`);
         const newCommentRef = push(commentRef);
         
         await set(newCommentRef, comment);
+
+        if(currentUser.uid !== uid) {    
+        await set(notifPostRef, {
+          uid: currentUser.uid,
+          comment: text,
+          postId: postKey,
+          type: type,
+          timestamp: Date.now(),
+        });
+        }
         setText('');
         setComments(prev=>[...prev, comment]);
 

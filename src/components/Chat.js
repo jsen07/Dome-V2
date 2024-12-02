@@ -168,7 +168,7 @@ useEffect(() => {
                     if (messagesArray.length > result.messages.length) {
                       const newMessage = messagesArray[messagesArray.length - 1];
                       setLastMessage(newMessage)
-                      console.log( messagesArray.length, result.messages.length)
+                    //   console.log( messagesArray.length, result.messages.length)
                         if (newMessage.uid !== user.uid && newMessage.chatId === chatId) {
 
                             if(newMessage.type === 'direct') {
@@ -287,16 +287,23 @@ set(newPostRef, {
         
         });
 
-        const notificationRef = ref(db, `chatList/${reciever}/notifications/${user.uid}/messages`);
-        const newNotifRef = push(notificationRef);
-        set(newNotifRef, {
+        const notifiChatListRef = ref(db, `chatList/${reciever}/notifications/${user.uid}/messages`);
+        const newChatNotifRef = push(notifiChatListRef);
+        set(newChatNotifRef, {
             message: text,
             displayName: user.uid,
             sentAt: serverTimestamp(),
             isSeen: false,
             chatId: chatId,
             id: uniqueId,
-        });   
+        });
+        
+        const notificationRef = ref(db, `notifications/chat/${reciever}/${user.uid}`);
+        set(notificationRef, {
+            timestamp: serverTimestamp(),
+            chatId: chatId,
+            recieverId: user.uid
+        });
        
         const input = document.getElementById("send-message__input");
 
@@ -512,11 +519,15 @@ function HeaderformatTimestamp(timestamp) {
 
             const updateIsSeen = onValue(chatListRef, (snapshot) => {
                 const messageToDelete = ref(db, `chatList/${user.uid}/notifications/${reciever}/messages`);
+                const notifToDelete = ref(db, `notifications/chat/${user.uid}/${reciever}`);
             const chatData = snapshot.val();
                 if (chatData && !chatData.isSeen) {
                     update(chatListRef, { isSeen: true });
 
                 remove(messageToDelete).catch(error => {
+                    console.error('Error deleting message:', error);
+                });
+                remove(notifToDelete).catch(error => {
                     console.error('Error deleting message:', error);
                 });
                     

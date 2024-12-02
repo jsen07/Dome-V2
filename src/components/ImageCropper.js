@@ -6,6 +6,7 @@ import { set, ref as dbRef } from 'firebase/database';
 import { useStateValue } from './contexts/StateProvider';
 import imageCompression from 'browser-image-compression';
 import ResizeIcon from './svg/scale-arrows-red-circle-20606.svg';
+import HeightIcon from '@mui/icons-material/Height';
 
 const MIN_DIMENSION = 1080;  // Minimum width for cropping
 const MIN_HEIGHT = 250;  // Minimum height for cropping

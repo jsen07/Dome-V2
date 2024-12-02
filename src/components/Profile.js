@@ -3,17 +3,16 @@ import { useAuth } from './contexts/AuthContext';
 import { ref, set, child, get, getDatabase, onValue } from 'firebase/database';
 import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
 import { db } from '../firebase';
-import Placeholder from './images/profile-placeholder-2.jpg';
-import { updateProfile } from 'firebase/auth';
+
 import { useStateValue } from './contexts/StateProvider';
-import { actionTypes } from '../reducers/userReducer';
 import { useLocation } from 'react-router-dom';
 import ProfileComments from './ProfileComments';
 import Notifications from './Notifications';
 import ProfileMainContent from './ProfileMainContent';
-import ImageCropper from './ImageCropper';
+
 import ProfileBanner from './ProfileBanner';
 import Photos from './ProfileFilters/Photos';
+import EditProfile from './EditProfile';
 
 const Profile = () => {
   const [isComponentActive, setIsComponentActive] = useState(false);
@@ -39,11 +38,17 @@ const Profile = () => {
     setActiveSection(section);
   };
 
+  useEffect(()=> {
+    if(editProfileToggled && !isCurrentUser) {
+      setEditProfileToggled(false);
+    }
+  },[isCurrentUser])
+
   function fetchUserProfile(userId) {
     return new Promise((resolve, reject) => {
       const db_ref = db.ref();
+      setLoading(true);
       get(child(db_ref, `users/${userId}`)).then((snapshot) => {
-          setLoading(true);
           if (snapshot.exists()) {
             const userData = snapshot.val();
             setUserDetails(userData); // Update state with userData
@@ -64,7 +69,7 @@ const Profile = () => {
 
   function fetchUserBackground(userId) {
     return new Promise((resolve, reject) => {
-      // setLoading(true)
+      setLoading(true)
       const db_ref = db.ref();
       get(child(db_ref, `users/${userId}/background`))
         .then((snapshot) => {
@@ -72,9 +77,11 @@ const Profile = () => {
             const userData = snapshot.val();
             setBackground(userData.profileBackground)
             resolve(userData);
+            setLoading(false)
  
           } else {
             setBackground('');
+            setLoading(false)
 
           }
         })
@@ -82,6 +89,7 @@ const Profile = () => {
           console.log("Error fetching user background:", error);
  
           reject(error);
+          setLoading(false)
         });
     });
   }
@@ -94,15 +102,19 @@ const Profile = () => {
   
     fetchUserProfile(userId)
       .then(userData => {
+        setLoading(true);
         if (userData.uid === currentUser?.uid) {
           setCurrentUser(true);
+          setLoading(false)
         } else {
           setCurrentUser(false);
+          setLoading(false)
         }
         // console.log(userDetails)
       })
       .catch((error) => {
         console.error("Error fetching user data:", error);
+        setLoading(false)
       });
 
       fetchUserBackground(userId);
@@ -137,67 +149,7 @@ const Profile = () => {
 
   }, [currentUser])
 
-  const handleFileChange = (e) => {
-    if (e.target.files[0]) {
-      // setUploadPhoto(e.target.files[0]);
-      handleFileUpload(e.target.files[0]);
-    }
-  };
 
-  const handleFileUpload = async (photo) => {
-    setLoading(true);
-    const fileRef = sRef(storage, `${currentUser.uid}.png`);
-
-    try {
-      await uploadBytes(fileRef, photo);
-      const photoLink = await getDownloadURL(fileRef);
-      dispatch({
-        type: actionTypes.SET_PROFILE,
-        ...user,
-        PhotoURL: photoLink,
-      });
-
-      await set(ref(db, `users/${currentUser.uid}`), {
-        ...userDetails,
-        photoUrl: photoLink,
-      });
-
-      updateProfile(currentUser, { photoURL: photoLink });
- 
-      setChangeAvatarToggled(false)
-      setLoading(false);
-
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      setLoading(false);
-    }
-  };
-
-  const handleBackgroundChange = (e) => {
-    if (e.target.files[0]) {
-      handleBackgroundFile(e.target.files[0]);
-    }
-  };
-
-  const handleBackgroundFile = async (backgroundImage) => {
-
-    setLoading(true);
-    const fileRef = sRef(storage, `${currentUser.uid}-backgroundImage.png`);
-
-    try {
-      await uploadBytes(fileRef, backgroundImage);
-      const photoLink = await getDownloadURL(fileRef);
-
-      await set(ref(db, `users/${currentUser.uid}/background`), {
-        profileBackground: photoLink
-      });
-      setLoading(false);
-
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      setLoading(false);
-    }
-  }
 
   useEffect(() => {
     setIsComponentActive(true);
@@ -214,39 +166,7 @@ const Profile = () => {
     })},[userId])
 
 
-  const removeProfilePicture = async () => {
-    try {
-      await updateProfile(currentUser, { photoURL: '' });
-      await set(ref(db, `users/${currentUser.uid}`), {
-        ...userDetails,
-        photoUrl: '',
-      });
-      setChangeAvatarToggled(false)
-    } catch (error) {
-      console.error("Error removing profile picture:", error);
-    }
-  };
 
-  const saveChanges = () => {
-    const newDisplayName = document.getElementById("edit-display-name__box").value;
-    const newBio = document.getElementById("edit-bio").value;
-    const newGender = document.getElementById("edit-gender").value;
-
-    updateProfile(currentUser, { displayName: newDisplayName }).then(() => {
-      set(ref(db, `users/${currentUser.uid}`), {
-        ...userDetails,
-        Bio: newBio,
-        displayName: newDisplayName,
-        Gender: newGender,
-      })
-        .then(() => {
-          setEditProfileToggled(false);
-        })
-        .catch((error) => {
-          console.error("Error saving changes:", error);
-        });
-    });
-  };
 
   const closeButton = () => {
     setEditProfileToggled(false)
@@ -255,120 +175,52 @@ const Profile = () => {
 const toggleProfileEdit = () => {
   setEditProfileToggled(true);
 }
-  if (loading) return <div className="loading">LOADING...</div>;
 
-  return (
-    // <div className="profile__background" style={background ? { backgroundImage: `url(${background})` } : {}}>
-    // <div className="profile__background">
-       <div className={`profile__background ${isComponentActive ? 'active' : ''}`}>
-      <div className="profile__page">
-        {/* Profile View */}
-        {!editProfileToggled && (
-          <div className="profile__view">
-            <ProfileBanner background={background} status={status} isCurrentUser={isCurrentUser} userDetails={userDetails} toggleProfileEdit={toggleProfileEdit}/>
-
-            <div className='profile-links'>
-          <p onClick={()=>handleSectionToggle('Posts')}> Posts </p>
-          <p> About </p>
-          <p> Friends </p>
-          <p onClick={()=>handleSectionToggle('Photos')}> Photos</p>
-
-            </div>
-            {activeSection ==='Posts'  && (
-                <ProfileMainContent userDetails={userDetails} />
-            )}
-
-            {activeSection ==='Photos' && (
-                <Photos userId={userId}/>
-            )}
-          </div>
-     )}
-
-     {editProfileToggled && isCurrentUser && (
-          <div className="edit-profile__view">
-            <div className="close-button">
-              <button onClick={closeButton}>Close</button>
-            </div>
-            <div className="edit-avatar">
-              <div className="avatar-container">
-                <img alt="avatar" src={userDetails?.photoUrl || Placeholder} className="profile__icon" />
-              </div>
-              <button onClick={() => setChangeAvatarToggled(!changeAvatarToggled)}>
-                Change Photo
-              </button>
-            </div>
-
-            <div className="user-profile__details">
-              <p>Unique ID: {currentUser.uid}</p>
-              <p>Display name</p>
-              <input
-                id="edit-display-name__box"
-                type="text"
-                defaultValue={userDetails?.displayName}
-                disabled={!isCurrentUser}
+return (
+  <div className={`profile__background ${isComponentActive ? 'active' : ''}`}>
+    <div className="profile__page">
+      {loading ? (
+        <div className='loading'></div>
+      ) : (
+        <>
+          {/* Profile View */}
+          {!editProfileToggled && !loading && (
+            <div className="profile__view">
+              <ProfileBanner 
+                background={background} 
+                status={status} 
+                isCurrentUser={isCurrentUser} 
+                userDetails={userDetails} 
+                toggleProfileEdit={toggleProfileEdit} 
               />
-              <p>Bio:</p>
-              <textarea
-                id="edit-bio"
-                rows="4"
-                defaultValue={userDetails?.Bio}
-                disabled={!isCurrentUser}
-              ></textarea>
-              <p>Gender:</p>
-              <select
-                id="edit-gender"
-                name="gender"
-                defaultValue={userDetails?.Gender}
-                disabled={!isCurrentUser}
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-                <option value="Prefer not to say">Prefer not to say</option>
-              </select>
-              <p>Email: {userDetails?.email}</p>
-              <p> change profile background </p>
-              <ImageCropper handleBackgroundChange={handleBackgroundChange
-              }/>
-              
+              <div className="profile-links">
+                <p onClick={() => handleSectionToggle('Posts')}>Posts</p>
+                <p>About</p>
+                <p>Friends</p>
+                <p onClick={() => handleSectionToggle('Photos')}>Photos</p>
+              </div>
+              {activeSection === 'Posts' && <ProfileMainContent userDetails={userDetails} />}
+              {activeSection === 'Photos' && <Photos userId={userId} />}
             </div>
-            {isCurrentUser && (
-              <div className="edit-buttons__container">
-                <button onClick={saveChanges}>Save</button>
-              </div>
-            )}
+          )}
 
-            {changeAvatarToggled && (
-              <div className="avatar-home">
-                <div className="avatar__container">
-                  <div className="upload-avatar__container">
-                  {isCurrentUser && userDetails?.photoUrl && (
-                      <button onClick={removeProfilePicture}>
-                        Remove current Photo
-                      </button>
-                    )}
-                  </div>
-                </div>
+          {editProfileToggled && isCurrentUser && (
 
-                <div className="default-avatar__container">
-                {isCurrentUser && !userDetails?.photoUrl &&(
-         
-                      <input type="file" disabled={!isCurrentUser}onChange={handleFileChange} />
-            
-                  )}
-                </div>
-              </div>
-            )}
-          </div>
-  )}
-      </div>
-<div className='profile-panel__container' >
-  {/* {isCurrentUser && (
-          <Notifications />
-  )} */}
-      <ProfileComments user={userDetails}/>
-      </div>
+            <EditProfile 
+              userDetails={userDetails} 
+              isCurrentUser={isCurrentUser} 
+              closeButton={closeButton} 
+            />
+          )}
+        </>
+      )}
     </div>
-  );
-};
+
+    <div className="profile-panel__container">
+      <ProfileComments user={userDetails} />
+    </div>
+  </div>
+);
+}
 
 export default Profile;

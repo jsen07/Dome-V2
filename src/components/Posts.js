@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth } from './contexts/AuthContext';
 import Placeholder from './images/profile-placeholder-2.jpg';
-import { getDatabase, ref, get, set, push,  child, runTransaction, onValue } from "firebase/database";
+import { getDatabase, ref, get, set, remove, push,  child, runTransaction, onValue } from "firebase/database";
 import { useStateValue } from './contexts/StateProvider';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteOutlinedIcon from '@mui/icons-material/FavoriteOutlined';
@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import PostsComment from './PostsComment';
 import FullscreenPost from './FullscreenPost';
 import Skeleton from '@mui/material/Skeleton'; 
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Posts = () => {
 
@@ -33,6 +34,7 @@ const Posts = () => {
   const [clickTimeout, setClickTimeout] = useState(null);
   const [selectedPost, setSelectedPost] = useState();
   const [postStatus, setPostStatus] = useState('');
+  const [openMenu, setOpenMenu] = useState(false);
   const storage = getStorage();
   const navigate = useNavigate();
 
@@ -286,6 +288,7 @@ const likePost = async (type, uid, postId ) => {
           return likes;
       });
       const updatedPostRef = ref(getDatabase(), `${type}Posts/${uid}/${postId}`);
+      const notifPostRef = ref(getDatabase(), `notifications/posts/${uid}/${postId}/like`);
       const snapshot = await get(updatedPostRef);
       const updatedPost = snapshot.val();
   
@@ -295,6 +298,12 @@ const likePost = async (type, uid, postId ) => {
             post.postKey === postId ? { ...post, likes: updatedPost.likes } : post
           );
         });
+
+        set(notifPostRef, {
+          timestamp: Date.now(),
+          postId: postId,
+          senderId: currentUser.uid,
+      });
       }
   }
   catch(error) {
@@ -375,6 +384,17 @@ const handlePostClick = (post) => {
   setSelectedPost(post);
 };
 
+const deletePost = async (type, postId) => {
+  console.log(type, postId)
+  const postToDelete = ref(getDatabase(), `${type}Posts/${currentUser.uid}/${postId}`);
+try {
+  await remove(postToDelete);
+}
+catch (error) {
+  console.log(error);
+}
+}
+
   return (
   <div className='posts__component'>
     <div className='posts__container'>
@@ -443,8 +463,16 @@ const handlePostClick = (post) => {
                     <img src={post.photoUrl || Placeholder} alt={post.displayName} />
 
                     <div className='header__title'>
+                      <div className="name-time">
                       <h2 onClick={()=> navigate(`/profile?userId=${post.uid}`)}>{post.displayName}</h2>
                       <span>{formatTimestamp(post.timestamp)}</span>
+                      </div>
+
+                      {post.uid === currentUser.uid && (
+                        <DeleteIcon className='menu-dropdown' onClick={()=> deletePost(post.type, post.postKey)} />
+        
+                      )}
+
                     </div>
                   </div>
                   <div className='post__content' onDoubleClick={handleDoubleClick} >

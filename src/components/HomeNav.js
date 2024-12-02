@@ -14,25 +14,30 @@ import PersonSearchOutlinedIcon from '@mui/icons-material/PersonSearchOutlined';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import  logo  from './svg/logo-transparent-cropped-png.png';
+import Fade from '@mui/material/Fade';
 import Notifications from './Notifications';
+import ActiveNotifications from './ActiveNotifications';
 
 const HomeNav = () => {
   const navigate = useNavigate();
   const { logout, currentUser } = useAuth();
-
   const [activeLink, setActiveLink] = useState(''); 
+  const [activeNotifications, setActiveNotifications] = useState({
+    requests: 0,
+    posts: 0,
+    messages: 0
+  });
 
 
-
-  // useEffect(()=> {
-  //   handleLinkClick('home');
-  // },[])
   const handleLinkClick = (link) => {
 
-    setActiveLink(link);
 
-    if(activeLink === 'notifications') {
+    if(activeLink === 'notifications' && link === 'notifications') {
     setActiveLink('');
+    }
+    else {
+      setActiveLink(link);
+
     }
   };
 
@@ -105,6 +110,7 @@ const HomeNav = () => {
 )}
         {/* <h2> Notifications </h2> */}
       </div>
+      <ActiveNotifications />
 </div>
  
 <div className='icon-wrapper'>
@@ -163,9 +169,11 @@ const HomeNav = () => {
  
  
       {activeLink === 'notifications' && (
+     <Fade in={activeLink === 'notifications'}>
       <div className='notif_container'>
         <Notifications />
         </div>
+        </Fade>
     )}
       
 

@@ -9,6 +9,7 @@ import Collapse from '@mui/material/Collapse';
 import ListItem from '@mui/material/ListItem';
 
 
+
 const ProfileComments = ({ user }) => {
     const [comments, setComments] = useState([]);
     const [text, setText] = useState();
@@ -237,7 +238,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
             <TransitionGroup>
                 {comments.map((comment) => (
                     <Collapse key={comment.id}>
-                        <ListItem>
+                        <ListItem className='list-el'>
                             <Comment
                                 uid={comment.uid}
                                 id={comment.id}

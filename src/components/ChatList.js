@@ -287,7 +287,7 @@ useEffect(() => {
             return "Yesterday";
         } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
             const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
-            return dayOfWeek;
+            return `${dayOfWeek}`;
         } else {
             return timestampDate.toLocaleDateString("en-US", { 
                 year: 'numeric', 

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from './contexts/AuthContext';
-import { ref, set, child, get, getDatabase, onValue, serverTimestamp, push } from 'firebase/database';
+import { ref, set, child, get, getDatabase, serverTimestamp, push } from 'firebase/database';
 import { useStateValue } from './contexts/StateProvider';
 import { useNavigate } from 'react-router-dom';
 import HowToRegIcon from '@mui/icons-material/HowToReg';
+import Button from '@mui/material/Button';
+import EmailIcon from '@mui/icons-material/Email';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 const ProfileActionButtons = ({ userDetails }) => {
 
@@ -166,17 +169,22 @@ const friendsCheck = async () => {
 
   return (
 <div className='profile__action-buttons'>
-  <button onClick={createChat}>Message</button>
+  <Button className='send-message-button' variant="outlined" startIcon={<EmailIcon/>} onClick={createChat}>
+  Message
+</Button>
 
   {isFriends ? (
-    < HowToRegIcon />
+    <p>Friends {< HowToRegIcon className='isFriend'/>}</p>
   ) : (
     <>
 
       {hasSent ? (
         <p>Friend request has been sent.</p>
       ) : (
-        <button onClick={handleFriendRequest}>Send friend request</button>
+        // <button onClick={handleFriendRequest}>Send friend request</button>
+        <Button className='send-message-button' variant="outlined" startIcon={<PersonAddIcon/>} onClick={handleFriendRequest}>
+        Send friend request
+      </Button>
       )}
     </>
   )}

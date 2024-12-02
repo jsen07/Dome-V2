@@ -351,8 +351,8 @@
   align-items: center;
 }
 .main__left-navigation-content .navigation-panel__container {
-  width: 50px;
-  min-width: 50px;
+  width: 40px;
+  min-width: 40px;
   display: flex;
   flex-direction: column;
   padding-block: 20px;
@@ -365,7 +365,7 @@
   align-self: center;
   border-radius: 10px;
   background-color: rgb(22, 23, 27);
-  border: 1px solid rgba(140, 122, 230, 0.6);
+  border: 1px solid rgb(140, 122, 230);
   justify-content: space-between;
   align-items: center;
   position: relative;
@@ -377,7 +377,7 @@
   align-items: center;
 }
 .main__left-navigation-content .navigation-panel__container .nav__top img {
-  width: calc(100% - 20px);
+  width: calc(100% - 15px);
   margin-bottom: 30px;
   margin-top: 10px;
 }
@@ -414,6 +414,9 @@
   pointer-events: none;
   position: absolute;
 }
+.main__left-navigation-content .navigation-panel__container .nav__top .icon-wrapper .links .nav-icons {
+  font-size: 1.3rem;
+}
 .main__left-navigation-content .navigation-panel__container .nav__top .icon-wrapper .links.active {
   color: rgb(140, 122, 230);
 }
@@ -431,8 +434,26 @@
   opacity: 1;
   transition: all 0.2s ease-in-out;
 }
+.main__left-navigation-content .navigation-panel__container .nav__top .icon-wrapper .notificaiton_length {
+  position: absolute;
+  top: -5px;
+  left: 60%;
+  border-radius: 50%;
+  width: 10px;
+  height: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3px;
+  aspect-ratio: 1/1;
+  background-color: #1975d1;
+  border: 4px solid rgb(22, 23, 27);
+}
+.main__left-navigation-content .navigation-panel__container .nav__top .icon-wrapper .notificaiton_length p {
+  align-self: center;
+}
 .main__left-navigation-content .navigation-panel__container #logout-icon {
-  font-size: 36px;
+  font-size: 1.5rem;
   color: rgb(140, 122, 230);
 }
 .main__left-navigation-content .navigation-panel__container #logout-icon:hover {
@@ -440,14 +461,16 @@
   cursor: pointer;
 }
 .main__left-navigation-content .notif_container {
-  border: 1px solid blue;
   width: 400px;
   height: 90vh;
   padding-block: 20px;
-  padding-inline: 10px;
   position: absolute;
-  left: 70px;
+  left: 80px;
   top: 0;
+  background-color: rgb(15, 16, 19);
+  z-index: 9999;
+  border: 1px solid #2e2e2e;
+  border-radius: 10px;
 }
 
 .profile__background {
@@ -477,7 +500,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: calc(100% - 100px);
+  width: 85%;
+  max-inline-size: 95%;
   height: 100%;
   position: relative;
 }
@@ -496,7 +520,7 @@
 .profile__background .profile__page .profile__view .header__banner .profile-header {
   display: flex;
   flex-direction: row;
-  margin-top: 180px;
+  margin-top: 200px;
   height: auto;
   width: 100%;
   box-sizing: border-box;
@@ -504,10 +528,11 @@
   padding-bottom: 25px;
 }
 .profile__background .profile__page .profile__view .header__banner .profile-header .avatar__container {
-  width: 150px;
-  height: 150px;
+  width: 120px;
+  height: 120px;
   margin-inline: 30px;
   position: relative;
+  aspect-ratio: 1/1;
 }
 .profile__background .profile__page .profile__view .header__banner .profile-header .avatar__container img {
   width: 100%;
@@ -517,8 +542,8 @@
   border: 5px solid rgb(21, 23, 27);
 }
 .profile__background .profile__page .profile__view .header__banner .profile-header .avatar__container .status {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   display: none;
   position: absolute;
   right: 0px;
@@ -545,7 +570,7 @@
 .profile__background .profile__page .profile__view .header__banner .profile-header .header__container .header__text {
   display: flex;
   flex-direction: row;
-  font-size: 1.3rem;
+  font-size: 0.9rem;
   color: white;
   justify-content: space-between;
   align-items: center;
@@ -564,6 +589,22 @@
   flex-direction: row;
   align-items: center;
 }
+.profile__background .profile__page .profile__view .header__banner .profile-header .header__container .header__text .profile__action-buttons .send-message-button {
+  margin-right: 10px;
+  width: auto;
+  font-size: 0.8rem;
+  text-transform: none;
+}
+.profile__background .profile__page .profile__view .header__banner .profile-header .header__container .header__text .profile__action-buttons p {
+  display: flex;
+  align-items: center;
+  margin-inline: 10px;
+  font-size: 1.2rem;
+}
+.profile__background .profile__page .profile__view .header__banner .profile-header .header__container .header__text .profile__action-buttons p .isFriend {
+  color: green;
+  font-size: 2.2rem;
+}
 .profile__background .profile__page .profile__view .profile-links {
   display: flex;
   width: 100%;
@@ -571,6 +612,7 @@
   padding: 10px 10px 30px 10px;
   color: white;
   border-bottom: 2px solid rgba(109, 93, 212, 0.3);
+  font-size: 0.85rem;
 }
 .profile__background .profile__page .profile__view .profile-links p {
   margin-right: 10px;
@@ -599,7 +641,7 @@
   flex-direction: column;
   max-width: 40%;
   margin-right: 15px;
-  padding: 10px;
+  padding-block: 10px;
   position: sticky;
   top: 20px;
   max-height: calc(100vh - 40px);
@@ -610,6 +652,7 @@
   justify-content: center;
   padding: 20px;
   background-color: #23262D;
+  font-size: 0.85rem;
   border: 2px solid rgba(75, 75, 75, 0.3);
   border-radius: 10px;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
@@ -624,7 +667,7 @@
   padding: 10px;
 }
 .profile__background .profile__page .profile__view .profile-contents .main__right {
-  width: 60%;
+  max-width: 60%;
 }
 .profile__background .profile__page .profile__view .user-profile__details {
   display: flex;
@@ -652,53 +695,82 @@
   cursor: pointer;
 }
 .profile__background .profile__page .edit-profile__view {
+  width: 85%;
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  color: white;
+}
+.profile__background .profile__page .edit-profile__view .edit__header {
   width: 100%;
   display: flex;
-  flex-direction: column;
-  border: 2px solid green;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: 20px;
+  color: white;
 }
-.profile__background .profile__page .edit-profile__view .close-button {
-  width: 90%;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 15px;
+.profile__background .profile__page .edit-profile__view .edit__header .close {
+  font-size: 0.8rem;
 }
-.profile__background .profile__page .edit-profile__view .edit-avatar {
-  width: 100%;
+.profile__background .profile__page .edit-profile__view .edit__container {
+  background-color: #1d2027;
+  margin-block: 20px;
+  border-radius: 10px;
+  flex-grow: 1;
+  padding: 30px;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar {
+  flex-grow: 1;
+  border-radius: 15px;
+  border: 1px solid #878787;
+  padding: 20px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-direction: row;
   margin-bottom: 10px;
 }
-.profile__background .profile__page .edit-profile__view .edit-avatar .avatar-container {
-  width: 400px;
-  height: 400px;
-  border-radius: 50%;
-  margin-bottom: 15px;
+.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .avatar-container {
+  width: 130px;
+  height: 130px;
+  margin-inline: 40px;
+  aspect-ratio: 1/1;
 }
-.profile__background .profile__page .edit-profile__view .edit-avatar .avatar-container img {
+.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .avatar-container img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
 }
-.profile__background .profile__page .edit-profile__view .user-profile__details {
+.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .upload-profile {
+  display: flex;
+  flex-direction: column;
+  color: grey;
+  font-size: 0.6rem;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .upload-profile .upload {
+  font-size: 0.8rem;
+  margin-block: 20px;
+  width: auto;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .upload-profile .upload-button {
+  margin-block: 20px;
+  background-color: #1557d1;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .user-profile__details {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  border: 2px solid red;
   padding-inline: 20px;
 }
-.profile__background .profile__page .edit-profile__view .user-profile__details p {
+.profile__background .profile__page .edit-profile__view .edit__container .user-profile__details h4 {
   margin-block: 8px;
 }
-.profile__background .profile__page .edit-profile__view .edit-buttons__container {
+.profile__background .profile__page .edit-profile__view .edit__container .edit-buttons__container {
   flex-grow: 1;
-  border: 2px solid pink;
+  padding-inline: 20px;
+  margin-top: 20px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
 }
 .profile__background .profile-panel__container {
   width: calc(35vw - 10%);
@@ -847,7 +919,6 @@
   align-self: flex-start;
   margin-top: 90px;
   color: white;
-  border: 1px solid rgb(100, 136, 234);
 }
 .friendsPanel__home .online__container, .friendsPanel__home .offline__container {
   width: 100%;
@@ -1319,6 +1390,8 @@
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper .inner-card .card-title .time-bar {
   display: flex;
   flex-direction: row;
+  align-items: center;
+  font-size: 0.75rem;
 }
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper .inner-card .details__card {
   display: flex;
@@ -1448,11 +1521,13 @@
 }
 .user-message .message__container #message__time-sent, .message .message__container #message__time-sent {
   display: flex;
+  align-items: center;
+  width: auto;
   opacity: 0;
   position: absolute;
   bottom: -17px;
   font-size: 0.65rem;
-  left: 0;
+  left: -10px;
 }
 
 .user-message #message__time-sent {
@@ -1738,54 +1813,93 @@
 .notifications__container {
   display: flex;
   flex-direction: column;
+  height: 100%;
   border-radius: 10px;
-  margin-inline: 10px;
-  margin-top: 10px;
-  padding: 20px;
+  padding-block: 20px;
   color: white;
   font-size: 0.8rem;
 }
-.notifications__container h3 {
-  color: white;
+.notifications__container h1 {
+  margin-bottom: 10px;
 }
 .notifications__container .notification-header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 15px;
+  margin-inline: 25px;
+}
+.notifications__container .notification-header h1 {
+  color: #1975d1;
 }
 .notifications__container .notification-header .notification__tabs {
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
+  margin-top: 20px;
 }
-.notifications__container .notification-header .notification__tabs h3 {
-  margin-inline: 10px;
+.notifications__container .notification-header .notification__tabs .filter-buttons {
+  color: white;
+  text-transform: none;
+}
+.notifications__container .notification-header .notification__tabs .filter-buttons:hover {
+  color: #1975d1;
 }
 .notifications__container .notification__content {
-  height: auto;
+  height: 100%;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+  font-size: 0.8rem;
 }
 .notifications__container .notification__content .request__container {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 10px;
+  padding-inline: 30px;
+  padding-block: 15px;
   margin-block: 5px;
+}
+.notifications__container .notification__content .request__container:hover {
+  background-color: rgb(20, 21, 25);
+  cursor: pointer;
 }
 .notifications__container .notification__content .request__container .time__header {
   width: 100%;
   display: flex;
   justify-content: flex-end;
   margin-bottom: 5px;
+  font-size: 0.7rem;
+  color: grey;
 }
 .notifications__container .notification__content .request__container .request__action-buttons {
   display: inline;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .notifications__container .notification__content .request__container .request__action-buttons button {
   margin-right: 10px;
+}
+.notifications__container .notification__content .request__container .fr-buttons {
+  width: auto;
+  height: 20px;
+  font-size: 0.6rem;
+}
+.notifications__container .notification__content .request__container .fr-buttons:hover {
+  opacity: 0.8;
+}
+.notifications__container .notification__content .request__container .post__notifs {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.notifications__container .notification__content .request__container .post__notifs .image-notif__container {
+  width: 40px;
+  height: 40px;
+  aspect-ratio: 1/1;
+  margin-left: 10px;
+}
+.notifications__container .notification__content .request__container .post__notifs .image-notif__container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .friends-list__container {
@@ -1797,6 +1911,7 @@
   border: 2px solid rgba(109, 93, 212, 0.3);
   border-radius: 10px;
   padding: 20px;
+  position: relative;
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   box-sizing: border-box;
 }
@@ -1806,6 +1921,8 @@
   margin-bottom: 20px;
   color: black;
   border-bottom: 2px solid rgba(109, 93, 212, 0.3);
+  position: relative;
+  font-size: 0.6rem;
 }
 .friends-list__container .friends-list__header h1 {
   margin-bottom: 10px;
@@ -1817,7 +1934,6 @@
 }
 .friends-list__container .friends__container .friend {
   font-size: 0.6rem;
-  margin-right: 10px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1832,8 +1948,8 @@
   text-overflow: ellipsis;
 }
 .friends-list__container .friends__container .friend .profile {
-  width: 80px;
-  height: 80px;
+  width: 70px;
+  height: 70px;
   margin-bottom: 5px;
 }
 .friends-list__container .friends__container .friend .profile img {
@@ -1846,6 +1962,10 @@
 .friends-list__container .friends__container .friend .profile img:hover {
   cursor: pointer;
   opacity: 0.9;
+}
+.friends-list__container .friends__container .friends-skeleton {
+  width: 80px;
+  height: 80px;
 }
 
 *::-webkit-scrollbar-thumb {
@@ -1956,7 +2076,7 @@
   flex-direction: row;
   align-items: center;
   margin-bottom: 10px;
-  border-bottom: 2px solid rgba(109, 93, 212, 0.3);
+  border-bottom: 2px solid rgb(109, 93, 212);
   -webkit-box-shadow: 0 4px 6px -6px #222;
   -moz-box-shadow: 0 4px 6px -6px #222;
   box-shadow: 0 4px 6px -6px #222;
@@ -1967,16 +2087,34 @@
   border-radius: 50%;
   margin-right: 15px;
   object-fit: cover;
+  aspect-ratio: 1/1;
 }
 .posts__component .posts__container .post__entries .post-entry .post-header .header__title {
   display: flex;
   flex-grow: 1;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-between;
+}
+.posts__component .posts__container .post__entries .post-entry .post-header .header__title .name-time {
+  display: flex;
+  flex-direction: column;
+}
+.posts__component .posts__container .post__entries .post-entry .post-header .header__title .name-time span {
+  font-size: 0.75rem;
+  color: grey;
 }
 .posts__component .posts__container .post__entries .post-entry .post-header .header__title h2:hover {
   cursor: pointer;
   text-decoration: underline;
+}
+.posts__component .posts__container .post__entries .post-entry .post-header .header__title .menu-dropdown {
+  transition: opacity 0.2s ease-in-out;
+  color: grey;
+  font-size: 1.2rem;
+}
+.posts__component .posts__container .post__entries .post-entry .post-header .header__title .menu-dropdown:hover {
+  cursor: pointer;
+  opacity: 0.5;
 }
 .posts__component .posts__container .post__entries .post-entry .post__content {
   display: flex;
@@ -2048,8 +2186,8 @@
 }
 .posts__component .posts__container .post__entries .post-entry .post__action-buttons {
   display: flex;
-  border-top: 1px solid rgba(140, 122, 230, 0.6);
-  border-bottom: 1px solid rgba(140, 122, 230, 0.6);
+  border-top: 1px solid rgb(140, 122, 230);
+  border-bottom: 1px solid rgb(140, 122, 230);
   width: calc(100% - 80px);
   margin-bottom: 30px;
   padding-block: 7px;

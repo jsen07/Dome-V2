@@ -4,8 +4,8 @@
     height: 100%;
     align-items: center;
 .navigation-panel__container  {
-    width: 50px;
-    min-width: 50px;
+    width: 40px;
+    min-width: 40px;
     display: flex;
     flex-direction: column;
     padding-block: 20px;
@@ -19,7 +19,7 @@
     align-self: center;
     border-radius: 10px;
     background-color: rgb(22, 23, 27);
-    border: 1px solid rgba(140, 122, 230, 0.6);
+    border: 1px solid rgba(140, 122, 230, 1);
     justify-content: space-between;
     align-items: center;
     position: relative;
@@ -31,7 +31,7 @@
         align-items: center;
         
         img {
-            width: calc(100% - 20px);
+            width: calc(100% - 15px);
             margin-bottom: 30px;
             margin-top: 10px;
         }
@@ -43,6 +43,7 @@
             // border: 1px solid green;
             padding:0;
             margin-block: 10px;
+            
         .links {
             display: flex;
             flex-direction: row;
@@ -55,9 +56,6 @@
             transition: all 0.2s ease-in-out;
             color: #9E9E9E;
             position: relative;
-            .nav-icons {
-                // margin-right: 16px;
-            }
 
             &:hover {
                 background-color:rgba(140, 122, 230, 0.6);
@@ -76,9 +74,12 @@
             .line {
                 pointer-events: none;
                 position: absolute;
+
+                
                 
                 
             }
+        
             // .line.active {
             //     border: 1px solid rgba(140, 122, 230, 0.6);
             //     width: 1px;
@@ -91,7 +92,10 @@
             //     transition: all 0.2s ease-in-out;
             // }
 
-
+            
+            .nav-icons {
+                font-size: 1.3rem;
+            }
         }
 
         .links.active {
@@ -114,6 +118,25 @@
             opacity: 1;
             transition: all 0.2s ease-in-out;
         }
+
+        .notificaiton_length {
+            position: absolute;
+            top: -5px;
+            left: 60%;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px;
+            aspect-ratio: 1/1;
+            background-color: #1975d1;
+            border: 4px solid rgb(22, 23, 27);
+            p {
+                align-self: center;
+            }
+        }
     }
 
         
@@ -123,7 +146,7 @@
     }
 
     #logout-icon {
-        font-size: 36px;
+        font-size: 1.5rem;
         color: rgba(140, 122, 230, 1);
 
         &:hover {
@@ -135,13 +158,16 @@
 }
 
 .notif_container {
-    border: 1px solid blue;
+    // border: 1px solid blue;
     width: 400px;
     height: 90vh;
     padding-block: 20px;
-    padding-inline: 10px;
     position: absolute;
-    left: 70px;
+    left: 80px;
     top: 0;
+    background-color: rgb(15, 16, 19);
+    z-index: 9999;
+    border: 1px solid #2e2e2e;
+    border-radius: 10px;
 }
 }

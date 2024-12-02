@@ -1,3 +1,4 @@
+import FriendsList from "../components/FriendsList";
 
 
 export const initialState = {
@@ -6,12 +7,14 @@ export const initialState = {
     chat: {
         chatId: null,
         chatName: null
-    }
+    },
+    friendsList: null,
 };
 
 export const actionTypes = {
     SET_USER: "SET_USER",
-    SET_CHAT: "SET_CHAT"
+    SET_CHAT: "SET_CHAT",
+    SET_FRIENDSLIST: "SET_FRIENDSLIST",
 };
 
 const reducer = (state, action) => {
@@ -36,6 +39,12 @@ const reducer = (state, action) => {
                 isLoading: false,
                 chat: action.chat
             }
+            case actionTypes.SET_FRIENDSLIST:
+                return {
+                    ...state,
+                    isLoading: false,
+                    friendsList: action.friendsList
+                }
             default:
                 return state;
     }

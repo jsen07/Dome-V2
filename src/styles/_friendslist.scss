@@ -10,6 +10,7 @@
     border: 2px solid rgba(109, 93, 212, 0.3);
     border-radius: 10px;
     padding: 20px;
+    position: relative;
 box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 box-sizing: border-box;
     
@@ -20,6 +21,8 @@ box-sizing: border-box;
         margin-bottom: 20px;
         color: black;
         border-bottom:  2px solid rgba(109, 93, 212, 0.3);
+        position: relative;
+        font-size: 0.6rem;
         h1 {
             margin-bottom: 10px;
             color: white;
@@ -34,7 +37,7 @@ box-sizing: border-box;
         .friend {
             font-size: 0.6rem;
             // border: 1px solid white;
-            margin-right: 10px;
+            // margin-right: 5px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -50,8 +53,8 @@ box-sizing: border-box;
             }
             
             .profile {
-                width: 80px;
-                height: 80px;
+                width: 70px;
+                height: 70px;
                 margin-bottom: 5px;
      
                 img {
@@ -70,5 +73,11 @@ box-sizing: border-box;
             }
         }
 
+        .friends-skeleton {
+            width: 80px;
+            height: 80px;
+        }
+
     }
+
 }

@@ -134,7 +134,7 @@
                 flex-direction: row;
                 align-items: center;
                 margin-bottom: 10px;
-                border-bottom: 2px solid rgba(109, 93, 212, 0.3);
+                border-bottom: 2px solid rgba(109, 93, 212, 1);
                 -webkit-box-shadow: 0 4px 6px -6px #222;
                 -moz-box-shadow: 0 4px 6px -6px #222;
                 box-shadow: 0 4px 6px -6px #222;
@@ -145,16 +145,38 @@
                     border-radius: 50%;
                     margin-right: 15px;
                     object-fit: cover;
+                    aspect-ratio: 1/1;
                 }
                 .header__title {
                     display: flex;
                     flex-grow: 1;
-                    flex-direction: column;
+                    flex-direction: row;
                     justify-content: space-between;
+
+                    .name-time {
+                        display: flex;
+                        flex-direction: column;
+
+                        span{
+                            font-size: 0.75rem;
+                            color: grey;
+                        }
+                    }
 
                     h2:hover {
                         cursor: pointer;
                         text-decoration: underline;
+                    }
+
+                    .menu-dropdown {
+                        transition: opacity 0.2s ease-in-out;
+                        color: grey;
+                        font-size: 1.2rem;
+
+                        &:hover {
+                            cursor: pointer;
+                            opacity: 0.5;
+                        }
                     }
                 }
             }
@@ -243,8 +265,8 @@
             }
             .post__action-buttons {
                 display: flex;
-                border-top: 1px solid rgba(140, 122, 230, 0.6);
-                border-bottom: 1px solid rgba(140, 122, 230, 0.6);
+                border-top: 1px solid rgba(140, 122, 230, 1);
+                border-bottom: 1px solid rgba(140, 122, 230, 1);
                 width: calc(100% - 80px);
                 margin-bottom: 30px;
                 padding-block: 7px;

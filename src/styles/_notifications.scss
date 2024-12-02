@@ -3,58 +3,109 @@
     // border: 1px solid red;
     display: flex;
     flex-direction: column;
+    height: 100%;
     // background-color: #23262D;
     border-radius: 10px;
-    margin-inline: 10px;
-    margin-top: 10px;
-    padding: 20px;
+    padding-block: 20px;
     color: white;
     font-size: 0.8rem;
     // box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
-    h3 {
-        color:white;
+
+    h1 {
+        margin-bottom: 10px;
     }
         .notification-header {
             display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
+            flex-direction: column;
             margin-bottom: 15px;
-            // border: 1px solid red;
+            margin-inline: 25px;
+
+            h1 {
+                color: #1975d1;
+            }
 
             .notification__tabs {
                 display: flex;
-                justify-content: flex-start;
-                h3{
-                    margin-inline: 10px;
+                justify-content: space-evenly;
+                margin-top: 20px;
+
+                .filter-buttons {
+                    color: white;
+                    text-transform: none;
+
+                    &:hover {
+                        color: #1975d1;
+                    }
                 }
             }
         }
     .notification__content {
-        height: auto;
+        height: 100%;
+        // border: 1px solid blue;
+        overflow-y: auto;
         display: flex;
         flex-direction: column;
+        font-size: 0.8rem;
 
+
+        // border: 1px solid green;
+        
         .request__container {
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            padding: 10px;
+            padding-inline: 30px;
+            padding-block: 15px;
             // border: 2px solid black;
             margin-block: 5px;
+
+            &:hover {
+                background-color: rgb(20, 21, 25);
+                cursor: pointer;
+            }
 
             .time__header {
                 width: 100%;
                 display: flex;
                 justify-content: flex-end;
                 margin-bottom: 5px;
+                font-size: 0.7rem;
+                color: grey;
             }
 
             .request__action-buttons {
                 display: inline;
-                margin-top: 10px;
+                margin-top: 20px;
                 button {
                     margin-right: 10px;
+                }
+            }
+
+            .fr-buttons {
+                width: auto;
+                height: 20px;
+                font-size: 0.6rem;
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+            .post__notifs {
+                display: flex;
+                flex-direction: row;
+                justify-content: space-between;
+
+                .image-notif__container {
+                    width: 40px;
+                    height: 40px;
+                    aspect-ratio: 1/1;
+                    margin-left: 10px;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
                 }
             }
 
