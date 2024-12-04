@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useStateValue } from './contexts/StateProvider';
 import { useAuth } from './contexts/AuthContext';
-import { ref, child, get, getDatabase, remove, set, onValue } from 'firebase/database';
+import { ref, child, get, getDatabase, onValue } from 'firebase/database';
 
 const ActiveNotifications = () => {
     const [{ user }] = useStateValue();
@@ -10,8 +10,6 @@ const ActiveNotifications = () => {
     const [messageNotifs, setMessageNotifs] = useState('');
     const [postNotifs, setPostNotifs] = useState('');
     const [combinedList, setCombinedList] = useState(0);
-    const [notifications, setNotifications ] = useState([]);
-    const [commentsLength, setCommentsLength] = useState(0);
 
 
 useEffect(() => {

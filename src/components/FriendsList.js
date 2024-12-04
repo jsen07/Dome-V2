@@ -69,7 +69,8 @@ fetchFriends();
               <Skeleton className='friends-skeleton' variant="circular"/>
               </>
       ) : (
-            friends && friends.map((friend, index) => {
+        <>
+            {friends.length > 0 && friends.map((friend, index) => {
                 return (
                     <div key={index} className='friend'>
                         <div className='profile'>
@@ -77,8 +78,15 @@ fetchFriends();
                             </div>
                             <p> {friend.displayName} </p>
                         </div>
+
+                        
                 )
-            })
+            })}
+            {friends.length === 0 && (
+              <p> This poohead is a loner </p>
+            )}
+                       </>
+
        )}
         </div>
 

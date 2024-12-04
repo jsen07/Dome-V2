@@ -74,6 +74,7 @@
                 aspect-ratio: 1 / 1;
                 margin-left: 25px;
                 object-fit: cover;
+                position: relative;
     
                 
     
@@ -96,11 +97,11 @@
     
                  .Offline, .Online {
                     display: flex;
-                    position: relative;
-                    bottom: 22px;
-                    left: 40px;
-                    width: 14px;
-                    height: 14px;
+                    position: absolute;
+                    bottom: -3px;
+                    right: -2px;
+                    height: 1.8vh;
+                    aspect-ratio: 1 / 1;
                     background-color: #121212;
                     justify-content: center;
                     align-items: center;

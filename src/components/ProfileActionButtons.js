@@ -27,9 +27,6 @@ const createChat = async () => {
         const newChatListRef = push(chatListRef);
         const chatListId = newChatListRef.key;
 
-        const userNotificationKey = push(ref(db, `chatList/${currentUser.uid}/notifications`)).key
-        const recieverNotificationKey = push(ref(db, `chatList/${userDetails.uid}/notifications`)).key
-
         // Check if chat already exists
         if (!chatSnapshot.exists()) {
             const chatData = {

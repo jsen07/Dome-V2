@@ -2,7 +2,6 @@ import './styles/style.css';
 import 'react-image-crop/src/ReactCrop.scss';
 import React, { useEffect } from 'react'
 import Login from './components/Login';
-import Home from './components/Home';
 import { AuthProvider } from './components/contexts/AuthContext';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
@@ -10,7 +9,6 @@ import ProtectedRoute from './components/ProtectedRoute';
 import GroupchatRoute from './components/GroupchatRoute';
 import { useStateValue } from './components/contexts/StateProvider';
 import Chat from './components/Chat';
-import Sidebar from './components/Sidebar';
 import ChatList from './components/ChatList';
 import Profile from './components/Profile';
 import ChatRoute from './components/ChatRoute';

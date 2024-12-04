@@ -9,6 +9,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import GroupIcon from '@mui/icons-material/Group';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import Button from '@mui/material/Button';
+import Fade from '@mui/material/Fade';
 
 const ChatInfo = ({groupChat}) => {
 
@@ -317,6 +318,7 @@ const addMembers = async () => {
 
                               
 {isDropDownActive && (
+      <Fade in={isDropDownActive}>
                     <div ref={dropdownRef} className='drop-down__menu'>
                         {!isAdmin && (
                              <p onClick={()=> makeAdmin(member.uid)}> Assign Admin </p>
@@ -326,6 +328,7 @@ const addMembers = async () => {
                              )}
                            
                             </div>
+                            </Fade>
                           )}
                               </div>
                           )}

@@ -14,6 +14,7 @@ import PostsComment from './PostsComment';
 import FullscreenPost from './FullscreenPost';
 import Skeleton from '@mui/material/Skeleton'; 
 import DeleteIcon from '@mui/icons-material/Delete';
+import LikedBy from './LikedBy';
 
 const Posts = () => {
 
@@ -33,8 +34,8 @@ const Posts = () => {
   const [toggleFullscreen, setToggleFullscreen] = useState(false);
   const [clickTimeout, setClickTimeout] = useState(null);
   const [selectedPost, setSelectedPost] = useState();
-  const [postStatus, setPostStatus] = useState('');
-  const [openMenu, setOpenMenu] = useState(false);
+  const [isLikedBy, setLikedByComponent] = useState(false);
+  const [likedBy, setLikedBy] = useState([]);
   const storage = getStorage();
   const navigate = useNavigate();
 
@@ -394,7 +395,10 @@ catch (error) {
   console.log(error);
 }
 }
+const handleClickAway = () => {
+  setLikedByComponent(false);
 
+}
   return (
   <div className='posts__component'>
     <div className='posts__container'>
@@ -432,6 +436,8 @@ catch (error) {
 
       {isLoading ? (
           <>
+             <Skeleton variant="text" width="100%" height={100} />
+             <Skeleton variant="rectangular" width="100%" height={500} />
              <Skeleton variant="text" width="100%" height={100} />
              <Skeleton variant="rectangular" width="100%" height={500} />
           </>
@@ -505,7 +511,11 @@ catch (error) {
                      )}
 
                     {post.likes && post.likes.length > 0 && (
-                      <span>{post.likes.length}</span>
+                      <>
+                      <span onClick={()=> {
+                        setLikedBy(post.likes);
+                        setLikedByComponent(prev=>!prev)}}>{post.likes.length}</span>
+                      </>
                     )}
                     </div>
                     <div className='comments-wrapper'>
@@ -544,6 +554,10 @@ catch (error) {
         </div>
 )}
 
+{isLikedBy && (
+ 
+  <LikedBy postLikes={likedBy} isLikedBy={isLikedBy} handleClickAway={handleClickAway}/>
+)}
     </div>
 </div>
   )

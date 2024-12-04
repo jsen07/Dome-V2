@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import CloseButton from './svg/x-close-delete-svgrepo-com.svg';
 import Placeholder from './images/profile-placeholder-2.jpg';
 import PostsComment from './PostsComment';
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 const FullscreenPost = ({handleClick, post}) => {
     const navigate = useNavigate();
@@ -41,7 +42,8 @@ function formatTimestamp(timestamp) {
         <div className='post-f'>
             <img id="close-button" src={CloseButton}  onClick={handleClick} alt="close menu"/>
             <div className='post-content-f'>
-            
+            <ClickAwayListener onClickAway={handleClick}>  
+            <div className='post__fs'>
                 <div className='image-container'>
                     <img src={post.imageUrl} alt='post-image' />
                     </div>
@@ -67,7 +69,8 @@ function formatTimestamp(timestamp) {
                                     </div>
 
                                     </div>
-                   
+                                    </div>
+                                </ClickAwayListener>       
             </div>
         </div>
     </div>
