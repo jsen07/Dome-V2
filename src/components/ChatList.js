@@ -8,6 +8,7 @@ import { useAuth } from './contexts/AuthContext';
 import CreateGroupChat from './CreateGroupChat';
 import CreateChatIcon from './svg/groupchat-svg.svg';
 import dropdownIcon from './svg/triple-dot.svg';
+import GroupList from './GroupList';
 
 const ChatList = () => {
 
@@ -310,7 +311,7 @@ const createGroupChatToggle = () => {
                 )}
                 <div className='chat__top'>
                     <div className='chat__header'>
-<h1> Active chats </h1>
+<h1> Chats </h1>
 <img className="groupchat" onClick={createGroupChatToggle} src={CreateChatIcon} title="Create a group chat" alt="create group chat"/>
 </div>
 <div className='chat__filter-buttons'>
@@ -324,6 +325,7 @@ const createGroupChatToggle = () => {
             
             {!onlineToggle && !notificationToggle && (
                 <div className='chatlist__container'>
+                <h4>Direct messages </h4>
                 {chatList.map((chat, key) => (
                     <div 
                         className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
@@ -359,6 +361,10 @@ const createGroupChatToggle = () => {
                     <img src={dropdownIcon} onClick={(e) => handleDropdown(e, chat?.uid)}alt="drop-down-menu" />
                     </div>
                 ))}
+
+                <h4>Groups</h4>
+
+                <GroupList />
 
                 </div>
             )}

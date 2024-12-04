@@ -8,6 +8,8 @@ import receivingSoundEffect from './sound/new-notification-7-210334.mp3';
 import { Howl } from 'howler';
 import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import EmojiPicker from 'emoji-picker-react';
+import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
+import SendIcon from '@mui/icons-material/Send';
 import ChatInfo from './ChatInfo';
 const GroupChat = () => {
 
@@ -261,63 +263,139 @@ const handleEmoji =(e)=> {
 
 }
 
- const generateMessages = () => {
-    const dateMap = {};
+const generateMessages = () => {
+  const dateMap = {};
 
-    const now = new Date();
-    const currentDay = now.getDay();
-    const startOfWeek = new Date(now);
-    startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+  const now = new Date();
+  const currentDay = now.getDay();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
 
-    const today = now.toISOString().split('T')[0];
-    const startOfWeekString = startOfWeek.toISOString().split('T')[0];
+  const today = now.toISOString().split('T')[0];
+  const startOfWeekString = startOfWeek.toISOString().split('T')[0];
 
-    chat.forEach(chatData => {
-        if (chatData.chatId === chatId) {
-            const timestamp = chatData.sentAt;
+  chat.forEach(chatData => {
+      if (chatData.chatId === chatId) {
+          const timestamp = chatData.sentAt;
 
-            if (timestamp) {
-                const date = new Date(timestamp);
-                if (!isNaN(date)) {
-                    const dateString = date.toISOString().split('T')[0];
+          if (timestamp) {
+              const date = new Date(timestamp);
 
-                    if (!dateMap[dateString]) {
-                        dateMap[dateString] = { label: dateString, messages: [] };
-                    }
+              if (!isNaN(date)) {
+                  const dateString = date.toISOString().split('T')[0];
 
-                    if (dateString === today) {
-                        dateMap[dateString].label = "Today";
-                    } else if (dateString >= startOfWeekString && dateString < today) {
-                        const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
-                        dateMap[dateString].label = dayOfWeek;
-                    } else {
-                        const formattedDate = date.toLocaleDateString("en-US", { 
-                            year: 'numeric', 
-                            month: 'long', 
-                            day: 'numeric' 
-                        });
-                        dateMap[dateString].label = formattedDate;
-                    }
+                  if (!dateMap[dateString]) {
+                      dateMap[dateString] = { label: dateString, messages: [] };
+                  }
 
-                    dateMap[dateString].messages.push(chatData);
-                } else {
-                    console.error("Invalid date:", timestamp);
-                }
-            }
-        }
-    });
+                  if (dateString === today) {
+                      dateMap[dateString].label = "Today"; 
+                  } else if (dateString >= startOfWeekString && dateString <= today) {
+                      const dayOfWeek = date.toLocaleString('en-US', { weekday: 'long' });
+                      dateMap[dateString].label = dayOfWeek;
+                  } else {
+                      const formattedDate = date.toLocaleDateString("en-US", { 
+                          year: 'numeric', 
+                          month: 'long', 
+                          day: 'numeric' 
+                      });
+                      dateMap[dateString].label = formattedDate;
+                  }
 
-  return Object.keys(dateMap).map(date => (
-      <div key={date} className='date-container'>
-          <div className='date-notify'>
-              <h4>{dateMap[date].label}</h4>
-          </div> 
-          {dateMap[date].messages.map((message, index) => (
-              <ChatMessage key={index} data={message} />
-          ))}
+                  dateMap[dateString].messages.push(chatData);
+              } else {
+                  console.error("Invalid date:", timestamp);
+              }
+          }
+      }
+  });
+
+  return Object.keys(dateMap).map((date, index) => (
+      <div key={index} className="date-container">
+          <div className="date-notify">
+              <div className="title-date">
+                  <h4>{dateMap[date].label}</h4>
+              </div>
+          </div>
+          {dateMap[date].messages.map((message, index) => {
+              const isUserMessage = message.uid === user?.uid;
+              const isFirstMessageOfDay = index === 0 || message.uid !== dateMap[date].messages[index - 1].uid;
+  
+              const previousMessageTimestamp = index > 0 ? dateMap[date].messages[index - 1].sentAt : null; // Timestamp of  previous message
+              const currentMessageTimestamp = message.sentAt;
+
+              const timeDifference = previousMessageTimestamp ? (currentMessageTimestamp - previousMessageTimestamp) / (1000 * 60) : 0; // in minutes
+  
+              const shouldShowDisplayName =
+                  isFirstMessageOfDay || 
+                  timeDifference >= 15 || 
+                  message.uid !== dateMap[date].messages[index - 1].uid;
+  
+              return (
+                  <div key={message.id} className={isUserMessage ? "user-message" : "message"}>
+ 
+                      {shouldShowDisplayName && (
+                          <div className="message_header">
+                              <span>{message.displayName}</span>
+                              {shouldShowDisplayName && (
+<span id="time-header"> {HeaderformatTimestamp(message.sentAt)}</span>
+)}
+                          </div>
+                      )}
+                      <ChatMessage data={message} isFirstMessageOfDay={isFirstMessageOfDay} shouldShowDisplayName={shouldShowDisplayName}/>
+                     
+
+                  </div>
+              );
+          })}
       </div>
   ));
-};
+  
+}
+
+function HeaderformatTimestamp(timestamp) {
+  const timestampDate = new Date(timestamp);
+  let hours = timestampDate.getHours();       // Get hours
+  const minutes = timestampDate.getMinutes()
+  let dayOrNight = "";
+  const now = new Date();
+  const todayStart = new Date(now.setHours(0, 0, 0, 0));
+  const yesterdayStart = new Date(todayStart);
+  yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+  const currentDay = now.getDay();
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+  const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
+
+  if(hours >= 12) {
+      dayOrNight = "PM"
+  }
+  if(hours === 0 || hours < 12) {
+      dayOrNight ="AM"
+  }
+  if( hours === 0 ) {
+      hours = 12;
+  }
+
+  const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
+  if (timestampDate >= todayStart) {
+      
+      
+      return `Today at ${timeOfMessage}`;
+
+  } else if (timestampDate >= yesterdayStart) {
+      return `Yesterday at ${timeOfMessage}`;
+  } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
+  
+      return `${dayOfWeek} at ${timeOfMessage}`
+  } else {
+      return `${dayOfWeek}, ${timestampDate.toLocaleDateString("en-US", { 
+          year: 'numeric', 
+          month: 'long', 
+          day: 'numeric' 
+      })} at ${timeOfMessage}`
+      }
+  }
 
 const notifyTyping = (chatId, userId, typing, displayName) => {
   set(ref(getDatabase(), `typingStatus/${chatId}/${userId}`), typing)
@@ -436,13 +514,13 @@ const getUserDisplayName = async (userId) => {
 </div>
 <div ref={messagesEndRef} /></div> 
 <div className='input__container'>
-<div className='emoji-button' onClick={emojiToggleHandler}> </div>
-<div className='emoji-picker__container'>
-<EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
-</div>
-<input  id="send-message__input" type="text" placeholder="Type a message..."  ref={inputRef} value={text} onChange={handleInputChange} onKeyDown={handleKeyPress} />
-<div id="send-button" onClick={sendMessage}></div>
-</div>
+  <EmojiEmotionsOutlinedIcon className='emoji-button' onClick={emojiToggleHandler}/>
+  <div className='emoji-picker__container'>
+  <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
+  </div>
+   <input  id="send-message__input" placeholder="Type a message..." type="text"  ref={inputRef} value={text} onChange={handleInputChange} onKeyDown={handleKeyPress} />
+        <SendIcon  id="send-button" onClick={sendMessage}/>
+        </div>
 </div>
 
 

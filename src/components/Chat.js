@@ -9,6 +9,8 @@ import { Howl } from 'howler';
 import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import EmojiPicker from 'emoji-picker-react';
 import { useNavigate } from 'react-router-dom';
+import EmojiEmotionsOutlinedIcon from '@mui/icons-material/EmojiEmotionsOutlined';
+import SendIcon from '@mui/icons-material/Send';
 
 const Chat = () => {
     const [isComponentActive, setIsComponentActive] = useState(false);
@@ -421,8 +423,8 @@ set(newPostRef, {
         }
     });
 
-    return Object.keys(dateMap).map(date => (
-        <div key={date} className="date-container">
+    return Object.keys(dateMap).map((date, index) => (
+        <div key={index} className="date-container">
             <div className="date-notify">
                 <div className="title-date">
                     <h4>{dateMap[date].label}</h4>
@@ -639,12 +641,12 @@ useEffect(() => {
   </div>
   <div ref={messagesEndRef} /></div> 
   <div className='input__container'>
-  <div className='emoji-button' onClick={emojiToggleHandler}> </div>
+  <EmojiEmotionsOutlinedIcon className='emoji-button' onClick={emojiToggleHandler}/>
   <div className='emoji-picker__container'>
-  <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="light" height={400} width={400}/>
+  <EmojiPicker open={emojiToggle} emojiStyle="native" onEmojiClick={handleEmoji} theme="dark" height={400} width={400}/>
   </div>
    <input  id="send-message__input" placeholder="Type a message..." type="text"  ref={inputRef} value={text} onChange={handleInputChange} onKeyDown={handleKeyPress} />
-        <div id="send-button" onClick={sendMessage}></div>
+        <SendIcon  id="send-button" onClick={sendMessage}/>
         </div>
   </div>
        

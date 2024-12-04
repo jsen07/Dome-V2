@@ -9,7 +9,7 @@
     border: 2px solid pink;
     background-color: aqua;
     position: absolute;
-    z-index: 2;
+    z-index: 10000;
 
     .searched-user__box {
         border: 2px solid green;

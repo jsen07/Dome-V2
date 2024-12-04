@@ -7,6 +7,7 @@ import Trash from './svg/bin-svgrepo-com.svg';
 import { TransitionGroup } from 'react-transition-group';
 import Collapse from '@mui/material/Collapse';
 import ListItem from '@mui/material/ListItem';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
@@ -213,7 +214,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
             {/* <button className="reply-btn">Reply</button> */}
             {currentUser.uid === user.uid && (
     //   <button className="remove-btn" onClick={() => deleteComment(id)}>Remove</button>
-      <img src={Trash}  onClick={() => deleteComment(id)} alt="Delete" />
+      <DeleteIcon className='delete' src={Trash}  onClick={() => deleteComment(id)} />
             )}
         </div>
 </div>
@@ -237,7 +238,7 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
         <div className="comment-list">
             <TransitionGroup>
                 {comments.map((comment) => (
-                    <Collapse key={comment.id}>
+                    <Collapse className='collapse' key={comment.id}>
                         <ListItem className='list-el'>
                             <Comment
                                 uid={comment.uid}

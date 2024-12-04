@@ -21,7 +21,7 @@
             margin-inline: 25px;
 
             h1 {
-                color: #1975d1;
+                color:rgba(154, 134, 253, 1);
             }
 
             .notification__tabs {
@@ -34,7 +34,7 @@
                     text-transform: none;
 
                     &:hover {
-                        color: #1975d1;
+                        color:rgba(154, 134, 253, 1);
                     }
                 }
             }
@@ -55,7 +55,7 @@
             flex-direction: column;
             justify-content: space-between;
             padding-inline: 30px;
-            padding-block: 15px;
+            padding-block: 12px;
             // border: 2px solid black;
             margin-block: 5px;
 
@@ -85,9 +85,16 @@
                 width: auto;
                 height: 20px;
                 font-size: 0.6rem;
+                color:rgba(154, 134, 253, 1);
+                border-color:rgba(154, 134, 253, 1);
                 &:hover {
                     opacity: 0.8;
                 }
+            }
+
+            .fr-buttons.contained {
+                color: black;
+                background-color:rgba(154, 134, 253, 1);
             }
 
             .post__notifs {

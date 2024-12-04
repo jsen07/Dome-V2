@@ -33,7 +33,7 @@
 
     .input-container {
         // border: 2px solid green;
-        outline: 1px solid rgba(100, 136, 234, 1);
+        // outline: 1px solid rgba(100, 136, 234, 1);
         margin-top: 20px;
         // border: 2px solid #8c7ae6;
         margin-bottom: 10px;
@@ -134,7 +134,7 @@
                 flex-direction: row;
                 align-items: center;
                 margin-bottom: 10px;
-                border-bottom: 2px solid rgba(109, 93, 212, 1);
+                // border-bottom: 1px solid rgba(109, 93, 212, 1);
                 -webkit-box-shadow: 0 4px 6px -6px #222;
                 -moz-box-shadow: 0 4px 6px -6px #222;
                 box-shadow: 0 4px 6px -6px #222;
@@ -267,7 +267,7 @@
                 display: flex;
                 border-top: 1px solid rgba(140, 122, 230, 1);
                 border-bottom: 1px solid rgba(140, 122, 230, 1);
-                width: calc(100% - 80px);
+                width: calc(100% - 20px);
                 margin-bottom: 30px;
                 padding-block: 7px;
                 // border-radius: 5px;
@@ -287,7 +287,8 @@
                     // border: 1px solid black;
                     &:hover {
                         cursor: pointer;
-                        background-color: rgba(140, 122, 230, 0.6);
+                        // background-color: rgba(140, 122, 230, 0.6);
+                        color: rgba(140, 122, 230, 1);
                     }
                 }
                 img {

@@ -304,7 +304,7 @@ const NewCommentsOnPosts = ({comment, displayName, imageUrl, post, postId, times
 
             </div>
             <div className="request__action-buttons">
-                <Button variant="contained" className='fr-buttons'>Go to Post</Button>
+                <Button variant="contained" className='fr-buttons contained'>Go to Post</Button>
                 <Button variant="outlined" className='fr-buttons'>Close</Button>
                 </div>
                 </div>
@@ -336,7 +336,7 @@ const NewRequests = ({ uid, displayName, timestamp, photoUrl }) => {
         </div>
         <p>{displayName} would like to send you a friend request</p>
         <div className="request__action-buttons">
-          <Button variant="contained" className='fr-buttons' onClick={() => handleAccept(uid, displayName, photoUrl || "")}>Accept</Button>
+          <Button variant="contained" className='fr-buttons contained' onClick={() => handleAccept(uid, displayName, photoUrl || "")}>Accept</Button>
   
           <Button variant="outlined" className='fr-buttons' onClick={() => handleReject(uid)}>Reject</Button>
         </div>
@@ -452,6 +452,12 @@ return (
     />
 
   ))}
+
+{requestList.length === 0 && (
+        <div className="request__container">
+                <p> Nothing to see here 🌝</p>
+        </div>
+  )}
   </>
             
 )}
@@ -472,6 +478,11 @@ return (
     uid={uid}
     />
   ))}
+    {postList.length === 0 && (
+        <div className="request__container">
+                <p> Nothing to see here 🌝</p>
+        </div>
+  )}
   </>
             
 )}
@@ -487,6 +498,12 @@ return (
     sentAt={sentAt}
     />
   ))}
+
+  {messagesList.length === 0 && (
+        <div className="request__container">
+                <p> Nothing to see here 🌝</p>
+        </div>
+  )}
   </>
             
 )}

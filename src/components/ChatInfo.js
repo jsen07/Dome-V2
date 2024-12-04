@@ -5,6 +5,10 @@ import { useStateValue } from './contexts/StateProvider';
 import { useParams } from 'react-router-dom';
 import ArrowDownIcon from './svg/arrow-down.svg';
 import Placeholder from './images/profile-placeholder-2.jpg';
+import EditIcon from '@mui/icons-material/Edit';
+import GroupIcon from '@mui/icons-material/Group';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import Button from '@mui/material/Button';
 
 const ChatInfo = ({groupChat}) => {
 
@@ -224,7 +228,7 @@ const searchUserByID = async () => {
       searchableUsers.forEach((user) => {
         if(searchValue === user.displayName){
           setUserList(prev=>[...prev, user]);
-          setMembers(prev=>[...prev, user]);
+          // setMembers(prev=>[...prev, user]);
           setSearchIds(prev=>[...prev, user.uid])
 
         }
@@ -268,24 +272,26 @@ const addMembers = async () => {
         {!editChat ? (
                  <div className='main__chat-info'>
                     <div className='close__container'>
-                    <button onClick={()=>setEditChat(prev=>!prev)}> Edit </button>
+                    <EditIcon className='edit-button' onClick={()=>setEditChat(prev=>!prev)}/>
                 </div>
 
                 <div className='edit-group-photo'>
                 <img src={groupchat?.photoUrl || Placeholder } alt="group-profile" />
                 </div>
-                 <h1> {groupchat?.name}</h1>
+<div className='group-name'>
+                <h1> {groupchat?.name}</h1>
+                </div>
 
                  {groupchat?.description && (
                 <div className='description'>
                     <p> {groupchat?.description} </p>
                     </div>
                  )}
-                 <div className='members'>
-                  <div className='title'>
-                 <h3> Group · {groupchat?.allowedUsers.length} Members</h3>
+                                <div className='title'>
+                 <h3> <GroupIcon/>· {groupchat?.allowedUsers.length} Members</h3>
                  <p onClick={()=>setAddMembersMenu(prev => !prev)}> Add members </p>
                  </div>
+                 <div className='members'>
 
                  {members && members.length > 0 && members.map((member) => {
                      const isAdmin = groupchat.admin.includes(member.uid); 
@@ -356,7 +362,7 @@ const addMembers = async () => {
         ) : (
             <div className='edit__chat-info'>
                 <div className='close__container'>
-                    <button onClick={()=>setEditChat(prev=>!prev)}> Close </button>
+                    <CloseRoundedIcon className='edit-button' onClick={()=>setEditChat(prev=>!prev)} />
                 </div>
             {/* <h1> Edit </h1> */}
             <div className='edit-group-photo'>
@@ -381,7 +387,7 @@ const addMembers = async () => {
                 type="text"
                 defaultValue={groupchat?.name}
               />
-                         <button onClick={saveGroupChatName}> save </button>
+                         <Button className='button' variant="outlined" onClick={saveGroupChatName}> Save </Button>
               <p>Description</p>
               <textarea
                 id="edit-discription"
@@ -389,7 +395,7 @@ const addMembers = async () => {
                 defaultValue={groupchat?.description || ""}
               ></textarea>
     
-              <button onClick={saveGroupChatDescription}> save </button>
+              <Button className='button' variant="outlined" onClick={saveGroupChatDescription}> Save </Button>
 
               </div>
             </div>

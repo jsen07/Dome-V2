@@ -1,31 +1,55 @@
 .chat-info__container {
     // background-color: rgb(26, 29, 33); //lighter 
     // width: 300px; //macbook air size
-    
-    padding: 20px;
-    // border-left: 1px solid #2f3640;
-    transition: all 0.5s ease-in-out;
+    display: flex;
+    flex-grow: 1;
     color: white;
+    font-size: 0.75rem;
 
    .main__chat-info {
+    padding-block: 15px;
+    padding-inline: 20px;
     display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: center;
+    // max-height: 100%;
+    position: relative;
+
+
+.group-name {
+    display: flex;
+    margin-top: 10px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
-    // border: 1px solid red;
-    position: relative;
+    text-align: center;
+    h1{
+        font-size: 1.1rem;
+
+    }
+}
+
     .close__container {
         width: 100%;
         display: flex;
         justify-content: flex-end;
         margin-bottom: 10px;
+
+        .edit-button {
+            color: #6d5dd4;
+            transition: transform 0.2s ease-in;
+            margin-right: 5px;
+            &:hover {
+                cursor: pointer;
+                transform: scale(0.90);
+            }
+        }
     }
 
     .edit-group-photo {
-        width: 200px;
-        height: 200px;
+        aspect-ratio: 1 / 1;
+        height: 25vh;
         // border: 1px solid red;
         display: flex;
         flex-direction: column;
@@ -34,22 +58,12 @@
         object-fit: cover;
 
         img {
-            width: 200px;
-            height: 200px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
         }
     }
-    h1{
-        width: 100%;
-        font-size: 1.6rem;
-        // border: 1px solid green;
-        height: auto;
-        margin-top: 10px;
-        // padding: 10px;
-        text-align: center;
-    }
-
     .description {
         width: calc(100% - 20px);
         background-color: #23262D;
@@ -72,6 +86,14 @@
         display: flex;
         flex-direction: row;
         justify-content: space-between;
+        align-items: center;
+        margin-top: 15px;
+
+        h3{
+            align-items: center;
+            display: flex;
+            color:#6d5dd4;
+        }
 
         p {
             &:hover {
@@ -82,13 +104,14 @@
     }
 
     .members {
-        flex-grow: 1;
-        width: calc(100% - 20px);
+        width: 100%;
+        height: 100%;
         // border: 1px solid red;
+        // max-height: 95vh;
+        overflow-y: auto;
         margin-top: 20px;
         display: flex;
         flex-direction: column;
-        padding: 10px;
 
         h3 {
             margin-bottom: 20px;
@@ -96,12 +119,12 @@
 
         .user__container {
             // flex-grow: 1;
-            // border: 1px solid red;
             display: flex;
             margin-block: 5px;
             padding: 8px;
             flex-direction: row;
             border-radius: 10px;
+                //    border: 1px solid blue;
             // justify-content: center;
             align-items: center;
 
@@ -111,15 +134,16 @@
             }
         
             .profile {
-                width: 60px;
-                height: 60px;
+                width: 50px;
+                height: 50px;
+                aspect-ratio: 1 / 1;
                 display: flex;
                 align-items: center;
                 justify-content: center;
 
                 img {
-                    width: 60px;
-                    height: 60px;
+                    width: 100%;
+                    height: 100%;
                     border-radius: 50%;
                     object-fit: cover;
                 }
@@ -160,15 +184,13 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        background-color: #23262D;
+        background-color: #2f3640;
         border-radius: 5px;
         top: 30px;
-        left: -45px;
+        left: -80px;
         padding: 8px;
         margin-right: 10px;
-  
-
-        font-size: 0.9rem;
+        font-size: 0.8rem;
 
         p {
             padding: 2px;
@@ -224,22 +246,33 @@
 }
 
     .edit__chat-info{
-        width: 100%;
-        // border: 2px solid blue;
+        flex-grow: 1;
+        // border: 1px solid blue;
         display: flex;
         flex-direction: column;
+        padding-block: 15px;
+        padding-inline: 20px;
         align-items: center;
-        justify-content: center;
 
         .close__container {
             width: 100%;
             display: flex;
             justify-content: flex-end;
             margin-bottom: 10px;
+    
+            .edit-button {
+                color: #6d5dd4;
+                transition: transform 0.2s ease-in;
+                margin-right: 5px;
+                &:hover {
+                    cursor: pointer;
+                    transform: scale(0.90);
+                }
+            }
         }
         .edit-group-photo {
-            width: 200px;
-            height: 200px;
+            aspect-ratio: 1 / 1;
+            height: 25vh;
             // border: 1px solid red;
             display: flex;
             flex-direction: column;
@@ -260,6 +293,7 @@
 
         label {
             margin-block: 5px;
+            font-size: 0.9rem;
             &:hover {
                 cursor: pointer;
                 opacity: 0.6;
@@ -270,24 +304,42 @@
             width: 100%;
             // border: 1px solid red;
             margin-top: 20px;
+            padding: 10px;
+            max-height: 100%;
+            overflow-y: auto;
 
-            button {
+            .button {
                 margin-left: 10px;
+                margin-bottom: 40px;
+                width: 50px;
+                height: 30px;
+                font-size: 0.8rem;
+                text-transform: none;
+                color: #6d5dd4;
+                border: 1px solid #6d5dd4;
+
+                &:hover {
+                    background-color: rgba(15, 16, 19, 0.4);
+                }
             }
 
             input, textarea {
                 width: 100%;
                 margin-block: 10px;
                 margin-left: 10px;
-                padding: 5px;
-                background-color: white;
+                padding: 10px;
+                background-color: #23262D;
+                color: white;
                 border-radius: 4px;
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
                 box-sizing: border-box;
-                transition: outline 0.1s ease-in, background-color 0.1s ease-in,box-shadow 0.1s ease-in;
+                border: none;
+                resize: none;
+                outline: 1px solid rgba(109, 93, 212, 0);
+                transition: outline 0.2s ease-in, background-color 0.1s ease-in,box-shadow 0.1s ease-in;
                 
                 &:focus {
-                    outline: 2px solid #7e00e6;
+                    outline: 1px solid #6d5dd4;
                     box-shadow: 0 0 5px rgba(126, 0, 230, 0.5); 
                 }
             }

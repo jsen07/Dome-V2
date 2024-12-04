@@ -80,9 +80,13 @@ useEffect(()=> {
     }
 },[requestNotifs, messageNotifs, postNotifs])
   return (
-    <div className='notificaiton_length'>
-        <p>{combinedList}</p>
-        </div>
+    <>
+    {combinedList > 0 && (
+            <div className='notificaiton_length'>
+            <p>{combinedList}</p>
+            </div>
+    )}
+    </>
   )
 }
 
