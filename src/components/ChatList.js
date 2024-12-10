@@ -325,7 +325,7 @@ const createGroupChatToggle = () => {
             
             {!onlineToggle && !notificationToggle && (
                 <div className='chatlist__container'>
-                <h4>Direct messages </h4>
+                <h4>DIRECT MESSAGES </h4>
                 {chatList.map((chat, key) => (
                     <div 
                         className={chat?.isSeen ? `card__container ${chat?.isSeen}` :  `card__container ${chat?.isSeen}`} 
@@ -362,7 +362,7 @@ const createGroupChatToggle = () => {
                     </div>
                 ))}
 
-                <h4>Groups</h4>
+                <h4>GROUPS</h4>
 
                 <GroupList />
 

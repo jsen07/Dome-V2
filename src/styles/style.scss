@@ -91,11 +91,40 @@
         .content-wrapper {
           display: flex;
           height: 100%;
-          align-self: flex-end;
+          align-self: center;
           width: calc(100% - 55px); //55px size of homeNav 
           flex-direction: row;
-          // border: 2px solid blue;
-          justify-content: center;
+          justify-content: space-evenly;
+          padding-inline: 50px;
+
+
+          .side-content {
+            display: flex;
+            flex-direction: column;
+            // border: 1px solid red;
+
+
+            .credits {
+              color: grey;
+              font-size: 0.75rem;
+              display: flex;
+              flex-wrap: wrap;
+              // border: 1px solid blue;
+              max-width: 15vw;
+
+              p{
+                margin-right: 2px;
+              }
+
+              a {
+                text-decoration: none;
+                color: grey;
+                &:hover {
+                  text-decoration: underline;
+                }
+              }
+            }
+          }
 
         }
 }
@@ -123,3 +152,4 @@
 @import './chatInfo';
 @import './Photos';
 @import './likedBy';
+@import './searchBar';

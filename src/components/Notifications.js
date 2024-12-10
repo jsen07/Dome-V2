@@ -64,7 +64,7 @@ function formatTimestamp(timestamp) {
         return "Yesterday";
     } else if (timestampDate >= startOfWeek) {
         const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
-        return dayOfWeek;
+        return `${dayOfWeek} at ${timeOfMessage}`;
     } else {
         return timestampDate.toLocaleDateString("en-US", { 
             year: 'numeric', 
@@ -320,7 +320,7 @@ const NewMessages = ({chatId, timestamp, displayName}) => {
             </div>
             <p>{displayName} has sent you a new message </p>
             <div className="request__action-buttons">
-                <Button variant="contained" className='fr-buttons'
+                <Button variant="contained" className='fr-buttons contained'
                 onClick={()=> navigate(`/chats/${chatId}`)}
                 >Go to message</Button>
                 <Button variant="outlined" className='fr-buttons'>Close</Button>

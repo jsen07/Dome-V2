@@ -19,6 +19,8 @@ import FriendsPanel from './components/FriendsPanel';
 import { db } from './firebase';
 import { child, get, serverTimestamp } from "firebase/database";
 import logo from './components/images/logo-transparent-png.png';
+import SearchBar from './components/SearchBar';
+import Footer from './components/footer';
 
 function App() {
 
@@ -83,9 +85,13 @@ function App() {
                             </div>
                           </div>
                           <div className='content-wrapper'>
+                            <SearchBar />
       
                         <Posts />
+                        <div className='side-content'>
                         <FriendsPanel />
+                        <Footer />
+                        </div>
                         </div>
                         </div>
                         {/* <HomeNav /> */}

@@ -3,6 +3,7 @@ import { ref, onValue, getDatabase, get, push, set, serverTimestamp } from "fire
 import {  useStateValue } from './contexts/StateProvider';
 import Placeholder from './images/avatar_placeholder.png';
 import { useNavigate } from "react-router-dom";
+import ClickAwayListener from '@mui/material/ClickAwayListener';
 
 const CreateGroupChat = ({createGroupChatToggle}) => {
 
@@ -95,6 +96,7 @@ else {
 }
 }
   return (
+    <ClickAwayListener onClickAway={createGroupChatToggle}>  
     <div className='createGroupChat__modal'>
       <h1>Create a Group chat </h1>
       <button onClick={createGroupChatToggle}>Close</button>
@@ -128,6 +130,7 @@ else {
     }
     <h2 onClick={createGroupChat}>Create</h2>
       </div>
+      </ClickAwayListener>
   )
 }
 

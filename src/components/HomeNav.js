@@ -79,7 +79,7 @@ const HomeNav = () => {
 </div>
 
 
-<div className='icon-wrapper'>
+{/* <div className='icon-wrapper'>
       <div className={`links ${activeLink === 'search' ? 'active' : ''}`} 
       onClick={()=> {
         handleLinkClick('search');
@@ -93,8 +93,8 @@ const HomeNav = () => {
 )}
 
         {/* <h2> Search </h2> */}
-      </div>
-</div>
+      {/* </div>
+</div> */} 
 
 <div className='icon-wrapper'>
       <div className={`links ${activeLink === 'notifications' ? 'active' : ''}`} 
@@ -131,17 +131,17 @@ const HomeNav = () => {
 </div>
 
 
-<div className='icon-wrapper'>
+{/* <div className='icon-wrapper'>
       <div className={`links ${activeLink === 'friends' ? 'active' : ''}`}       
       onClick={()=> {
         handleLinkClick('friends'); 
         // navigate(`/profile?userId=${currentUser.uid}`)
       }}>
       <div className={`line ${activeLink === 'friends' ? 'active' : ''}`}></div>
-      <Diversity1OutlinedIcon className='nav-icons'/>
+      <Diversity1OutlinedIcon className='nav-icons'/> */}
         {/* <h2> Friends </h2> */}
-      </div>
-</div>
+      {/* </div> */}
+{/* </div> */}
 
 
 <div className='icon-wrapper'>

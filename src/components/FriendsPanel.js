@@ -95,45 +95,52 @@ useEffect(()=>{
     
 },[friends])
   return (
+<>
+{onlineUsers.length > 0 || offlineUsers.length > 0 && (
     <div className='friendsPanel__home'>
 
-{onlineUsers.length > 0 && (
-    <div className='online__container'>
-        <h4>Online</h4>
-  
-               {onlineUsers.map((friend, index) => {
-                    return (
-                        <div key={index} className='friend'  onClick={()=> navigate(`/profile?userId=${friend.uid}`)}>
-                            <div className='profile'>           
-                                <img src={friend?.photoUrl || Placeholder} alt="avatar"/>
-                                <div className={friend.status ? `status ${friend.status}` : 'status'}></div>
+    {onlineUsers.length > 0 && (
+        <div className='online__container'>
+            <h4>Online</h4>
+      
+                   {onlineUsers.map((friend, index) => {
+                        return (
+                            <div key={index} className='friend'  onClick={()=> navigate(`/profile?userId=${friend.uid}`)}>
+                                <div className='profile'>           
+                                    <img src={friend?.photoUrl || Placeholder} alt="avatar"/>
+                                    <div className={friend.status ? `status ${friend.status}` : 'status'}></div>
+                                    </div>
+                                    <p> {friend.displayName} </p>
                                 </div>
-                                <p> {friend.displayName} </p>
-                            </div>
-                    )
-                })}
-                </div>
-            )}
-
-{offlineUsers.length > 0 && (
-    <div className='offline__container'>
-        <h4>Offline</h4>
-  
-               {offlineUsers.map((friend, index) => {
-                    return (
-                        <div key={index} className='friend'  onClick={()=> navigate(`/profile?userId=${friend.uid}`)}>
-                            <div className='profile'>
-                                <img src={friend?.photoUrl || Placeholder} alt="avatar"/>
-                                <div className={friend.status ? `status ${friend.status}` : 'status'}></div>
+                        )
+                    })}
+                    </div>
+                )}
+    
+    {offlineUsers.length > 0 && (
+        <div className='offline__container'>
+            <h4>Offline</h4>
+      
+                   {offlineUsers.map((friend, index) => {
+                        return (
+                            <div key={index} className='friend'  onClick={()=> navigate(`/profile?userId=${friend.uid}`)}>
+                                <div className='profile'>
+                                    <img src={friend?.photoUrl || Placeholder} alt="avatar"/>
+                                    <div className={friend.status ? `status ${friend.status}` : 'status'}></div>
+                                    </div>
+                                    <p> {friend.displayName} </p>
                                 </div>
-                                <p> {friend.displayName} </p>
-                            </div>
-                    )
-                })}
-                </div>
-            )}
-            </div>
+                        )
+                    })}
+                    </div>
+                )}
 
+                  
+                </div>
+
+
+)}
+</>
 )}
 
 export default FriendsPanel
