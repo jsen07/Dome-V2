@@ -12,19 +12,48 @@ const PostsComment = ( { postKey, type, uid }) => {
 
 
     function formatTimestamp(timestamp) {
-        const date = new Date(timestamp); 
-        let options = {
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true, 
-        };
-
-        let timeString = date.toLocaleString('en-US', options);
-        timeString = timeString.replace(/^0/, '');
+      const timestampDate = new Date(timestamp);
+      let hours = timestampDate.getHours();       // Get hours
+      const minutes = timestampDate.getMinutes()
+      let dayOrNight = "";
+      const now = new Date();
+      const todayStart = new Date(now.setHours(0, 0, 0, 0));
+      const yesterdayStart = new Date(todayStart);
+      yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+      const currentDay = now.getDay();
+      const startOfWeek = new Date(now);
+      startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+      const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
     
-        return timeString;
+      if(hours >= 12) {
+          dayOrNight = "PM"
+      }
+      if(hours === 0 || hours < 12) {
+          dayOrNight ="AM"
+      }
+      if( hours === 0 ) {
+          hours = 12;
+      }
+    
+      const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
+      if (timestampDate >= todayStart) {
           
- }
+          
+          return `Today at ${timeOfMessage}`;
+    
+      } else if (timestampDate >= yesterdayStart) {
+          return `Yesterday at ${timeOfMessage}`;
+      } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
+      
+          return `${dayOfWeek} at ${timeOfMessage}`
+      } else {
+          return `${timestampDate.toLocaleDateString("en-US", { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric' 
+          })} at ${timeOfMessage}`
+          }
+    }
 
 const handleTextChange = (e) => {
     console.log(e.target.value)
@@ -101,7 +130,7 @@ return (
         <div className='comment__container'>
             <div className='post-comment__header'>
                 <h4> {comment.displayName}</h4>
-                <p> {formatTimestamp(comment.timestamp)}</p>
+                <span> {formatTimestamp(comment.timestamp)}</span>
             </div>
                 <p> {comment.comment}</p>
                 </div>  

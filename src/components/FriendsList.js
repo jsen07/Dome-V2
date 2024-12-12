@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from './contexts/AuthContext';
 import { ref, child, get, getDatabase } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
-import Placeholder from './images/avatar_placeholder.png';
+import Placeholder from '../components/images/profile-placeholder-2.jpg';
 import Skeleton from '@mui/material/Skeleton';
 const FriendsList = ( {user}) => {
 
@@ -57,7 +57,7 @@ fetchFriends();
         
         <div className='friends-list__header'>
         <h1> Friends </h1>
-        {/* <p> {friends?.length} friends </p> */}
+        <p> {friends?.length} Friends </p>
     </div>
 
 

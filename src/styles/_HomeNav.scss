@@ -1,20 +1,17 @@
 .main__left-navigation-content {
     display: flex;
     flex-direction: row;
-    height: 100%;
-    align-items: center;
+    padding-block: 5px;
 .navigation-panel__container  {
-    width: 40px;
-    min-width: 40px;
+    width: 65px;
     display: flex;
     flex-direction: column;
     padding-block: 20px;
-    padding-inline: 10px;
+    box-sizing: border-box;
     margin-left: 5px;
     color: white;
     font-size: 0.6rem;
-    height: 90vh;;
-    // margin-bottom: 20px;
+    height: 100%;
     margin-right: 10px;
     align-self: center;
     border-radius: 10px;
@@ -31,7 +28,7 @@
         align-items: center;
         
         img {
-            width: calc(100% - 15px);
+            width: calc(100% - 30px);
             margin-bottom: 30px;
             margin-top: 10px;
         }
@@ -119,7 +116,7 @@
             transition: all 0.2s ease-in-out;
         }
 
-        .notificaiton_length {
+        .notification_length {
             position: absolute;
             top: -5px;
             left: 60%;
@@ -160,8 +157,7 @@
 .notif_container {
     // border: 1px solid blue;
     width: 400px;
-    height: 90vh;
-    padding-block: 20px;
+    height: 100%;
     position: absolute;
     left: 80px;
     top: 0;

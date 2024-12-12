@@ -362,8 +362,6 @@ const createGroupChatToggle = () => {
                     </div>
                 ))}
 
-                <h4>GROUPS</h4>
-
                 <GroupList />
 
                 </div>

@@ -50,37 +50,41 @@ const GroupList = () => {
   
 
 
-return (
-    <div>
-      {groupchats.length > 0 && (
-        groupchats.map((groupchat) => (
-          // <div key={groupchat.groupChatKey} className="groupchat__container" onClick={()=> navigate(`/home/groupchat/${groupchat.groupChatKey}`)}>
-          //   <img
-          //     alt="avatar"
-          //     src={groupchat?.photoUrl ? groupchat?.photoUrl : Placeholder}
-          //     className="profile__icon"
-          //   />
-          // </div>
+    return (
+      <div>
 
-          <div className="card__container">
-                            
-                            <div className='chat-details__wrapper'  onClick={()=> navigate(`/home/groupchat/${groupchat.groupChatKey}`)}>
-                        <div className='profile__card'>
-                            <img alt='user-avatar' src={groupchat?.photoUrl || Placeholder} />
-                                </div>
-                                
-                        <div className='inner-card'>
-                            <div className='card-title'>
-                        <h1>{groupchat?.name}</h1>
-                        </div>
+        {groupchats.length > 0 && (
+          <>
+            <h4>GROUPS</h4>
+
+            {groupchats.map((groupchat) => (
+              <div
+                key={groupchat.groupChatKey}
+                className="card__container"
+                onClick={() => navigate(`/home/groupchat/${groupchat.groupChatKey}`)} 
+              >
+                <div className="chat-details__wrapper">
+                  <div className="profile__card">
+                    <img
+                      alt="group-avatar"
+                      src={groupchat?.photoUrl || Placeholder} 
+                      className="profile__icon"
+                    />
+                  </div>
     
+                  <div className="inner-card">
+                    <div className="card-title">
+                      <h1>{groupchat?.name}</h1> 
                     </div>
-                    </div>
-                    </div>
-        ))
-      )}
-    </div>
-  );
+                  </div>
+                </div>
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+    );
+    
 };
 
 export default GroupList;

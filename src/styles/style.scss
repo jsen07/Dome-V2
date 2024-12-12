@@ -91,26 +91,24 @@
         .content-wrapper {
           display: flex;
           height: 100%;
-          align-self: center;
-          width: calc(100% - 55px); //55px size of homeNav 
           flex-direction: row;
-          justify-content: space-evenly;
-          padding-inline: 50px;
+          justify-content: space-around;
 
 
           .side-content {
             display: flex;
             flex-direction: column;
-            // border: 1px solid red;
+            width: 20vw;
+
 
 
             .credits {
               color: grey;
               font-size: 0.75rem;
               display: flex;
-              flex-wrap: wrap;
-              // border: 1px solid blue;
-              max-width: 15vw;
+              flex-grow: 1;
+              align-items: flex-end;
+   
 
               p{
                 margin-right: 2px;
@@ -122,6 +120,13 @@
                 &:hover {
                   text-decoration: underline;
                 }
+              }
+
+              .info-block {
+                display: flex;
+                width: 100%;
+                flex-wrap: wrap;
+                margin-bottom: 20px;
               }
             }
           }

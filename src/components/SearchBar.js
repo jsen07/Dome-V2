@@ -72,7 +72,6 @@ const SearchBar = () => {
               '& .MuiInputLabel-root': {
                 fontSize: '0.8rem',
                 color: 'rgb(154, 134, 253)',
-                backgroundColor: 'rgb(31, 32, 38)',
               },
               '& .MuiInputLabel-root.Mui-focused': {
                 color: 'rgb(154, 134, 253)',

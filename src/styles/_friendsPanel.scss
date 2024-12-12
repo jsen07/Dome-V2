@@ -1,14 +1,14 @@
 .friendsPanel__home {
     // margin-top: 100px;
+    align-items: flex-end;
     border-radius: 10px;
     // height: calc(100% - 90px);
-    width: 15vw;
+    width: 100%;
     background-color: rgb(15, 16, 19);
     border: 1px solid #2f3640;
     display: flex;
     flex-direction: column;
     align-items: center;
-    align-self: flex-start;
     margin-top: 90px;
     // margin-right: 20px;
     color: white;
@@ -41,8 +41,8 @@
 
         &:hover {
             cursor: pointer;
-            outline: 1px solid rgba(100, 136, 234, 1);
-            opacity: 0.7;
+            background-color: rgb(21, 23, 27);
+            opacity: 0.8;
         }
 
         .profile {

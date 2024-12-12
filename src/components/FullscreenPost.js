@@ -20,22 +20,49 @@ const FullscreenPost = ({handleClick, post}) => {
       }, []);
   
 
-function formatTimestamp(timestamp) {
-  const date = new Date(timestamp);
-  
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  
-  let hours = date.getHours();
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const ampm = hours >= 12 ? 'PM' : 'AM';
-  
-  hours = hours % 12;
-  hours = hours ? hours : 12;
-  
-  return `${day}/${month}/${year} at ${hours}:${minutes} ${ampm}`;
-}
+      function formatTimestamp(timestamp) {
+        const timestampDate = new Date(timestamp);
+        let hours = timestampDate.getHours();       // Get hours
+        const minutes = timestampDate.getMinutes()
+        let dayOrNight = "";
+        const now = new Date();
+        const todayStart = new Date(now.setHours(0, 0, 0, 0));
+        const yesterdayStart = new Date(todayStart);
+        yesterdayStart.setDate(yesterdayStart.getDate() - 1);
+        const currentDay = now.getDay();
+        const startOfWeek = new Date(now);
+        startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
+        const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
+      
+        if(hours >= 12) {
+            dayOrNight = "PM"
+        }
+        if(hours === 0 || hours < 12) {
+            dayOrNight ="AM"
+        }
+        if( hours === 0 ) {
+            hours = 12;
+        }
+      
+        const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
+        if (timestampDate >= todayStart) {
+            
+            
+            return `Today at ${timeOfMessage}`;
+      
+        } else if (timestampDate >= yesterdayStart) {
+            return `Yesterday at ${timeOfMessage}`;
+        } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
+        
+            return `${dayOfWeek} at ${timeOfMessage}`
+        } else {
+            return `${timestampDate.toLocaleDateString("en-US", { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            })} at ${timeOfMessage}`
+            }
+      }
   return (
     <div className='post__fullscreen'>
 

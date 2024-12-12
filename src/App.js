@@ -77,7 +77,8 @@ function App() {
                 <PrivateRoute>
                         {/* <Sidebar/>
                          <ChatList /> */}
-                                                 <HomeNav />
+                                    <HomeNav />
+                                       
                          <div className='home-content__container'>
                           <div className='banner'>
                             <div className='logo-container'>

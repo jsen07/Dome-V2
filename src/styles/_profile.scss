@@ -245,15 +245,13 @@
             
         }
         p {
-            // background-color: #dcdde1;
             border-radius: 5px;
             color: white;
-            padding: 10px;
         }
     }
 }
 .main__right {
-    max-width: 60%;
+    flex-grow: 1;
     
 }
 }

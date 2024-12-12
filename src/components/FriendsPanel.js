@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useAuth } from './contexts/AuthContext';
 import { ref, child, get, getDatabase, onValue } from 'firebase/database';
 import { useNavigate } from 'react-router-dom';
-import Placeholder from './images/avatar_placeholder.png';
+import Placeholder from '../components/images/profile-placeholder-2.jpg';
 
 const FriendsPanel = () => {
     const { currentUser } = useAuth();
@@ -96,7 +96,7 @@ useEffect(()=>{
 },[friends])
   return (
 <>
-{onlineUsers.length > 0 || offlineUsers.length > 0 && (
+{(onlineUsers.length > 0 || offlineUsers.length > 0) && (
     <div className='friendsPanel__home'>
 
     {onlineUsers.length > 0 && (

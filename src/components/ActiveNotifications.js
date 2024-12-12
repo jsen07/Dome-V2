@@ -80,7 +80,7 @@ useEffect(()=> {
   return (
     <>
     {combinedList > 0 && (
-            <div className='notificaiton_length'>
+            <div className='notification_length'>
             <p>{combinedList}</p>
             </div>
     )}

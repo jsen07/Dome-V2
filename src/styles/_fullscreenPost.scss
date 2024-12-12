@@ -1,5 +1,4 @@
 .post__fullscreen {
-    // border: 1px solid red;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.9);
     top: 0;
@@ -9,7 +8,7 @@
     z-index: 999;
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow-y: hidden;
  
 
     .post-f {
@@ -102,12 +101,17 @@
             .header__title {
                 display: flex;
                 flex-grow: 1;
-                flex-direction: row;
-                justify-content: space-between;
+                flex-direction: column;
 
                 h2:hover {
                     cursor: pointer;
                     text-decoration: underline;
+                }
+
+                span {
+                    margin-top: 3px;
+                    color: grey;
+                    font-size: 0.75rem;
                 }
             }
         }

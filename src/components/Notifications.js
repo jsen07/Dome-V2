@@ -358,8 +358,9 @@ useEffect(() => {
     setMergedAndSortedList(combinedList);
   }, [requestList, postList, messagesList]);
 
+
 return (
-    allNotifs && allNotifs.length > 0 ? (
+    (mergedAndSortedList?.length && !loading) > 0 ? (
       <div className="notifications__container">
 
         <div className="notification-header">
@@ -513,12 +514,17 @@ return (
 
       </div>
     ) : (
+<>
+        {!loading && (
+
       <div className="notifications__container">
            <div className="notification-header">
         <h1> Notifications </h1>
         <p>No new notifications at the moment.</p>
-        </div>
+        </div> 
       </div>
+    )}
+    </>
     )
   );
   
