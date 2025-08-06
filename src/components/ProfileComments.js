@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { getDatabase, ref, get, set, push, serverTimestamp, runTransaction, onValue, remove } from "firebase/database";
+import { getDatabase, ref, get, set, push, runTransaction, onValue, remove } from "firebase/database";
 import { useAuth } from './contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import Placeholder from '../components/images/profile-placeholder-2.jpg';
@@ -15,53 +15,62 @@ const ProfileComments = ({ user }) => {
     const [comments, setComments] = useState([]);
     const [text, setText] = useState();
     const { currentUser } = useAuth();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!user?.uid) return;
-    
-        const fetchComments = async () => {
-          const commentsRef = ref(getDatabase(), `profile/${user.uid}/comments`);
-          const snapshot = await get(commentsRef);
-    
-          try {
+const getUserProfile = async (id) => {
+    const userRef = ref(getDatabase(), `users/${id}`);
+    const snap = await get(userRef);
+    if(snap.exists()) {
+        const userData = snap.val();
+
+        return userData
+    }
+}
+
+useEffect(() => {
+    if (!user?.uid) return;
+
+    const fetchComments = async () => {
+        setLoading(true);
+        const commentsRef = ref(getDatabase(), `profile/${user.uid}/comments`);
+        const snapshot = await get(commentsRef);
+        const profileComments = [];
+
+        try {
             if (snapshot.exists()) {
-              const commentData = snapshot.val();
-              const commentsArray = Object.keys(commentData).map(key => ({
-                id: key,
-                ...commentData[key]
-              }));
-              setComments(commentsArray);
-    
-              if (currentUser?.uid) {
-                const userRef = ref(getDatabase(), `users/${currentUser.uid}`);
-                onValue(userRef, (userSnapshot) => {
-                  if (userSnapshot.exists()) {
-                    const userData = userSnapshot.val();
-                    const updatedDisplayName = userData.displayName;
-                    const updatedPhotoURL = userData.photoUrl;
-    
-                    setComments(prevComments => 
-                      prevComments.map(comment => 
-                        comment.uid === currentUser.uid 
-                          ? { ...comment, displayName: updatedDisplayName, photoUrl: updatedPhotoURL }
-                          : comment
-                      )
-                    );
-                  }
+                const commentData = snapshot.val();
+                const commentArray = Object.entries(commentData); 
+
+                const userProfilePromises = commentArray.map(async ([key,comment]) => {
+                    const userProfile = await getUserProfile(comment.uid);
+                    console.log(key)
+
+                    return {
+                        id: key,
+                        displayname: userProfile.displayName,
+                        photoURL: userProfile.photoUrl || "",
+                        ...comment,
+                    };
+
                 });
-              }
+
+                const resolvedComments = await Promise.all(userProfilePromises);
+                console.log(resolvedComments)
+                setComments(resolvedComments);
             } else {
-              setComments([]);
+                setComments([]);
             }
-          } catch (error) {
-            console.log(error);
-          }
-        };
-    
-        fetchComments();
-    
-      }, [user, currentUser]); // Added currentUser to the dependency array
+        } catch (error) {
+            console.error('Error fetching comments:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchComments();
+}, [user, currentUser]); // Dependencies array
+
 const handleTextChange = (e) => {
     setText(e.target.value);
 };
@@ -71,8 +80,6 @@ const postComment = async () => {
     if(!text) return
 
     const comment = {
-        displayName: currentUser.displayName,
-        photoUrl: currentUser.photoURL,
         uid: currentUser.uid,
         comment: text,
         timestamp: Date.now(),
@@ -145,35 +152,36 @@ catch (error) {
         return timeOfMessage;
 
     } else if (timestampDate >= yesterdayStart) {
-        return "Yesterday";
+        return `Yesterday at ${timeOfMessage}`;
     } else if (timestampDate >= startOfWeek) {
         const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
-        return dayOfWeek;
+        return `${dayOfWeek} at ${timeOfMessage}`;
     } else {
-        return timestampDate.toLocaleDateString("en-US", { 
+        const longDate = timestampDate.toLocaleDateString("en-US", { 
             year: 'numeric', 
             month: 'long', 
             day: 'numeric' 
         });
+        return `${longDate} at ${timeOfMessage}`
         }
     }
-useEffect(() => {
- if (!user?.uid) return;
+// useEffect(() => {
+//  if (!user?.uid) return;
 
-    const commentRef = ref(getDatabase(), `profile/${user.uid}/comments`);
-    const unsubscribe = onValue(commentRef, (snapshot) => {
-            if (snapshot.exists()) {
-                const commentData = snapshot.val();
-                const commentsArray = Object.keys(commentData).map(key => ({
-                    id: key,
-                    ...commentData[key]
-                }));
-                setComments(commentsArray);
-            }
-        });
+//     const commentRef = ref(getDatabase(), `profile/${user.uid}/comments`);
+//     const unsubscribe = onValue(commentRef, (snapshot) => {
+//             if (snapshot.exists()) {
+//                 const commentData = snapshot.val();
+//                 const commentsArray = Object.keys(commentData).map(key => ({
+//                     id: key,
+//                     ...commentData[key]
+//                 }));
+//                 setComments(commentsArray);
+//             }
+//         });
 
-    return () => unsubscribe();
-}, [user]);
+//     return () => unsubscribe();
+// }, [user]);
 
 const deleteComment = async (commentId) => {
     const commentToDelete = ref(getDatabase(), `profile/${user.uid}/comments/${commentId}`);
@@ -237,14 +245,14 @@ const Comment = ( {uid, id, displayName, photoUrl, timestamp, comment, likes=[]}
 
         <div className="comment-list">
             <TransitionGroup>
-                {comments.map((comment) => (
-                    <Collapse className='collapse' key={comment.id}>
+                {comments.map((comment, key) => (
+                    <Collapse className='collapse' key={key}>
                         <ListItem className='list-el'>
                             <Comment
                                 uid={comment.uid}
                                 id={comment.id}
-                                displayName={comment.displayName}
-                                photoUrl={comment.photoUrl}
+                                displayName={comment.displayname}
+                                photoUrl={comment.photoURL}
                                 timestamp={comment.timestamp}
                                 comment={comment.comment}
                                 likes={comment.likes}

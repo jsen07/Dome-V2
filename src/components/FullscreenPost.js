@@ -72,27 +72,29 @@ const FullscreenPost = ({handleClick, post}) => {
             <ClickAwayListener onClickAway={handleClick}>  
             <div className='post__fs'>
                 <div className='image-container'>
-                    <img src={post.imageUrl} alt='post-image' />
+                    <img src={post?.imageUrl} alt='post-image' />
                     </div>
                     
                     <div className='post__side'>
                         <div className="post-header">
-                            <img src={post.photoUrl || Placeholder} alt={post.displayName} />
+                            <div className='profile-card'>
+                            <img src={post?.photoUrl || Placeholder} alt={post?.displayName} />
+                            </div>
                             <div className='header__title'>
-                                <h2 onClick={()=> navigate(`/home/profile?userId=${post.uid}`)}>{post.displayName}</h2>
-                                <span>{formatTimestamp(post.timestamp)}</span>
+                                <h2 onClick={()=> navigate(`/profile?userId=${post.uid}`)}>{post?.displayName}</h2>
+                                <span>{formatTimestamp(post?.timestamp)}</span>
                                 </div>
                                 </div>
                                 {post.post && (
                                 <div className='post__content'>
    
                                     <div className='post-text'>
-                                        <p>{post.post}</p>
+                                        <p>{post?.post}</p>
                                     </div>
                                 </div>
                             )}
                                 <div className='post__comment-container'>
-                                    <PostsComment postKey={post.postKey} type={post.type} uid={post.uid} />
+                                    <PostsComment postKey={post?.postKey} type={post?.type} uid={post?.uid} />
                                     </div>
 
                                     </div>

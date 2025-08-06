@@ -1,7 +1,7 @@
 import React from 'react'
 import FriendsList from './FriendsList';
 import ProfilePosts from './ProfilePosts';
-const ProfileMainContent = ({userDetails}) => {
+const ProfileMainContent = ({userDetails,handleClick, handlePostClick, setPostFullscreen}) => {
   return (
     <div className="profile-contents">
           
@@ -16,7 +16,7 @@ const ProfileMainContent = ({userDetails}) => {
         </div>
       
       <div className='main__right'>
-        <ProfilePosts  user={userDetails?.uid}/>
+        <ProfilePosts  user={userDetails?.uid} handleClick={handleClick} handlePostClick={handlePostClick} setPostFullscreen={setPostFullscreen}/>
         </div>
 
         

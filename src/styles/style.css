@@ -71,12 +71,13 @@
   display: flex;
   height: 100%;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .home .home-content__container .content-wrapper .side-content {
   display: flex;
   flex-direction: column;
-  width: 20vw;
+  width: 17vw;
+  min-width: 300px;
 }
 .home .home-content__container .content-wrapper .side-content .credits {
   color: grey;
@@ -532,7 +533,7 @@
   background-color: #121212;
   position: relative;
   width: 100%;
-  height: 250px;
+  height: 300px;
   aspect-ratio: 16/9;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -543,7 +544,7 @@
 .profile__background .profile__page .profile__view .header__banner .profile-header {
   display: flex;
   flex-direction: row;
-  margin-top: 200px;
+  margin-top: 250px;
   height: auto;
   width: 100%;
   box-sizing: border-box;
@@ -598,7 +599,11 @@
   justify-content: space-between;
   align-items: center;
   padding-right: 20px;
-  margin-bottom: 25px;
+  margin-bottom: 0px;
+}
+.profile__background .profile__page .profile__view .header__banner .profile-header .header__container .header__text .header__t h2 {
+  font-size: 1rem;
+  color: grey;
 }
 .profile__background .profile__page .profile__view .header__banner .profile-header .header__container .header__text .edit-profile-button {
   width: auto;
@@ -640,19 +645,19 @@
   margin-top: 110px;
   padding: 10px 10px 30px 10px;
   color: white;
-  border-bottom: 2px solid rgb(109, 93, 212);
   font-size: 0.85rem;
 }
-.profile__background .profile__page .profile__view .profile-links p {
-  margin-right: 10px;
+.profile__background .profile__page .profile__view .profile-links .links {
   padding-inline: 15px;
-  padding-block: 7px;
+  padding-block: 15px;
   text-align: center;
-  background-color: #23262D;
-  border-radius: 15px;
 }
-.profile__background .profile__page .profile__view .profile-links p:hover {
+.profile__background .profile__page .profile__view .profile-links .links:hover {
   cursor: pointer;
+  background-color: #23262D;
+}
+.profile__background .profile__page .profile__view .profile-links .links.active {
+  border-bottom: 2px solid rgb(109, 93, 212);
 }
 .profile__background .profile__page .profile__view .profile-contents {
   border-radius: 15px;
@@ -745,51 +750,82 @@
   border-radius: 10px;
   flex-grow: 1;
   padding: 30px;
+  display: flex;
+  flex-direction: row;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar {
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 50%;
+  margin-bottom: 20px;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .edit-avatar {
   flex-grow: 1;
+  justify-content: center;
   border-radius: 15px;
+  height: auto;
   border: 1px solid #878787;
   padding: 20px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: 10px;
+  margin-right: 20px;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .avatar-container {
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .edit-avatar .avatar-container {
   width: 130px;
   height: 130px;
   margin-inline: 40px;
   aspect-ratio: 1/1;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .avatar-container img {
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .edit-avatar .avatar-container img {
   width: 100%;
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .upload-profile {
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .edit-avatar .upload-profile {
   display: flex;
   flex-direction: column;
   color: grey;
   font-size: 0.6rem;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .upload-profile .upload {
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .edit-avatar .upload-profile .upload {
   font-size: 0.8rem;
   margin-block: 20px;
   width: auto;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .edit-avatar .upload-profile .upload-button {
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .edit-avatar .upload-profile .upload-button {
   margin-block: 20px;
   background-color: #1557d1;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .user-profile__details {
-  flex-grow: 1;
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .bio-group {
+  border-radius: 15px;
+  border: 1px solid #878787;
+  height: 20%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-inline: 20px;
+  padding: 20px;
 }
-.profile__background .profile__page .edit-profile__view .edit__container .user-profile__details h4 {
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .bio-group h4 {
+  margin-bottom: 10px;
+  font-size: 0.7rem;
+  color: grey;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .bio-group textarea {
+  flex-grow: 1;
+  padding: 10px;
+  resize: none;
+  margin-top: 10px;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .user-profile__details {
+  height: 70%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+.profile__background .profile__page .edit-profile__view .edit__container .edit_section-1 .user-profile__details h4 {
   margin-block: 8px;
 }
 .profile__background .profile__page .edit-profile__view .edit__container .edit-buttons__container {
@@ -806,6 +842,10 @@
 }
 .profile__background.active {
   opacity: 1;
+}
+.profile__background .loading {
+  position: absolute;
+  top: 50%;
 }
 
 .search-user__container {
@@ -936,15 +976,12 @@
 }
 
 .friendsPanel__home {
-  align-items: flex-end;
-  border-radius: 10px;
+  height: 100%;
   width: 100%;
-  background-color: rgb(15, 16, 19);
-  border: 1px solid #2f3640;
+  background-color: rgb(22, 23, 27);
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 90px;
   color: white;
 }
 .friendsPanel__home .online__container, .friendsPanel__home .offline__container {
@@ -954,9 +991,14 @@
   font-size: 0.9rem;
 }
 .friendsPanel__home .online__container h4, .friendsPanel__home .offline__container h4 {
-  color: #9c88ff;
   margin-block: 7px;
   margin-left: 20px;
+}
+.friendsPanel__home .online__container #offline-header, .friendsPanel__home .offline__container #offline-header {
+  color: grey;
+}
+.friendsPanel__home .online__container #online-header, .friendsPanel__home .offline__container #online-header {
+  color: green;
 }
 .friendsPanel__home .online__container .friend, .friendsPanel__home .offline__container .friend {
   flex-grow: 1;
@@ -1354,13 +1396,13 @@
   margin-block: 5px;
   padding-block: 10px;
   padding-inline: 15px;
-  border: 1px solid rgba(140, 122, 230, 0);
+  border-block: 1px solid rgba(47, 54, 64, 0);
   transition: border 0.2s ease-in-out;
   box-sizing: border-box;
 }
 .chat-card__container .chatlist__container .card__container:hover {
   cursor: pointer;
-  border: 1px solid rgb(140, 122, 230);
+  border-block: 1px solid rgb(47, 54, 64);
 }
 .chat-card__container .chatlist__container .card__container .chat-details__wrapper {
   display: flex;
@@ -1396,7 +1438,7 @@
   left: 35px;
   width: 12px;
   height: 12px;
-  background-color: #121212;
+  background-color: #323232;
   justify-content: center;
   align-items: center;
   border-radius: 50%;
@@ -1571,12 +1613,12 @@
 .user-message .message__container #message__time-sent, .message .message__container #message__time-sent {
   display: flex;
   align-items: center;
-  width: auto;
+  min-width: 3rem;
   opacity: 0;
   position: absolute;
   bottom: -17px;
   font-size: 0.65rem;
-  left: -10px;
+  left: -5px;
 }
 
 .user-message #message__time-sent {
@@ -1972,7 +2014,6 @@
   border-radius: 10px;
   padding: 20px;
   position: relative;
-  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   box-sizing: border-box;
 }
 .friends-list__container .friends-list__header {
@@ -1995,6 +2036,7 @@
 .friends-list__container .friends__container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
 }
 .friends-list__container .friends__container .friend {
   font-size: 0.6rem;
@@ -2326,6 +2368,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: auto;
   border-radius: 10px;
   background-color: #1d2027;
   margin-block: 10px;
@@ -2477,6 +2520,8 @@
 }
 .user__posts .post__entries .post-entry .comment-p_container {
   max-height: 500px;
+  flex-grow: 1;
+  display: flex;
 }
 .user__posts .loading {
   position: absolute;
@@ -2493,8 +2538,7 @@
   margin-top: 5px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-height: 100%;
+  flex-grow: 1;
   justify-content: space-between;
 }
 .post-comment__container .post__comment {
@@ -2564,6 +2608,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: hidden;
+  color: white;
 }
 .post__fullscreen .post-f {
   width: 100%;
@@ -2616,7 +2661,7 @@
 .post__fullscreen .post-content-f .post__fs .post__side {
   display: flex;
   flex-direction: column;
-  width: 500px;
+  min-width: 500px;
   max-height: 90vh;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -2635,11 +2680,17 @@
   -moz-box-shadow: 0 4px 6px -6px #222;
   box-shadow: 0 4px 6px -6px #222;
 }
-.post__fullscreen .post-content-f .post__fs .post__side .post-header img {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+.post__fullscreen .post-content-f .post__fs .post__side .post-header .profile-card {
+  aspect-ratio: 1/1;
   margin-right: 15px;
+  width: 80px;
+  height: 80px;
+}
+.post__fullscreen .post-content-f .post__fs .post__side .post-header .profile-card img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 .post__fullscreen .post-content-f .post__fs .post__side .post-header .header__title {
   display: flex;
@@ -2677,6 +2728,7 @@
   border-radius: 5px;
 }
 .post__fullscreen .post-content-f .post__fs .post__side .post__comment-container {
+  display: flex;
   padding: 10px;
   background-color: rgb(21, 23, 27);
   margin-bottom: 5px;

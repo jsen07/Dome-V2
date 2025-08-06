@@ -80,18 +80,18 @@ function App() {
                                     <HomeNav />
                                        
                          <div className='home-content__container'>
-                          <div className='banner'>
+                          {/* <div className='banner'>
                             <div className='logo-container'>
                             <img src={logo} alt="banner-logo"/>
                             </div>
-                          </div>
+                          </div> */}
                           <div className='content-wrapper'>
                             <SearchBar />
       
                         <Posts />
                         <div className='side-content'>
                         <FriendsPanel />
-                        <Footer />
+                        {/* <Footer /> */}
                         </div>
                         </div>
                         </div>

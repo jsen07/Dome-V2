@@ -548,9 +548,9 @@ const handleClickAway = () => {
 
           )}
 
-          {friendPosts.length === 0 && publicPosts.length === 0 && friendPosts.length === 0 && (
+          {/* {friendPosts.length === 0 && publicPosts.length === 0 && friendPosts.length === 0 && (
             <p> No posts. </p>
-          )}
+          )} */}
         </div>
 )}
 

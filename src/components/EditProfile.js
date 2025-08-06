@@ -22,11 +22,14 @@ const EditProfile = ( { userDetails, isCurrentUser, closeButton  } ) => {
     
   const [loading, setLoading] = useState(false);
   const [active, setActive] = useState(false);
+  const [characters, setCharacters] = useState(250);
+  const [remaining, setRemaining] = useState();
     const [{ user }, dispatch] = useStateValue();
     const [changeAvatarToggled, setChangeAvatarToggled] = useState(false);
 
 useEffect(()=> {
   setActive(true);
+  setRemaining(characters - userDetails?.Bio.length);
 },[])
     const handleBackgroundChange = (e) => {
         if (e.target.files[0]) {
@@ -136,6 +139,7 @@ useEffect(()=> {
         whiteSpace: 'nowrap',
         width: 1,
       });
+
   return (
     <Fade in={active}>
     <div className="edit-profile__view">
@@ -147,6 +151,8 @@ useEffect(()=> {
     </div>
 
     <div className='edit__container'>
+
+      <div className='edit_section-1'>
 
     <div className="edit-avatar">
       <div className="avatar-container">
@@ -190,23 +196,26 @@ useEffect(()=> {
 
     <div className="user-profile__details">
       {/* <p>Unique ID: {currentUser.uid}</p> */}
-      <h4>Email: {userDetails?.email}</h4>
-      <h4>Display name</h4>
-      {/* <input
+      {/* <h4>E-mail: {userDetails?.email}</h4> */}
+
+      
+      <h5>Display name:</h5>
+      <input
         id="edit-display-name__box"
         type="text"
         defaultValue={userDetails?.displayName}
         disabled={!isCurrentUser}
-      /> */}
-      <h4>Bio:</h4>
-      {/* <textarea
-        id="edit-bio"
-        rows="4"
-        defaultValue={userDetails?.Bio}
+      />
+      <h5>Full name:</h5>
+      <input
+        id="edit-display-name__box"
+        type="text"
+        defaultValue={userDetails?.fullName}
         disabled={!isCurrentUser}
-      ></textarea> */}
-      <h4>Gender:</h4>
-      {/* <select
+      />
+ 
+      <h5>Gender:</h5>
+      <select
         id="edit-gender"
         name="gender"
         defaultValue={userDetails?.Gender}
@@ -215,9 +224,29 @@ useEffect(()=> {
         <option value="Male">Male</option>
         <option value="Female">Female</option>
         <option value="Prefer not to say">Prefer not to say</option>
-      </select> */}
+      </select>
       
     </div>
+
+    </div>
+
+    <div className='edit_section-1'>
+
+
+    <div className='bio-group'>
+    <h5>Biography</h5>
+      <textarea
+        id="edit-bio"
+        rows="4"
+        defaultValue={userDetails?.Bio}
+        disabled={!isCurrentUser}
+        // onChange={characterHandler}
+        onChange={(e)=> { setRemaining(characters - e.target.value.length)}}
+        maxLength={characters}>
+      </textarea>
+      <h4>{remaining} characters remaining</h4>
+      </div>
+
     {isCurrentUser && (
       <>
       <div className="edit-buttons__container">
@@ -228,6 +257,7 @@ useEffect(()=> {
             }/> */}
             </>
     )}
+    </div>
 
     {changeAvatarToggled && (
       <div className="avatar-home">

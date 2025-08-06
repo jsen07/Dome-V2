@@ -13,15 +13,22 @@ import ProfileMainContent from './ProfileMainContent';
 import ProfileBanner from './ProfileBanner';
 import Photos from './ProfileFilters/Photos';
 import EditProfile from './EditProfile';
+import FullscreenPost from './FullscreenPost';
 
 const Profile = () => {
   const [isComponentActive, setIsComponentActive] = useState(false);
+  const [activeLink, setActiveLink] = useState('Posts'); 
   const [userDetails, setUserDetails] = useState(null);
   const [editProfileToggled, setEditProfileToggled] = useState(false);
   const [changeAvatarToggled, setChangeAvatarToggled] = useState(false);
   const [photosToggle, setPhotosToggle] = useState(false);
   const [background, setBackground] = useState();
   const [activeSection, setActiveSection] = useState('Posts');
+  const [toggleFullscreen, setToggleFullscreen] = useState(false);
+  const [clickTimeout, setClickTimeout] = useState(null);
+  const [selectedPost, setSelectedPost] = useState();
+  const [postFs, setPostFs] = useState();
+  
 
   const [loading, setLoading] = useState(false);
   const [{ user }, dispatch] = useStateValue();
@@ -176,6 +183,25 @@ const toggleProfileEdit = () => {
   setEditProfileToggled(true);
 }
 
+
+const handleClick = (e) => {
+
+  if (clickTimeout) return;
+
+  const timeoutId = setTimeout(() => {
+    setToggleFullscreen((prev) => !prev);
+    setClickTimeout(null); 
+  }, 200);
+
+  setClickTimeout(timeoutId);
+};
+
+const handlePostClick = (post) => {
+  setSelectedPost(post);
+};
+const setPostFullscreen = (post) => {
+  setPostFs(post)
+}
 return (
   <div className={`profile__background ${isComponentActive ? 'active' : ''}`}>
     <div className="profile__page">
@@ -194,12 +220,15 @@ return (
                 toggleProfileEdit={toggleProfileEdit} 
               />
               <div className="profile-links">
-                <p onClick={() => handleSectionToggle('Posts')}>Posts</p>
-                <p>About</p>
-                <p>Friends</p>
-                <p onClick={() => handleSectionToggle('Photos')}>Photos</p>
+                <p onClick={() => {
+                  handleSectionToggle('Posts')}} className={`links ${activeSection === 'Posts' ? 'active' : ''}`} >Posts</p>
+                <p onClick={() => {
+                  handleSectionToggle('About')}} className={`links ${activeSection === 'About' ? 'active' : ''}`}>About</p>
+                <p onClick={() => {
+                  handleSectionToggle('Friends')}} className={`links ${activeSection === 'Friends' ? 'active' : ''}`}>Friends</p>
+                <p onClick={() => handleSectionToggle('Photos')} className={`links ${activeSection === 'Photos' ? 'active' : ''}`}>Photos</p>
               </div>
-              {activeSection === 'Posts' && <ProfileMainContent userDetails={userDetails} />}
+              {activeSection === 'Posts' && <ProfileMainContent userDetails={userDetails} handleClick={handleClick} handlePostClick={handlePostClick} setPostFullscreen={setPostFullscreen}/>}
               {activeSection === 'Photos' && <Photos userId={userId} />}
             </div>
           )}
@@ -214,6 +243,11 @@ return (
           )}
         </>
       )}
+
+         {toggleFullscreen && selectedPost && selectedPost.postKey === postFs && (
+              <FullscreenPost handleClick={handleClick} post={selectedPost} />
+            )}
+
     </div>
 
     <div className="profile-panel__container">

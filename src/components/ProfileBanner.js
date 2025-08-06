@@ -19,7 +19,10 @@ const ProfileBanner = ({background, status, isCurrentUser, userDetails, togglePr
     </div>
   <div className='header__container'>
     <div className='header__text'>
+      <div className='header__t'>
     <h1>{userDetails?.displayName}</h1>
+    <h2><i>Jayssen De Castro</i> </h2>
+    </div>
     {isCurrentUser && (   
       //   <button onClick={toggleProfileEdit}>
       //   Edit Profile

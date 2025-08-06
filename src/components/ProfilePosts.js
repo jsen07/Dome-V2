@@ -12,7 +12,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 
-const ProfilePosts = ( { user }) => {
+const ProfilePosts = ( { user, handleClick, handlePostClick, setPostFullscreen }) => {
 
   const { currentUser } = useAuth();
   const [text, setText] = useState();
@@ -106,7 +106,6 @@ const ProfilePosts = ( { user }) => {
           }
     finally {
       setLoading(false);
-      console.log(publicPosts)
     }
   };
 const fetchUserFriendPosts = async () => {
@@ -289,31 +288,29 @@ const handleDoubleClick = (e, type, uid, postKey) => {
   likePost(type, uid, postKey);
 };
 const handleDoubleClickImage = (e, type, uid, postKey) => {
-  // Clear the click timeout to prevent the single-click handler from firing
   if (clickTimeout) {
     clearTimeout(clickTimeout);
     setClickTimeout(null);
   }
-  // Handle double-click logic (e.g., like or expand post)
   handleDoubleClick(e, type, uid, postKey);
 };
 
 
-const handleClick = (e) => {
+// const handleClick = (e) => {
 
-  if (clickTimeout) return;
+//   if (clickTimeout) return;
 
-  const timeoutId = setTimeout(() => {
-    setToggleFullscreen((prev) => !prev);
-    setClickTimeout(null); 
-  }, 200);
+//   const timeoutId = setTimeout(() => {
+//     setToggleFullscreen((prev) => !prev);
+//     setClickTimeout(null); 
+//   }, 200);
 
-  setClickTimeout(timeoutId);
-};
+//   setClickTimeout(timeoutId);
+// };
 
-const handlePostClick = (post) => {
-  setSelectedPost(post);
-};
+// const handlePostClick = (post) => {
+//   setSelectedPost(post);
+// };
 
 const deletePost = async (type, postId) => {
   console.log(type, postId)
@@ -325,10 +322,7 @@ catch (error) {
   console.log(error);
 }
 }
-const handleClickAway = () => {
-  setLikedByComponent(false);
 
-}
   return (
 <div className="user__posts">
   {/* <h1>Your posts</h1> */}
@@ -344,9 +338,9 @@ const handleClickAway = () => {
 
         return (
           <div key={post.postKey} className="post-entry">
-            {toggleFullscreen && selectedPost && selectedPost.postKey === post.postKey && (
+            {/* {toggleFullscreen && selectedPost && selectedPost.postKey === post.postKey && (
               <FullscreenPost handleClick={handleClick} post={selectedPost} />
-            )}
+            )} */}
 
             <div className="post-header">
             <img src={post.photoUrl || Placeholder} alt={post.displayName} />
@@ -379,9 +373,10 @@ const handleClickAway = () => {
                     src={post.imageUrl}
                     alt="post-image"
                     onDoubleClick={(e) => handleDoubleClickImage(e, post.type, post.uid, post.postKey)}
-                    onClick={() => {
-                      handleClick();
+                    onClick={(e) => {
+                      handleClick(e)
                       handlePostClick(post);
+                      setPostFullscreen(post.postKey)
                     }}
                   />
                 </div>

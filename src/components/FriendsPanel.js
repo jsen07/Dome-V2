@@ -101,7 +101,7 @@ useEffect(()=>{
 
     {onlineUsers.length > 0 && (
         <div className='online__container'>
-            <h4>Online</h4>
+            <h4 id='online-header'>Online </h4>
       
                    {onlineUsers.map((friend, index) => {
                         return (
@@ -119,7 +119,7 @@ useEffect(()=>{
     
     {offlineUsers.length > 0 && (
         <div className='offline__container'>
-            <h4>Offline</h4>
+            <h4 id='offline-header'>Offline</h4>
       
                    {offlineUsers.map((friend, index) => {
                         return (
