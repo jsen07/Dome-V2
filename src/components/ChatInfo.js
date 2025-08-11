@@ -1,71 +1,72 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { ref, get, getDatabase, update} from 'firebase/database';
-import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
-import { useStateValue } from './contexts/StateProvider';
-import { useParams } from 'react-router-dom';
-import ArrowDownIcon from './svg/arrow-down.svg';
-import Placeholder from './images/profile-placeholder-2.jpg';
-import EditIcon from '@mui/icons-material/Edit';
-import GroupIcon from '@mui/icons-material/Group';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import Button from '@mui/material/Button';
-import Fade from '@mui/material/Fade';
+import React, { useState, useEffect, useRef } from "react";
+import { ref, get, getDatabase, update } from "firebase/database";
+import {
+  ref as sRef,
+  getDownloadURL,
+  getStorage,
+  uploadBytes,
+} from "firebase/storage";
+import { useStateValue } from "./contexts/StateProvider";
+import { useParams } from "react-router-dom";
+import ArrowDownIcon from "./svg/arrow-down.svg";
+import Placeholder from "./images/profile-placeholder-2.jpg";
+import EditIcon from "@mui/icons-material/Edit";
+import GroupIcon from "@mui/icons-material/Group";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import Button from "@mui/material/Button";
+import Fade from "@mui/material/Fade";
 
-const ChatInfo = ({groupChat}) => {
+const ChatInfo = ({ groupChat }) => {
+  const [editChat, setEditChat] = useState(false);
+  const [groupchat, setGroupChat] = useState(groupChat);
+  const [loading, setLoading] = useState(false);
+  const [members, setMembers] = useState([]);
+  const [{ user }] = useStateValue();
+  const { chatId } = useParams();
+  const storage = getStorage();
+  const [openDropDown, setOpenDropDown] = useState(null);
+  const [changes, setChanges] = useState(false);
+  const dropdownRef = useRef(null);
+  const [addMembersMenu, setAddMembersMenu] = useState(false);
+  const [text, setText] = useState();
+  const [userList, setUserList] = useState([]);
+  const [searchedIds, setSearchIds] = useState([]);
 
-    const [editChat, setEditChat] = useState(false);
-    const [groupchat, setGroupChat] = useState(groupChat);
-    const [loading, setLoading] = useState(false);
-    const [members, setMembers] = useState([]);
-    const [{ user }] = useStateValue();
-    const { chatId } = useParams();
-    const storage = getStorage();
-    const [openDropDown, setOpenDropDown] = useState(null);
-    const [changes, setChanges] = useState(false);
-    const dropdownRef = useRef(null);
-    const [addMembersMenu, setAddMembersMenu] = useState(false);
-    const [text, setText] = useState();
-    const [userList, setUserList] = useState([]);
-    const [ searchedIds ,setSearchIds] = useState([]);
+  // console.log(groupChat)
 
-    // console.log(groupChat)
-
-useEffect(() => {
+  useEffect(() => {
     setEditChat(false);
-}, [chatId]);
+  }, [chatId]);
 
-const saveGroupChatName = () => {
-
+  const saveGroupChatName = () => {
     const newName = document.getElementById("edit-groupchat-name__box").value;
     update(ref(getDatabase(), `groupChat/${chatId}`), {
-        ...groupChat,
-        name: newName
-      })
+      ...groupChat,
+      name: newName,
+    });
 
-      const updatedGroupChat = { ...groupchat, name: newName };
-      setGroupChat(updatedGroupChat);
-}
+    const updatedGroupChat = { ...groupchat, name: newName };
+    setGroupChat(updatedGroupChat);
+  };
 
-const saveGroupChatDescription = () => {
-
+  const saveGroupChatDescription = () => {
     const newDescription = document.getElementById("edit-discription").value;
     update(ref(getDatabase(), `groupChat/${chatId}`), {
-        ...groupChat,
-        description: newDescription
-      })
+      ...groupChat,
+      description: newDescription,
+    });
 
-      const updatedGroupChat = { ...groupchat, description: newDescription };
-      setGroupChat(updatedGroupChat); 
-}
+    const updatedGroupChat = { ...groupchat, description: newDescription };
+    setGroupChat(updatedGroupChat);
+  };
 
-const handlePhotoChange = (e) => {
+  const handlePhotoChange = (e) => {
     if (e.target.files[0]) {
       handlePhotoFile(e.target.files[0]);
     }
   };
 
   const handlePhotoFile = async (photo) => {
-
     setLoading(true);
     const fileRef = sRef(storage, `${chatId}-chatImage.png`);
 
@@ -75,18 +76,17 @@ const handlePhotoChange = (e) => {
 
       await update(ref(getDatabase(), `groupChat/${chatId}`), {
         ...groupChat,
-        photoUrl: photoLink
-      })
+        photoUrl: photoLink,
+      });
 
       const updatedGroupChat = { ...groupchat, photoUrl: photoLink };
-      setGroupChat(updatedGroupChat); 
+      setGroupChat(updatedGroupChat);
       setLoading(false);
-
     } catch (error) {
       console.error("Error uploading file:", error);
       setLoading(false);
     }
-  }
+  };
   useEffect(() => {
     setChanges(false);
     const fetchUserData = async () => {
@@ -95,17 +95,16 @@ const handlePhotoChange = (e) => {
       try {
         const snapshot = await get(dbRef);
         if (snapshot.exists()) {
-            const membersArray = []
+          const membersArray = [];
           const data = snapshot.val();
           let users = data.allowedUsers;
-
 
           for (let userId of users) {
             const userRef = ref(getDatabase(), `users/${userId}`);
             const userDataSnapshot = await get(userRef);
             if (userDataSnapshot.exists()) {
               const userData = userDataSnapshot.val();
-            
+
               membersArray.push(userData);
             } else {
               console.log(`No data for user: ${userId}`);
@@ -113,9 +112,8 @@ const handlePhotoChange = (e) => {
           }
           const filteredMembers = [...new Set(membersArray)];
           setMembers(filteredMembers);
-
         } else {
-          console.log('No data found for this chat');
+          console.log("No data found for this chat");
         }
       } catch (error) {
         console.log(error);
@@ -123,289 +121,328 @@ const handlePhotoChange = (e) => {
     };
 
     fetchUserData();
-
   }, [chatId, user, changes]);
 
   const toggleDropDown = (e, memberId) => {
     e.stopPropagation();
-    setOpenDropDown(prev => (prev === memberId ? null : memberId));
-}
+    setOpenDropDown((prev) => (prev === memberId ? null : memberId));
+  };
 
-useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event) => {
-        
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpenDropDown(null); 
-      } 
+        setOpenDropDown(null);
+      }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener("click", handleClickOutside);
 
     return () => {
-        document.removeEventListener('click', handleClickOutside);
-      };
-
+      document.removeEventListener("click", handleClickOutside);
+    };
   }, []);
 
-const makeAdmin = async (memberId) => {
-  const dbRef = ref(getDatabase(), `groupChat/${chatId}`);
+  const makeAdmin = async (memberId) => {
+    const dbRef = ref(getDatabase(), `groupChat/${chatId}`);
 
-  try {
-    const snapshot = await get(dbRef);
+    try {
+      const snapshot = await get(dbRef);
 
-    if (snapshot.exists()) {
-      let admin = snapshot.val().admin || [];
+      if (snapshot.exists()) {
+        let admin = snapshot.val().admin || [];
 
-    if (!admin.includes(memberId)) {
-      admin.push(memberId);
+        if (!admin.includes(memberId)) {
+          admin.push(memberId);
 
-      await update(dbRef, {
-        admin: admin,
-      });
-      const updatedGroupChat = { ...groupchat, admin: admin };
-      setGroupChat(updatedGroupChat)
-      setOpenDropDown(null);
-    }
-  }
-}
-  catch(error) {
-    console.log(error);
-  }
-}
-
-const kickMember = async (memberId) => {
-  const dbRef = ref(getDatabase(), `groupChat/${chatId}`);
-
-
-  try {
-    const snapshot = await get(dbRef);
-
-    if (snapshot.exists()) {
-      let allowedUsers = snapshot.val().allowedUsers || [];
-
-      if(allowedUsers.length > 0 ) {
-        const filteredArray = allowedUsers.filter(userId => userId !== memberId)
-
-      await update(dbRef, {
-        allowedUsers: filteredArray,
-      });
-      const filteredMembers = members.filter(member => member.uid !== memberId);
-      setMembers(filteredMembers);
-
-      const updatedGroupChat = { ...groupchat, allowedUsers: filteredArray };
-      setGroupChat(updatedGroupChat)
-
-      setOpenDropDown(null);
-      setChanges(true);
-    }
-    
-  }
-}
-catch(error) {
-  console.log(error);
-}
-
-}
-const handleKeyPress = (event) => {
-  if( event.key === "Enter") {
-    searchUserByID();
-  }
-};
-const handleTextChange = (e) => {
-  setText(e.target.value);
-};
-const searchUserByID = async () => {
-  const dbRef = ref(getDatabase(), 'users');
-
-  try {
-    const snapshot = await get(dbRef);
-    const searchValue = text.trim();
-    if(snapshot.exists()) {
-      const data = snapshot.val();
-      const users = Object.values(data);
-
-      const searchableUsers = users.filter(user => !members.some(member => member.uid === user.uid));
-
-      searchableUsers.forEach((user) => {
-        if(searchValue === user.displayName){
-          setUserList(prev=>[...prev, user]);
-          // setMembers(prev=>[...prev, user]);
-          setSearchIds(prev=>[...prev, user.uid])
-
+          await update(dbRef, {
+            admin: admin,
+          });
+          const updatedGroupChat = { ...groupchat, admin: admin };
+          setGroupChat(updatedGroupChat);
+          setOpenDropDown(null);
         }
-      })
+      }
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
-  catch(error) {
-    console.log(error);
-  }
-// setUserList(arr);
+  const kickMember = async (memberId) => {
+    const dbRef = ref(getDatabase(), `groupChat/${chatId}`);
 
-}
-const addMembers = async () => {
-  const dbRef = ref(getDatabase(), `groupChat/${chatId}`);
+    try {
+      const snapshot = await get(dbRef);
 
-  try {
-    const snapshot = await get(dbRef);
+      if (snapshot.exists()) {
+        let allowedUsers = snapshot.val().allowedUsers || [];
 
-    if (snapshot.exists()) {
-      let allowedUsers = snapshot.val().allowedUsers || [];
+        if (allowedUsers.length > 0) {
+          const filteredArray = allowedUsers.filter(
+            (userId) => userId !== memberId
+          );
 
-      const newGroupMembers = allowedUsers.concat(searchedIds);
-      console.log(newGroupMembers)
-  
+          await update(dbRef, {
+            allowedUsers: filteredArray,
+          });
+          const filteredMembers = members.filter(
+            (member) => member.uid !== memberId
+          );
+          setMembers(filteredMembers);
+
+          const updatedGroupChat = {
+            ...groupchat,
+            allowedUsers: filteredArray,
+          };
+          setGroupChat(updatedGroupChat);
+
+          setOpenDropDown(null);
+          setChanges(true);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter") {
+      searchUserByID();
+    }
+  };
+  const handleTextChange = (e) => {
+    setText(e.target.value);
+  };
+  const searchUserByID = async () => {
+    const dbRef = ref(getDatabase(), "users");
+
+    try {
+      const snapshot = await get(dbRef);
+      const searchValue = text.trim();
+      if (snapshot.exists()) {
+        const data = snapshot.val();
+        const users = Object.values(data);
+
+        const searchableUsers = users.filter(
+          (user) => !members.some((member) => member.uid === user.uid)
+        );
+
+        searchableUsers.forEach((user) => {
+          if (searchValue === user.displayName) {
+            setUserList((prev) => [...prev, user]);
+            // setMembers(prev=>[...prev, user]);
+            setSearchIds((prev) => [...prev, user.uid]);
+          }
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    // setUserList(arr);
+  };
+  const addMembers = async () => {
+    const dbRef = ref(getDatabase(), `groupChat/${chatId}`);
+
+    try {
+      const snapshot = await get(dbRef);
+
+      if (snapshot.exists()) {
+        let allowedUsers = snapshot.val().allowedUsers || [];
+
+        const newGroupMembers = allowedUsers.concat(searchedIds);
+        console.log(newGroupMembers);
+
         await update(dbRef, {
           allowedUsers: newGroupMembers,
         });
-        const updatedGroupChat = { ...groupchat, allowedUsers: newGroupMembers };
-        setGroupChat(updatedGroupChat)
+        const updatedGroupChat = {
+          ...groupchat,
+          allowedUsers: newGroupMembers,
+        };
+        setGroupChat(updatedGroupChat);
         setAddMembersMenu(false);
+      }
+    } catch (error) {
+      console.log(error);
     }
-
-  }
-  catch(error) {
-    console.log(error);
-  }
-}
+  };
   return (
-    <div className='chat-info__container'>
-        {!editChat ? (
-                 <div className='main__chat-info'>
-                    <div className='close__container'>
-                    <EditIcon className='edit-button' onClick={()=>setEditChat(prev=>!prev)}/>
-                </div>
+    <div className="chat-info__container">
+      {!editChat ? (
+        <div className="main__chat-info">
+          <div className="close__container">
+            <EditIcon
+              className="edit-button"
+              onClick={() => setEditChat((prev) => !prev)}
+            />
+          </div>
 
-                <div className='edit-group-photo'>
-                <img src={groupchat?.photoUrl || Placeholder } alt="group-profile" />
-                </div>
-<div className='group-name'>
-                <h1> {groupchat?.name}</h1>
-                </div>
+          <div className="edit-group-photo">
+            <img src={groupchat?.photoUrl || Placeholder} alt="group-profile" />
+          </div>
+          <div className="group-name">
+            <h1> {groupchat?.name}</h1>
+          </div>
 
-                 {groupchat?.description && (
-                <div className='description'>
-                    <p> {groupchat?.description} </p>
+          {groupchat?.description && (
+            <div className="description">
+              <p> {groupchat?.description} </p>
+            </div>
+          )}
+          <div className="title">
+            <h3>
+              {" "}
+              <GroupIcon />· {groupchat?.allowedUsers.length} Members
+            </h3>
+            <p onClick={() => setAddMembersMenu((prev) => !prev)}>
+              {" "}
+              Add members{" "}
+            </p>
+          </div>
+          <div className="members">
+            {members &&
+              members.length > 0 &&
+              members.map((member) => {
+                const isAdmin = groupchat.admin.includes(member.uid);
+                const isDropDownActive = openDropDown === member.uid;
+                const kickAble = member.uid !== user.uid;
+                return (
+                  <div className="user__container" key={member.uid}>
+                    <div className="profile">
+                      <img src={member.photoUrl || Placeholder} alt="profile" />
                     </div>
-                 )}
-                                <div className='title'>
-                 <h3> <GroupIcon/>· {groupchat?.allowedUsers.length} Members</h3>
-                 <p onClick={()=>setAddMembersMenu(prev => !prev)}> Add members </p>
-                 </div>
-                 <div className='members'>
+                    <div className="user__text">
+                      <h3> {member.displayName}</h3>
 
-                 {members && members.length > 0 && members.map((member) => {
-                     const isAdmin = groupchat.admin.includes(member.uid); 
-                    const isDropDownActive = openDropDown === member.uid;
-                    const kickAble = member.uid !== user.uid;
-                    return (
-                        <div className='user__container' key={member.uid}>
-                            <div className='profile'>
-                                <img src={member.photoUrl || Placeholder} alt="profile" />
-                                </div>
-                                <div className='user__text'>
-                            <h3> {member.displayName}</h3>
+                      {isAdmin ? <p> Admin </p> : <p> Member </p>}
+                    </div>
+                    {member.uid !== user.uid && (
+                      <div className="menu">
+                        <img
+                          src={ArrowDownIcon}
+                          className={isDropDownActive ? "active" : ""}
+                          alt="drop-down-menu"
+                          onClick={(e) => toggleDropDown(e, member.uid)}
+                        />
 
-                            {isAdmin ? (
-                                <p> Admin </p>
-                            ) : (
-                                <p> Member </p>
-                            )}
+                        {isDropDownActive && (
+                          <Fade in={isDropDownActive}>
+                            <div ref={dropdownRef} className="drop-down__menu">
+                              {!isAdmin && (
+                                <p onClick={() => makeAdmin(member.uid)}>
+                                  {" "}
+                                  Assign Admin{" "}
+                                </p>
+                              )}
+                              {kickAble && (
+                                <p onClick={() => kickMember(member.uid)}>
+                                  {" "}
+                                  Kick{" "}
+                                </p>
+                              )}
                             </div>
-                          {member.uid !== user.uid && (
-                            <div className='menu'>
-                              <img src={ArrowDownIcon} className={isDropDownActive ? 'active' : ''} alt="drop-down-menu"  onClick={(e) => toggleDropDown(e, member.uid)}/>
-
-                              
-{isDropDownActive && (
-      <Fade in={isDropDownActive}>
-                    <div ref={dropdownRef} className='drop-down__menu'>
-                        {!isAdmin && (
-                             <p onClick={()=> makeAdmin(member.uid)}> Assign Admin </p>
-                             )}
-                             {kickAble && (
-                                <p onClick={()=> kickMember(member.uid)}> Kick </p>
-                             )}
-                           
-                            </div>
-                            </Fade>
-                          )}
-                              </div>
-                          )}
-       
-                  
-                        </div>
-                            
-                    )
-                 })}
-                 </div>
-
-                 {addMembersMenu && (
-                  <div className='add-members-menu'>
-                    <div className='title-add-users'>
-                    <h1> Add Members </h1>
-                    <button onClick={()=>setAddMembersMenu(prev=>!prev)}> Close </button>
-                    </div>
-
-                    <div className='search-user__form'>
-                    <input type='text' placeholder='Search for users' onChange={handleTextChange} onKeyDown={handleKeyPress}></input>
-                      {userList.length > 0 && userList.map((data, key) => (
-                      <div className='search__user-list'>
-                          <h1> {data.displayName}</h1>
-                          </div>
-                          ))}
-
-                          {userList.length > 0 && <button onClick={addMembers}> Add Members </button> }
-
-                    </div>
-                    </div>
-
-                 )}
-                 </div>
-        ) : (
-            <div className='edit__chat-info'>
-                <div className='close__container'>
-                    <CloseRoundedIcon className='edit-button' onClick={()=>setEditChat(prev=>!prev)} />
-                </div>
-            {/* <h1> Edit </h1> */}
-            <div className='edit-group-photo'>
-
-                
-            {loading ? (
-                <div className='loading'></div>
-            ) : (
-                <img src={groupchat?.photoUrl || Placeholder } alt="group-profile" />
-            )}
+                          </Fade>
+                        )}
+                      </div>
+                    )}
                   </div>
+                );
+              })}
+          </div>
 
-                <label htmlFor="file-upload" className="custom-file-upload">
-        Change group photo
-      </label>
-                <input id="file-upload" type="file" onChange={handlePhotoChange} disabled={loading}/>
-            <div className='edit__form'>
+          {addMembersMenu && (
+            <div className="add-members-menu">
+              <div className="title-add-users">
+                <h1> Add Members </h1>
+                <button onClick={() => setAddMembersMenu((prev) => !prev)}>
+                  {" "}
+                  Close{" "}
+                </button>
+              </div>
 
-            <p> Group chat name</p>
-              <input
-                id="edit-groupchat-name__box"
-                type="text"
-                defaultValue={groupchat?.name}
-              />
-                         <Button className='button' variant="outlined" onClick={saveGroupChatName}> Save </Button>
-              <p>Description</p>
-              <textarea
-                id="edit-discription"
-                rows="4"
-                defaultValue={groupchat?.description || ""}
-              ></textarea>
-    
-              <Button className='button' variant="outlined" onClick={saveGroupChatDescription}> Save </Button>
+              <div className="search-user__form">
+                <input
+                  type="text"
+                  placeholder="Search for users"
+                  onChange={handleTextChange}
+                  onKeyDown={handleKeyPress}
+                ></input>
+                {userList.length > 0 &&
+                  userList.map((data, key) => (
+                    <div className="search__user-list">
+                      <h1> {data.displayName}</h1>
+                    </div>
+                  ))}
 
+                {userList.length > 0 && (
+                  <button onClick={addMembers}> Add Members </button>
+                )}
               </div>
             </div>
+          )}
+        </div>
+      ) : (
+        <div className="edit__chat-info">
+          <div className="close__container">
+            <CloseRoundedIcon
+              className="edit-button"
+              onClick={() => setEditChat((prev) => !prev)}
+            />
+          </div>
+          {/* <h1> Edit </h1> */}
+          <div className="edit-group-photo">
+            {loading ? (
+              <div className="loading"></div>
+            ) : (
+              <img
+                src={groupchat?.photoUrl || Placeholder}
+                alt="group-profile"
+              />
+            )}
+          </div>
 
-        )}
+          <label htmlFor="file-upload" className="custom-file-upload">
+            Change group photo
+          </label>
+          <input
+            id="file-upload"
+            type="file"
+            onChange={handlePhotoChange}
+            disabled={loading}
+          />
+          <div className="edit__form">
+            <p> Group chat name</p>
+            <input
+              id="edit-groupchat-name__box"
+              type="text"
+              defaultValue={groupchat?.name}
+            />
+            <Button
+              className="button"
+              variant="outlined"
+              onClick={saveGroupChatName}
+            >
+              {" "}
+              Save{" "}
+            </Button>
+            <p>Description</p>
+            <textarea
+              id="edit-discription"
+              rows="4"
+              defaultValue={groupchat?.description || ""}
+            ></textarea>
+
+            <Button
+              className="button"
+              variant="outlined"
+              onClick={saveGroupChatDescription}
+            >
+              {" "}
+              Save{" "}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default ChatInfo
+export default ChatInfo;
