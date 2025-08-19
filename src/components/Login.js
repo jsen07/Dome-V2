@@ -1,158 +1,227 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { useAuth } from './contexts/AuthContext';
+import React, { useRef, useState } from "react";
+import { useAuth } from "./contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-
-
-
+import svgLogo from "./images/logo-transparent-png.png";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
+import PersonIcon from "@mui/icons-material/Person";
+import WavingHandIcon from "@mui/icons-material/WavingHand";
 
 const Login = () => {
-
   const displaynameRef = useRef();
   const emailRef = useRef();
   const passwordRef = useRef();
+  const repeatPasswordRef = useRef();
+
   const { signUp, login } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [logUser, setLogin] = useState(true);
+  const [isLoginActive, setIsLoginActive] = useState(true);
+  const [showPassword, setShowPassword] = useState(false);
 
   const navigate = useNavigate();
 
+  const validateForm = () => {
+    const email = emailRef.current.value.trim();
+    const password = passwordRef.current.value.trim();
 
-  useEffect(() => {
-    // if(user_id) {
-    //   console.log("there is a user");
-    //   navigate("/home");
+    if (!email || !password) {
+      return "Please fill out all required fields.";
+    }
 
-    // }
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      return "Please enter a valid email address.";
+    }
 
+    if (password.length < 6) {
+      return "Password must be at least 6 characters.";
+    }
 
+    if (!isLoginActive) {
+      const displayName = displaynameRef.current.value.trim();
+      const repeatPassword = repeatPasswordRef.current.value.trim();
 
-    // if(!user_id) {
-    //   console.log("there is no user");
-    // }
-  });
+      if (!displayName) {
+        return "Display name is required.";
+      }
+      if (password !== repeatPassword) {
+        return "Passwords do not match.";
+      }
+    }
 
+    return "";
+  };
 
-  // function writeUserData(userId, displayName, email, password) {
-
-  //   const db_ref = db.ref();
-  //   // db_ref.child('users/' + userId).set({
-  //   //   displayName: displayName,
-  //   //   email: email,
-  //   //   password: password
-  //   // })
-  //   get(child(db_ref, `users/${userId}`)).then((snapshot) => {
-  //     if (!snapshot.exists()) {
-  //       db_ref.child('users/' + userId).set({
-  //         photoUrl: "",
-  //         displayName: displayName,
-  //         Bio: "",
-  //         Gender: "Prefer not to say",
-  //         email: email,
-  //         password: password
-  //       })
-  //     } else {
-  //       alert("User already exists");
-  //     }
-  //   }).catch((error) => {
-  //     console.error(error);
-  //   });
-  //   setLoading(false);
-  // }
-
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const validationError = validateForm();
+    if (validationError) {
+      toast.error(validationError);
+      return;
+    }
+
     setLoading(true);
-    if(!logUser) {
-    await signUp(emailRef.current.value, passwordRef.current.value, displaynameRef.current.value);
-      setLogin(true);
 
-
-  }
-  if(logUser) {
-    await login(emailRef.current.value, passwordRef.current.value).then(res => {
-      setLoading(true)
-      // dispatch({
-      //   type: actionTypes.SET_USER,
-      //   user: res
-      // })
-      // console.log(user);
-      navigate("/home");
-      // console.log("this is the response from the log in:" + JSON.stringify(res.uid));
-
-    }, error => {
-      console.log(error.message);
-    });
-  }
-
-  setLoading(false);
-}
+    try {
+      if (!isLoginActive) {
+        await signUp(
+          emailRef.current.value,
+          passwordRef.current.value,
+          displaynameRef.current.value
+        );
+        toast.success("Registration successful! Please log in.");
+        setIsLoginActive(true);
+      } else {
+        await login(emailRef.current.value, passwordRef.current.value);
+        toast.success("Login successful!");
+        navigate("/home");
+      }
+    } catch (err) {
+      toast.error("Invalid details. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className='login-register'>
-        <div className='banner'>
-        <div className='logo-container'>
-          <div className='logo'></div>
-          <h1>The Dome </h1>
-        </div>
-        </div>
+    <div className="absolute top-0 left-0 bg-neutral-950 text-white w-full min-h-screen font-sourceSans3 flex flex-col justify-between px-4">
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
 
-
-        <div className='login-form__container'>
-          <div className='form__container'>
-          <h1> 🕹️WELCOME TO THE DOME 🎮 </h1>
-
-            { !logUser && (
-
-      <form onSubmit={handleSubmit}>
-      <p> Create an acccount 👾 </p>
-      <label id="display-name__text">Display name</label>
-      <input  id="display-name__box" type="text" ref={displaynameRef} name="displayName" />
-      <label>Email</label>
-      <input type="email" name="user_email" ref={emailRef} required/>
-      <label>Password</label>
-      <input type="text" ref={passwordRef} name="Password" />
-
-
-
-<div className='form__footer'>
-      <button id="login-register__button" type="submit" disabled={loading} onClick={handleSubmit}> Register </button>
-      <p> Already have an account? </p>
-      <p id="text-state" onClick={() =>setLogin(true)}>Sign in</p>
-</div>
-
-
-    </form>
-            )}
-
-    { logUser && (
-      <form>
-        <p> Welcome Back! 😊 👋 </p>
-         <label>Email</label>
-         <input type="email" name="user_email" ref={emailRef} required/>
-         <label>Password</label>
-         <input type="text" ref={passwordRef} name="Password" />
-
-        <div className='form__footer'>
-      <button id="login-register__button" type="submit" disabled={loading} onClick={handleSubmit}> Login </button>
-      <p> Need to register? </p>
-      <p id="text-state" onClick={() =>setLogin(false)}> Register </p>
+      <div className="flex py-8 justify-center">
+        <img src={svgLogo} alt="Logo" className="w-64 object-contain" />
       </div>
-         </form>
-      )}
-    
+
+      <div className="flex flex-col items-center grow w-full max-w-md mx-auto">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col py-4 rounded-lg w-full text-base gap-3"
+        >
+          {isLoginActive ? (
+            <h1 className="text-4xl font-bebas mb-2 flex gap-4">
+              {" "}
+              Welcome Back!{" "}
+              <WavingHandIcon
+                className="text-violet-300"
+                style={{ fontSize: "inherit" }}
+              />{" "}
+            </h1>
+          ) : (
+            <h1 className="text-4xl font-bebas mb-2">
+              {" "}
+              <PersonIcon
+                className="text-violet-500"
+                style={{ fontSize: "inherit" }}
+              />{" "}
+              Create an Account{" "}
+            </h1>
+          )}
+
+          {!isLoginActive && (
+            <>
+              <label>Display Name</label>
+              <input
+                className="p-2 bg-neutral-700 text-white rounded"
+                type="text"
+                ref={displaynameRef}
+              />
+            </>
+          )}
+
+          <label>Email</label>
+          <input
+            className="p-2 bg-neutral-700 text-white rounded"
+            type="email"
+            ref={emailRef}
+          />
+
+          <label>Password</label>
+          <div className="relative">
+            <input
+              className="p-2 bg-neutral-700 text-white rounded w-full pr-10"
+              type={showPassword ? "text" : "password"}
+              ref={passwordRef}
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 transition-all hover:text-gray-300"
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <VisibilityOffIcon style={{ fontSize: "inherit" }} />
+              ) : (
+                <VisibilityIcon style={{ fontSize: "inherit" }} />
+              )}
+            </button>
           </div>
 
+          {!isLoginActive && (
+            <>
+              <label>Repeat Password</label>
+              <div className="relative">
+                <input
+                  className="p-2 bg-neutral-700 text-white rounded w-full pr-10"
+                  type="password"
+                  ref={repeatPasswordRef}
+                />
+              </div>
+            </>
+          )}
 
-          <div className='form__side-text'>
-            <h1> The Dome official discord chatroom</h1>
-            <p>We’re excited to have you join our community! This server is all about , sharing gaming tips, discussing books, collaborating on art, etc., and we can’t wait for you to dive in.</p>
-          </div>
-          
+          <button
+            type="submit"
+            disabled={loading}
+            className="shadow-lg p-2 bg-violet-600 hover:bg-violet-500 transition rounded-md w-full"
+          >
+            {isLoginActive ? "Login" : "Register"}
+          </button>
+        </form>
+
+        <div className="mt-3 text-sm">
+          {isLoginActive ? (
+            <>
+              Don't have an account?{" "}
+              <span
+                className="text-violet-300 underline cursor-pointer"
+                onClick={() => setIsLoginActive(false)}
+              >
+                Register
+              </span>
+            </>
+          ) : (
+            <>
+              Already have an account?{" "}
+              <span
+                className="text-violet-300 underline cursor-pointer"
+                onClick={() => setIsLoginActive(true)}
+              >
+                Login
+              </span>
+            </>
+          )}
         </div>
-        
+      </div>
 
+      <footer className="text-center py-6 text-gray-500 text-xs">
+        Created by <span className="text-violet-400">Jayssen De Castro</span> •
+        Built with React & Tailwind CSS
+      </footer>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

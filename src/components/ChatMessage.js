@@ -1,103 +1,48 @@
-import React from 'react'
-import { useStateValue } from './contexts/StateProvider';
+import React, { useState } from "react";
+import { useStateValue } from "./contexts/StateProvider";
 
+const ChatMessage = ({ data }) => {
+  const [{ user }] = useStateValue();
+  const [showTimestamp, setShowTimestamp] = useState(false);
 
-
-const ChatMessage = ({ data, isFirstMessageOfDay, shouldShowDisplayName }) => {
-
-    const [{user}, dispatch] = useStateValue();
-
-
-    function formatTimestamp(timestamp) {
-      const date = new Date(timestamp); 
-      let hours = date.getHours();       // Get hours
-      const minutes = date.getMinutes()
-      let dayOrNight = "";
-
-    if(hours >= 12) {
-        dayOrNight = "PM"
-    }
-    if(hours === 0 || hours < 12) {
-        dayOrNight ="AM"
-    }
-    if( hours === 0 ) {
-        hours = 12;
-    }
-
-      const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
-
-  
-      return timeOfMessage;
-        
-}
-
-function HeaderformatTimestamp(timestamp) {
-  const timestampDate = new Date(timestamp);
-  let hours = timestampDate.getHours();       // Get hours
-  const minutes = timestampDate.getMinutes()
-  let dayOrNight = "";
-  const now = new Date();
-  const todayStart = new Date(now.setHours(0, 0, 0, 0));
-  const yesterdayStart = new Date(todayStart);
-  yesterdayStart.setDate(yesterdayStart.getDate() - 1);
-  const currentDay = now.getDay();
-  const startOfWeek = new Date(now);
-  startOfWeek.setDate(now.getDate() - currentDay + (currentDay === 0 ? -6 : 1));
-  const dayOfWeek = timestampDate.toLocaleString('en-US', { weekday: 'long' });
-
-  if(hours >= 12) {
-      dayOrNight = "PM"
-  }
-  if(hours === 0 || hours < 12) {
-      dayOrNight ="AM"
-  }
-  if( hours === 0 ) {
-      hours = 12;
+  function formatTimestamp(timestamp) {
+    const date = new Date(timestamp);
+    let hours = date.getHours();
+    const minutes = date.getMinutes();
+    let dayOrNight = hours >= 12 ? "PM" : "AM";
+    if (hours === 0) hours = 12;
+    return `${hours}:${String(minutes).padStart(2, "0")} ${dayOrNight}`;
   }
 
-  const timeOfMessage = `${hours}:${String(minutes).padStart(2, '0')} ${dayOrNight}`;
-  if (timestampDate >= todayStart) {
-      
-      
-      return `${timeOfMessage}`;
-
-  } else if (timestampDate >= yesterdayStart) {
-      return `Yesterday at ${timeOfMessage}`;
-  } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
-  
-      return `${dayOfWeek} at ${timeOfMessage}`
-  } else {
-      return `${dayOfWeek}, ${timestampDate.toLocaleDateString("en-US", { 
-          year: 'numeric', 
-          month: 'long', 
-          day: 'numeric' 
-      })} at ${timeOfMessage}`
-      }
-  }
+  const isUserMessage = data.uid === user?.uid;
 
   return (
-<>
-{/* {shouldShowDisplayName && (
-  <span id="time-header"> {HeaderformatTimestamp(data.sentAt)}</span>
-)} */}
-<div className='message__container'>
+    <div
+      className={`relative text-white text-sm flex flex-col px-3 py-1.5 rounded-lg max-w-xs break-words cursor-pointer my-1 ${
+        isUserMessage ? "bg-violet-500" : "bg-neutral-800"
+      }`}
+      onClick={() => setShowTimestamp((prev) => !prev)}
+    >
+      <p className="max-w-[230px]">
+        {data.message}
 
-        <div className='message-box'>
-        <p> {data.message} </p>
-
-        {/* <span id="message__time-sent"> {formatTimestamp(data.sentAt)}</span> */}
+        {showTimestamp && (
+          <span
+            className={`absolute text-[10px] flex text-gray-200 w-12
+            ${
+              isUserMessage
+                ? "bottom-[-20px] right-1 justify-end"
+                : "bottom-[-20px] left-1"
+            }
+            animate-timestamp-in
+          `}
+          >
+            {formatTimestamp(data.sentAt)}
+          </span>
+        )}
+      </p>
     </div>
-    {!isFirstMessageOfDay && !shouldShowDisplayName ? (
-    <span id="message__time-sent">{formatTimestamp(data.sentAt)}</span>
-  ) : (
-    <span id="message__time-sent"></span>
-  )
-}
+  );
+};
 
-
-</div>
-</>
-  )
-}
-
-export default ChatMessage
+export default ChatMessage;

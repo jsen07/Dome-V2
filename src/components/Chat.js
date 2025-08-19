@@ -22,6 +22,8 @@ import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
 import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined";
 import SendIcon from "@mui/icons-material/Send";
+import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
+import { useUserStatus } from "./hooks/useUserStatus";
 
 const Chat = () => {
   const [isComponentActive, setIsComponentActive] = useState(false);
@@ -41,21 +43,15 @@ const Chat = () => {
   const { chatId } = useParams();
   const [loading, setLoading] = useState(true);
   const [recieverData, setRecieverData] = useState();
-  const [status, setStatus] = useState("Offline");
+  // const [status, setStatus] = useState("Offline");
   const [emojiToggle, setEmojiToggle] = useState(false);
   const [lastMessage, setLastMessage] = useState();
-  const [unseenMessages, setUnseenMessages] = useState({});
   const inputRef = useRef(null);
   const notificationSentRef = useRef(false);
   const typingTimeoutRef = useRef(null);
 
-  var soundSend = new Howl({
-    src: [sendSoundEffect],
-  });
-
-  var receiveSend = new Howl({
-    src: [receivingSoundEffect],
-  });
+  //Hooks
+  const status = useUserStatus(reciever);
 
   //     useEffect(()=> {
   //         setIsComponentActive(false);
@@ -147,10 +143,6 @@ const Chat = () => {
 
   useEffect(() => {
     setLoading(true);
-    //fetch chat data everytime user changes chat
-    // const handleIsUser = () => {
-    //     isUser = true
-    // }
     fetchChatData(chatId, user)
       .then((result) => {
         setChat(result.messages);
@@ -181,9 +173,9 @@ const Chat = () => {
                   newMessage.uid !== user.uid &&
                   newMessage.chatId === chatId
                 ) {
-                  if (newMessage.type === "direct") {
-                    receiveSend.play();
-                  }
+                  // if (newMessage.type === "direct") {
+                  //   receiveSend.play();
+                  // }
                 }
               }
             }
@@ -198,44 +190,10 @@ const Chat = () => {
       });
   }, [chatId, user.uid]);
 
-  //get user Status
-
-  useEffect(() => {
-    const fetchStatus = () => {
-      return new Promise((resolve, reject) => {
-        const dbRef = ref(getDatabase());
-
-        get(child(dbRef, `status/${reciever}`))
-          .then((snapshot) => {
-            if (snapshot.exists()) {
-              const status = snapshot.val();
-              setStatus(status);
-              resolve(status);
-            }
-          })
-          .catch((error) => {
-            reject(error);
-          });
-      });
-    };
-
-    fetchStatus()
-      .then(() => {
-        const statusRef = ref(getDatabase(), `status/${reciever}`);
-        onValue(statusRef, (snapshot) => {
-          const status = snapshot.val();
-          setStatus(status);
-        });
-      })
-      .catch((error) => {
-        console.error("Failed to fetch status:", error);
-      });
-  }, [reciever, chatId]);
-
   const sendMessage = () => {
-    if (text === "") {
-      return;
-    }
+    const input = document.getElementById("send-message__input");
+
+    if (text === "") return;
 
     const chatRef = ref(getDatabase());
 
@@ -256,33 +214,32 @@ const Chat = () => {
       type: "direct",
     });
 
-    set(child(chatRef, "chatList/" + reciever + "/" + user.uid), {
+    set(child(chatRef, `chatList/${reciever}/${user.uid}`), {
       chatId: chatId,
       lastMessage: UserMessage,
       receiverId: user.uid,
-      updatedAt: serverTimestamp(),
+      sentAt: serverTimestamp(),
       isSeen: false,
       id: uniqueId,
     });
 
-    // const RecieverMessage = `${recieverData?.displayName}: ${text}`;
-    set(child(chatRef, "chatList/" + user.uid + "/" + reciever), {
+    set(child(chatRef, `chatList/${user.uid}/${reciever}`), {
       chatId: chatId,
       lastMessage: UserMessage,
       receiverId: reciever,
-      updatedAt: serverTimestamp(),
+      sentAt: serverTimestamp(),
       isSeen: true,
       id: uniqueId,
     });
 
     const notifiChatListRef = ref(
       db,
-      `chatList/${reciever}/notifications/${user.uid}/messages`
+      `chatList/${reciever}/notifications/${chatId}/messages`
     );
     const newChatNotifRef = push(notifiChatListRef);
     set(newChatNotifRef, {
       message: text,
-      displayName: user.uid,
+      displayName: user.displayName,
       sentAt: serverTimestamp(),
       isSeen: false,
       chatId: chatId,
@@ -299,12 +256,9 @@ const Chat = () => {
       recieverId: user.uid,
     });
 
-    const input = document.getElementById("send-message__input");
-
     setText("");
-    input.value = "";
+    input.focus();
     notifyTyping(chatId, user.uid, false);
-    soundSend.play();
   };
 
   const scrollToBottom = () => {
@@ -360,7 +314,6 @@ const Chat = () => {
     setEmojiToggle(!emojiToggle);
     inputRef.current.focus();
   };
-
   const generateMessages = () => {
     const dateMap = {};
 
@@ -374,64 +327,71 @@ const Chat = () => {
     const today = now.toISOString().split("T")[0];
     const startOfWeekString = startOfWeek.toISOString().split("T")[0];
 
+    // Group messages by date
     chat.forEach((chatData) => {
-      if (chatData.chatId === chatId) {
-        const timestamp = chatData.sentAt;
+      if (chatData.chatId !== chatId) return;
 
-        if (timestamp) {
-          const date = new Date(timestamp);
+      const timestamp = chatData.sentAt;
+      if (!timestamp) return;
 
-          if (!isNaN(date)) {
-            const dateString = date.toISOString().split("T")[0];
-
-            if (!dateMap[dateString]) {
-              dateMap[dateString] = { label: dateString, messages: [] };
-            }
-
-            if (dateString === today) {
-              dateMap[dateString].label = "Today";
-            } else if (dateString >= startOfWeekString && dateString <= today) {
-              const dayOfWeek = date.toLocaleString("en-US", {
-                weekday: "long",
-              });
-              dateMap[dateString].label = dayOfWeek;
-            } else {
-              const formattedDate = date.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              });
-              dateMap[dateString].label = formattedDate;
-            }
-
-            dateMap[dateString].messages.push(chatData);
-          } else {
-            console.error("Invalid date:", timestamp);
-          }
-        }
+      const date = new Date(timestamp);
+      if (isNaN(date)) {
+        console.error("Invalid date:", timestamp);
+        return;
       }
+
+      const dateString = date.toISOString().split("T")[0];
+
+      if (!dateMap[dateString]) {
+        dateMap[dateString] = { label: dateString, messages: [] };
+      }
+
+      if (dateString === today) {
+        dateMap[dateString].label = "Today";
+      } else if (dateString >= startOfWeekString && dateString <= today) {
+        dateMap[dateString].label = date.toLocaleString("en-US", {
+          weekday: "long",
+        });
+      } else {
+        dateMap[dateString].label = date.toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        });
+      }
+
+      dateMap[dateString].messages.push(chatData);
     });
 
-    return Object.keys(dateMap).map((date, index) => (
-      <div key={index} className="date-container">
-        <div className="date-notify">
-          <div className="title-date">
+    // Reverse dates so the latest date is first for flex-col-reverse
+    const reversedDates = Object.keys(dateMap).sort(
+      (a, b) => new Date(b) - new Date(a)
+    );
+
+    return reversedDates.map((date) => (
+      <div
+        key={date}
+        className="w-full flex flex-col gap-4 rounded-lg py-4 px-2 shadow-sm"
+      >
+        <div className="flex justify-center">
+          <div className="bg-neutral-900 px-4 py-1 rounded-full text-sm text-neutral-400">
             <h4>{dateMap[date].label}</h4>
           </div>
         </div>
+
         {dateMap[date].messages.map((message, index) => {
           const isUserMessage = message.uid === user?.uid;
           const isFirstMessageOfDay =
             index === 0 ||
             message.uid !== dateMap[date].messages[index - 1].uid;
 
-          const previousMessageTimestamp =
-            index > 0 ? dateMap[date].messages[index - 1].sentAt : null; // Timestamp of  previous message
-          const currentMessageTimestamp = message.sentAt;
+          const previousTimestamp =
+            index > 0 ? dateMap[date].messages[index - 1].sentAt : null;
+          const currentTimestamp = message.sentAt;
 
-          const timeDifference = previousMessageTimestamp
-            ? (currentMessageTimestamp - previousMessageTimestamp) / (1000 * 60)
-            : 0; // in minutes
+          const timeDifference = previousTimestamp
+            ? (currentTimestamp - previousTimestamp) / (1000 * 60)
+            : 0;
 
           const shouldShowDisplayName =
             isFirstMessageOfDay ||
@@ -440,20 +400,39 @@ const Chat = () => {
 
           return (
             <div
-              key={message.id}
-              className={isUserMessage ? "user-message" : "message"}
+              key={`${message.id}-${message.sentAt}`}
+              className={`flex flex-col ${
+                isUserMessage ? "items-end" : "items-start"
+              }`}
             >
               {shouldShowDisplayName && (
-                <div className="message_header">
-                  <span>{message.displayName}</span>
-                  {shouldShowDisplayName && (
-                    <span id="time-header">
-                      {" "}
-                      {HeaderformatTimestamp(message.sentAt)}
-                    </span>
+                <div
+                  className={`flex flex-row gap-2 items-center text-xxs mb-1 ${
+                    isUserMessage ? "items-end" : "items-start"
+                  }`}
+                >
+                  {isUserMessage ? (
+                    <>
+                      <span className="text-gray-400">
+                        {HeaderformatTimestamp(message.sentAt)}
+                      </span>
+                      <span className="font-semibold text-sm text-white">
+                        {message.displayName}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-semibold text-sm text-white">
+                        {message.displayName}
+                      </span>
+                      <span className="text-gray-400">
+                        {HeaderformatTimestamp(message.sentAt)}
+                      </span>
+                    </>
                   )}
                 </div>
               )}
+
               <ChatMessage
                 data={message}
                 isFirstMessageOfDay={isFirstMessageOfDay}
@@ -505,58 +484,80 @@ const Chat = () => {
     } else if (timestampDate >= startOfWeek && timestampDate <= todayStart) {
       return `${dayOfWeek} at ${timeOfMessage}`;
     } else {
-      return `${dayOfWeek}, ${timestampDate.toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })} at ${timeOfMessage}`;
+      // return `${dayOfWeek}, ${timestampDate.toLocaleDateString("en-US", {
+      //   year: "numeric",
+      //   month: "long",
+      //   day: "numeric",
+      // })} at ${timeOfMessage}`;
+      return `${dayOfWeek} at ${timeOfMessage}`;
     }
   }
 
   useEffect(() => {
+    if (!user?.uid || !chatId) return;
+    const db = getDatabase();
+
+    const messagesRef = ref(
+      db,
+      `chatList/${user.uid}/notifications/${chatId}/messages`
+    );
+    const unsubscribe = onValue(messagesRef, async (snapshot) => {
+      if (!snapshot.exists()) return;
+
+      snapshot.forEach((msgSnap) => {
+        const msg = msgSnap.val();
+        if (msg.chatId === chatId) {
+          remove(
+            ref(
+              db,
+              `chatList/${user.uid}/notifications/${chatId}/messages/${msgSnap.key}`
+            )
+          ).catch(console.error);
+        }
+      });
+    });
+
+    return () => unsubscribe();
+  }, [user?.uid, chatId]);
+
+  useEffect(() => {
+    if (!user?.uid || !reciever || !chatId) return;
     const db = getDatabase();
 
     const chatListRef = ref(db, `chatList/${user.uid}/${reciever}`);
     const userMessageUpdate = ref(db, `chatList/${reciever}/${user.uid}`);
-    // const notificationRef = ref(db, `chatList/${reciever}/notifications/${user.uid}/messages`);
 
-    const updateIsSeen = onValue(chatListRef, (snapshot) => {
-      const messageToDelete = ref(
-        db,
-        `chatList/${user.uid}/notifications/${reciever}/messages`
-      );
-      const notifToDelete = ref(
-        db,
-        `notifications/chat/${user.uid}/${reciever}`
-      );
+    const notifRef = ref(db, `notifications/chat/${user.uid}/${reciever}`);
+
+    const unsubscribeChat = onValue(chatListRef, async (snapshot) => {
       const chatData = snapshot.val();
       if (chatData && !chatData.isSeen) {
-        update(chatListRef, { isSeen: true });
+        // Mark as seen
+        await update(chatListRef, { isSeen: true }).catch(console.error);
 
-        remove(messageToDelete).catch((error) => {
-          console.error("Error deleting message:", error);
-        });
-        remove(notifToDelete).catch((error) => {
-          console.error("Error deleting message:", error);
-        });
+        // Remove the notification (optional, or you can keep if other messages exist)
+        remove(notifRef).catch(console.error);
       }
     });
 
-    const UserMessageSeen = onValue(userMessageUpdate, (snapshot) => {
+    const unsubscribeUser = onValue(userMessageUpdate, (snapshot) => {
       const messageData = snapshot.val();
-
-      if (messageData && lastMessage?.uid === messageData.receiverId) {
-        setSeen(messageData.isSeen);
+      if (messageData) {
+        const seenStatus =
+          lastMessage && lastMessage.uid === user.uid
+            ? messageData.isSeen
+            : false;
+        setSeen(seenStatus);
       } else {
         setSeen(false);
       }
     });
 
     return () => {
-      updateIsSeen();
-      UserMessageSeen();
+      unsubscribeChat();
+      unsubscribeUser();
     };
-  }, [reciever, chatId, lastMessage]);
+  }, [reciever, chatId, lastMessage, user?.uid]);
 
   const notifyTyping = (chatId, userId, typing, displayName) => {
     set(ref(getDatabase(), `typingStatus/${chatId}/${userId}`), typing);
@@ -597,86 +598,137 @@ const Chat = () => {
   }, [chatId, reciever]);
 
   return (
-    <div className={`chat-box__container ${isComponentActive ? "active" : ""}`}>
-      {/* <button onClick={closeChat}> Close Chat</button> */}
-      <div className="chat__header">
-        {loading ? (
-          <div className="loading"></div>
-        ) : (
-          <div className="chat__banner">
+    <>
+      {recieverData && reciever && user.uid && (
+        <div
+          className={`h-screen w-full absolute top-0 left-0 flex flex-col bg-neutral-950 ${
+            isComponentActive ? "active" : ""
+          }`}
+        >
+          <div className="fixed bg-neutral-950 top-0 text-white border-neutral-900 px-4 py-2 h-20 flex flex-row items-center gap-2 text-base z-20 w-full border-b">
+            <ArrowBackIosNewRoundedIcon
+              onClick={() => navigate(-1)}
+              className="cursor-pointer hover:opacity-80"
+            />
             <div
-              className="profile__card"
+              className="relative pl-2"
               onClick={() => navigate(`/profile?userId=${recieverData?.uid}`)}
             >
               <img
                 alt="user-avatar"
+                className="w-12 aspect-square rounded-full object-cover"
                 src={recieverData?.photoUrl || Placeholder}
               />
-              <div className={status ? status : "status"}>
-                <div className="inner"></div>
-              </div>
+              {/* <div
+                className={`w-5 h-5 rounded-full absolute left-10 top-8 sm:left-9 sm:top-9 ${
+                  status === "Online"
+                    ? `bg-green-600 border-4 border-neutral-950`
+                    : "bg-neutral-800 border-4 border-neutral-950"
+                }`}
+              ></div> */}
             </div>
-            <div className="header-details">
-              <h1> {recieverData?.displayName}</h1>
+            <div className="flex flex-row justify-between grow items-center">
+              <h1 className="text-base font-extrabold">
+                {" "}
+                {recieverData?.displayName}
+              </h1>
               {status && (
-                <p className={status ? `details ${status}` : "details"}>
-                  {" "}
-                  {status}{" "}
-                </p>
+                <span
+                  className={`rounded-full w-2.5 h-2.5 ${
+                    status === "Online"
+                      ? `bg-green-600  border-neutral-950`
+                      : "bg-neutral-800  border-neutral-950"
+                  }`}
+                >
+                  {/* {status} */}
+                </span>
               )}
             </div>
           </div>
-        )}
+          {/* <button onClick={closeChat}> Close Chat</button> */}
+          <div className="py-20 flex flex-col h-screen w-full relative">
+            {loading && <div className="loading"></div>}
 
-        <div className="messages__container" ref={messagesContainerRef}>
-          <div className="messages__inner">
-            {generateMessages()}
+            <div
+              className="flex flex-col h-screen py-20"
+              ref={messagesContainerRef}
+            >
+              <div className="flex-1 flex flex-col-reverse overflow-y-auto">
+                <div className="flex flex-col text-white text-sm h-6 px-4 font-bold">
+                  <div className="bg-neutral-950 h-6 w-full">
+                    {Object.keys(typingUsers).length > 0 && (
+                      <span>
+                        {recieverData
+                          ? `${recieverData.displayName} is typing...`
+                          : "Loading..."}
+                      </span>
+                    )}
+                  </div>
+                  {seen && Object.keys(typingUsers).length === 0 && (
+                    <span
+                      className="w-full flex justify-end text-xs py-2"
+                      ref={seenEndRef}
+                    >
+                      {" "}
+                      Seen{" "}
+                    </span>
+                  )}
+                </div>
+                {generateMessages()}
 
-            <div className="seen__container">
-              {Object.keys(typingUsers).length > 0 && (
-                <p id="typing">
-                  {recieverData
-                    ? `${recieverData.displayName} is typing...`
-                    : "Loading..."}
-                </p>
-              )}
-              {seen && Object.keys(typingUsers).length === 0 && (
-                <span ref={seenEndRef}> Seen </span>
-              )}
+                {chat.length === 0 && <p>You have started a chat.</p>}
+              </div>
+
+              <div ref={messagesEndRef} />
             </div>
-
-            {chat.length === 0 && <p>You have started a chat.</p>}
-          </div>
-          <div ref={messagesEndRef} />
-        </div>
-        <div className="input__container">
-          <EmojiEmotionsOutlinedIcon
-            className="emoji-button"
+            <div className="fixed h-20 bottom-0 left-0 border-t border-neutral-900 w-full bg-neutral-950 pt-2 pb-7 px-3 flex items-center gap-3">
+              {/* Emoji button */}
+              {/* <button
+            className="text-gray-400 hover:text-yellow-400 transition-colors"
             onClick={emojiToggleHandler}
-          />
-          <div className="emoji-picker__container">
-            <EmojiPicker
-              open={emojiToggle}
-              emojiStyle="native"
-              onEmojiClick={handleEmoji}
-              theme="dark"
-              height={400}
-              width={400}
-            />
+          >
+            <EmojiEmotionsOutlinedIcon />
+          </button> */}
+
+              {/* Emoji Picker */}
+              {/* {emojiToggle && (
+            <div className="absolute bottom-16 left-3 z-50">
+              <EmojiPicker
+                open={emojiToggle}
+                emojiStyle="native"
+                onEmojiClick={handleEmoji}
+                theme="dark"
+                height={400}
+                width={400}
+              />
+            </div>
+          )} */}
+
+              {/* Input */}
+              <input
+                id="send-message__input"
+                placeholder="Type a message..."
+                type="text"
+                ref={inputRef}
+                value={text}
+                onChange={handleInputChange}
+                onKeyDown={handleKeyPress}
+                className="w-full rounded-full px-4 py-2 bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-violet-400"
+              />
+
+              {/* Send button */}
+              <button
+                id="send-button"
+                onClick={sendMessage}
+                className="pb-1 flex items-center text-violet-400 hover:text-violet-500 transition-colors"
+              >
+                <SendIcon className="rotate-[-30deg]" />
+              </button>
+            </div>
           </div>
-          <input
-            id="send-message__input"
-            placeholder="Type a message..."
-            type="text"
-            ref={inputRef}
-            value={text}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyPress}
-          />
-          <SendIcon id="send-button" onClick={sendMessage} />
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

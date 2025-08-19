@@ -1,55 +1,51 @@
-import React from 'react'
-import ProfileActionButtons from './ProfileActionButtons';
-import Placeholder from './images/profile-placeholder-2.jpg';
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
-import Box from '@mui/material/Box';
+import React from "react";
+import ProfileActionButtons from "./ProfileActionButtons";
+import Placeholder from "./images/profile-placeholder-2.jpg";
 
-const ProfileBanner = ({background, status, isCurrentUser, userDetails, toggleProfileEdit}) => {
+const ProfileBanner = ({
+  background,
+  status,
+  isCurrentUser,
+  userDetails,
+  toggleProfileEdit,
+}) => {
   return (
-    <div  id="banner" className='header__banner'style={background ? { backgroundImage: `url(${background})` } : {}}>
-    <div className='profile-header'>
-    <div className="avatar__container">
-      <img
-        alt="avatar"
-        src={userDetails?.photoUrl || Placeholder}
-        className="profile__icon"
-      />
-      <div className={status ? `status ${status}` : 'status'}></div>
-    </div>
-  <div className='header__container'>
-    <div className='header__text'>
-      <div className='header__t'>
-    <h1>{userDetails?.displayName}</h1>
-    <h2><i>Jayssen De Castro</i> </h2>
-    </div>
-    {isCurrentUser && (   
-      //   <button onClick={toggleProfileEdit}>
-      //   Edit Profile
-      // </button>
-      <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        '& > *': {
-          m: 1,
-        },
-      }}
+    <div
+      className="text-white relative w-full flex flex-col"
+      // style={background ? { backgroundImage: `url(${background})` } : {}}
     >
-      <ButtonGroup variant="outlined" aria-label="Basic button group">
-  <Button className='edit-profile-button' onClick={toggleProfileEdit}> Edit Profile </Button>
-</ButtonGroup>
-</Box>
-    )}
-             {!isCurrentUser && (   
-        <ProfileActionButtons userDetails={userDetails}/>
-      )}
-    </div>
-  </div>
-    </div>
-    </div>
-  )
-}
+      <div className="aspect-[16/5] relative overflow-hidden bg-neutral-800">
+        <img
+          alt="banner"
+          src={background || Placeholder}
+          className="w-full h-full object-cover object-center"
+        />
 
-export default ProfileBanner
+        {isCurrentUser && (
+          //   <button onClick={toggleProfileEdit}>
+          //   Edit Profile
+          // </button>
+
+          <button
+            className="bg-blue-600 px-4 py-2 text-white rounded-xl shadow-md text-sm absolute top-2 right-2"
+            onClick={toggleProfileEdit}
+          >
+            {" "}
+            Edit Profile{" "}
+          </button>
+        )}
+        {!isCurrentUser && <ProfileActionButtons userDetails={userDetails} />}
+      </div>
+      <div className="pl-32 pr-2 text-2xl w-full flex justify-start relative">
+        <img
+          alt="avatar"
+          src={userDetails?.photoUrl || Placeholder}
+          className="w-28 border-8 border-neutral-950 rounded-full aspect-square object-cover absolute bottom-[-20px] left-3"
+        />
+        <h1 className="pl-4 pt-2 font-bold">{userDetails?.displayName}</h1>
+      </div>
+    </div>
+  );
+};
+
+export default ProfileBanner;
