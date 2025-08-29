@@ -123,6 +123,8 @@ const Profile = () => {
   const setPostFullscreen = (post) => {
     setPostFs(post);
   };
+
+  if (!userDetails) return null;
   return (
     <>
       <div className="w-full flex-col flex grow">

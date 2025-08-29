@@ -30,7 +30,8 @@ const ProfileBanner = ({
   const backgroundLoaded = useProfilePreloader(backgroundSrc);
 
   // Wait until images are loaded
-  if (!profileLoaded || (background && !backgroundLoaded)) return null;
+  if (!profileLoaded || !userDetails || (background && !backgroundLoaded))
+    return null;
 
   return (
     <div className="text-white relative w-full flex flex-col">

@@ -29,15 +29,28 @@ const UploadPost = () => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png"];
+
     if (images.length + files.length > 5) {
       setError("You can only upload up to 5 photos.");
       return;
     }
-    const previews = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }));
-    setImages((prev) => [...prev, ...previews]);
+
+    const validFiles = [];
+    for (let file of files) {
+      if (!allowedTypes.includes(file.type)) {
+        toast.error("Only JPG, JPEG, and PNG files are allowed.");
+        continue;
+      }
+      validFiles.push({
+        file,
+        preview: URL.createObjectURL(file),
+      });
+    }
+
+    if (validFiles.length > 0) {
+      setImages((prev) => [...prev, ...validFiles]);
+    }
   };
 
   const removeImage = (index) => {
@@ -181,7 +194,7 @@ const UploadPost = () => {
           <input
             id="image-upload"
             type="file"
-            accept="image/*"
+            accept=".jpg,.jpeg,.png"
             multiple
             onChange={handleImageChange}
             className="hidden"

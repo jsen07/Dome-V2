@@ -107,7 +107,7 @@ const ProfileMainContent = ({
     const date = new Date(timestamp);
     return date.toLocaleString("en-US", { month: "long", year: "numeric" });
   };
-
+  if (!userDetails) return null;
   return (
     <>
       <div className="flex flex-col text-white gap-4 grow">
@@ -128,6 +128,7 @@ const ProfileMainContent = ({
                 {userDetails?.Gender}
               </span>
 
+              {}
               <span className="flex flex-row items-center gap-1">
                 <CalendarMonthIcon style={{ fontSize: "15px" }} />
                 Joined {formatJoinedDate(userDetails?.joined)}
