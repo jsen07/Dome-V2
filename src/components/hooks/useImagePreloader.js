@@ -8,7 +8,6 @@ export function useImagePreloader(posts) {
 
     let isCancelled = false;
     setImagesLoaded(false);
-
     const promises = posts
       .filter((post) => post.imageUrl || post.imageUrls?.length)
       .map((post) => {
@@ -33,7 +32,7 @@ export function useImagePreloader(posts) {
     return () => {
       isCancelled = true;
     };
-  }, [posts]);
+  }, [posts.length]);
 
   return imagesLoaded;
 }

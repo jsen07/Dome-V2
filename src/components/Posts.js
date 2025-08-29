@@ -195,7 +195,7 @@ const Posts = () => {
             key={postKey}
             postKey={postKey}
             caption={post?.post}
-            image={post?.imageUrls?.[0]} // optional chaining to avoid errors
+            image={post?.imageUrls?.[0]}
             uid={post.uid}
             onClose={() =>
               setToggleComment((prev) => ({ ...prev, [postKey]: false }))
