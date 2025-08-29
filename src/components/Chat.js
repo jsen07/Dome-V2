@@ -13,10 +13,8 @@ import {
   update,
   remove,
 } from "firebase/database";
+import { toast } from "react-toastify";
 import ChatMessage from "./ChatMessage";
-import sendSoundEffect from "../components/sound/sendingSound.mp3";
-import receivingSoundEffect from "../components/sound/receivingSound.mp3";
-import { Howl } from "howler";
 import Placeholder from "../components/images/profile-placeholder-2.jpg";
 import EmojiPicker from "emoji-picker-react";
 import { useNavigate } from "react-router-dom";
@@ -24,10 +22,11 @@ import EmojiEmotionsOutlinedIcon from "@mui/icons-material/EmojiEmotionsOutlined
 import SendIcon from "@mui/icons-material/Send";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useUserStatus } from "./hooks/useUserStatus";
+import { useSelector } from "react-redux";
 
 const Chat = () => {
   const [isComponentActive, setIsComponentActive] = useState(false);
-  const [{ user }] = useStateValue();
+  // const [{ user }] = useStateValue();
   const [text, setText] = useState("");
   const [reciever, setReceiver] = useState();
   const [chat, setChat] = useState([]);
@@ -35,6 +34,7 @@ const Chat = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [typingUsers, setTypingUsers] = useState({});
   const navigate = useNavigate();
+  const user = useSelector((state) => state.user.activeUser);
 
   const messagesEndRef = useRef(null);
   const seenEndRef = useRef(null);
@@ -52,12 +52,6 @@ const Chat = () => {
 
   //Hooks
   const status = useUserStatus(reciever);
-
-  //     useEffect(()=> {
-  //         setIsComponentActive(false);
-
-  //   },[chatId])
-  //create a promise to ensure that chatdata is fetched
 
   function fetchChatData(chatId, user) {
     return new Promise((resolve, reject) => {
@@ -190,7 +184,7 @@ const Chat = () => {
       });
   }, [chatId, user.uid]);
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     const input = document.getElementById("send-message__input");
 
     if (text === "") return;
@@ -199,66 +193,71 @@ const Chat = () => {
 
     const db = getDatabase();
 
-    const postMessagesRef = ref(db, `chat/${chatId}/messages`);
-    const newPostRef = push(postMessagesRef);
-    const uniqueId = newPostRef.key;
-    const UserMessage = `${user.displayName}: ${text}`;
-    set(newPostRef, {
-      serverTime: serverTimestamp(),
-      sentAt: serverTimestamp(),
-      message: text,
-      displayName: user.displayName,
-      photoUrl: user.photoURL,
-      uid: user.uid,
-      chatId: chatId,
-      type: "direct",
-    });
+    try {
+      const postMessagesRef = ref(db, `chat/${chatId}/messages`);
+      const newPostRef = push(postMessagesRef);
+      const uniqueId = newPostRef.key;
+      const UserMessage = `${user.displayName}: ${text}`;
 
-    set(child(chatRef, `chatList/${reciever}/${user.uid}`), {
-      chatId: chatId,
-      lastMessage: UserMessage,
-      receiverId: user.uid,
-      sentAt: serverTimestamp(),
-      isSeen: false,
-      id: uniqueId,
-    });
+      const notificationRef = ref(
+        db,
+        `notifications/chat/${reciever}/${user.uid}`
+      );
+      const notifiChatListRef = ref(
+        db,
+        `chatList/${reciever}/notifications/${chatId}/messages`
+      );
+      const newChatNotifRef = push(notifiChatListRef);
 
-    set(child(chatRef, `chatList/${user.uid}/${reciever}`), {
-      chatId: chatId,
-      lastMessage: UserMessage,
-      receiverId: reciever,
-      sentAt: serverTimestamp(),
-      isSeen: true,
-      id: uniqueId,
-    });
+      await Promise.all([
+        set(newPostRef, {
+          sentAt: serverTimestamp(),
+          message: text,
+          uid: user.uid,
+          chatId: chatId,
+          type: "direct",
+        }),
 
-    const notifiChatListRef = ref(
-      db,
-      `chatList/${reciever}/notifications/${chatId}/messages`
-    );
-    const newChatNotifRef = push(notifiChatListRef);
-    set(newChatNotifRef, {
-      message: text,
-      displayName: user.displayName,
-      sentAt: serverTimestamp(),
-      isSeen: false,
-      chatId: chatId,
-      id: uniqueId,
-    });
+        set(child(chatRef, `chatList/${reciever}/${user.uid}`), {
+          chatId: chatId,
+          lastMessage: UserMessage,
+          receiverId: user.uid,
+          sentAt: serverTimestamp(),
+          isSeen: false,
+          id: uniqueId,
+        }),
 
-    const notificationRef = ref(
-      db,
-      `notifications/chat/${reciever}/${user.uid}`
-    );
-    set(notificationRef, {
-      timestamp: serverTimestamp(),
-      chatId: chatId,
-      recieverId: user.uid,
-    });
+        set(child(chatRef, `chatList/${user.uid}/${reciever}`), {
+          chatId: chatId,
+          lastMessage: UserMessage,
+          receiverId: reciever,
+          sentAt: serverTimestamp(),
+          isSeen: true,
+          id: uniqueId,
+        }),
 
-    setText("");
-    input.focus();
-    notifyTyping(chatId, user.uid, false);
+        set(newChatNotifRef, {
+          message: text,
+          displayName: user.displayName,
+          sentAt: serverTimestamp(),
+          isSeen: false,
+          chatId: chatId,
+          id: uniqueId,
+        }),
+
+        set(notificationRef, {
+          timestamp: serverTimestamp(),
+          chatId: chatId,
+          recieverId: user.uid,
+        }),
+      ]);
+
+      setText("");
+      input.focus();
+      notifyTyping(chatId, user.uid, false);
+    } catch (error) {
+      toast.error(error);
+    }
   };
 
   const scrollToBottom = () => {
@@ -374,7 +373,7 @@ const Chat = () => {
         className="w-full flex flex-col gap-4 rounded-lg py-4 px-2 shadow-sm"
       >
         <div className="flex justify-center">
-          <div className="bg-neutral-900 px-4 py-1 rounded-full text-sm text-neutral-400">
+          <div className=" border border-neutral-800 bg-neutral-900 px-4 py-1 rounded-full text-sm text-neutral-400">
             <h4>{dateMap[date].label}</h4>
           </div>
         </div>
@@ -600,11 +599,7 @@ const Chat = () => {
   return (
     <>
       {recieverData && reciever && user.uid && (
-        <div
-          className={`h-screen w-full absolute top-0 left-0 flex flex-col bg-neutral-950 ${
-            isComponentActive ? "active" : ""
-          }`}
-        >
+        <>
           <div className="fixed bg-neutral-950 top-0 text-white border-neutral-900 px-4 py-2 h-20 flex flex-row items-center gap-2 text-base z-20 w-full border-b">
             <ArrowBackIosNewRoundedIcon
               onClick={() => navigate(-1)}
@@ -646,87 +641,87 @@ const Chat = () => {
             </div>
           </div>
           {/* <button onClick={closeChat}> Close Chat</button> */}
-          <div className="py-20 flex flex-col h-screen w-full relative">
+          <div className="flex flex-col w-full relative overflow-y-auto grow pt-20">
             {loading && <div className="loading"></div>}
 
             <div
-              className="flex flex-col h-screen py-20"
               ref={messagesContainerRef}
+              className="flex flex-col-reverse px-1"
+              style={{ height: "calc(100vh - 5rem - 5rem)" }} // 5rem header + 5rem footer
             >
-              <div className="flex-1 flex flex-col-reverse overflow-y-auto">
-                <div className="flex flex-col text-white text-sm h-6 px-4 font-bold">
-                  <div className="bg-neutral-950 h-6 w-full">
-                    {Object.keys(typingUsers).length > 0 && (
-                      <span>
-                        {recieverData
-                          ? `${recieverData.displayName} is typing...`
-                          : "Loading..."}
-                      </span>
-                    )}
-                  </div>
+              <style>
+                {`
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    `}
+              </style>
+              <div className="flex-1 flex flex-col-reverse overflow-y-auto grow px-1">
+                <div className="flex flex-row font-bold text-white text-xs bg-neutral-950 h-6 px-2 mb-2 w-full justify-end">
+                  <span className="flex w-full self-start">
+                    {Object.keys(typingUsers).length > 0
+                      ? recieverData
+                        ? `${recieverData.displayName} is typing...`
+                        : "Loading..."
+                      : "\u00A0"}
+                  </span>
+
                   {seen && Object.keys(typingUsers).length === 0 && (
-                    <span
-                      className="w-full flex justify-end text-xs py-2"
-                      ref={seenEndRef}
-                    >
-                      {" "}
-                      Seen{" "}
-                    </span>
+                    <span ref={seenEndRef}> Seen </span>
                   )}
                 </div>
-                {generateMessages()}
 
-                {chat.length === 0 && <p>You have started a chat.</p>}
+                {generateMessages()}
               </div>
 
               <div ref={messagesEndRef} />
             </div>
-            <div className="fixed h-20 bottom-0 left-0 border-t border-neutral-900 w-full bg-neutral-950 pt-2 pb-7 px-3 flex items-center gap-3">
-              {/* Emoji button */}
-              {/* <button
-            className="text-gray-400 hover:text-yellow-400 transition-colors"
-            onClick={emojiToggleHandler}
-          >
-            <EmojiEmotionsOutlinedIcon />
-          </button> */}
-
-              {/* Emoji Picker */}
-              {/* {emojiToggle && (
-            <div className="absolute bottom-16 left-3 z-50">
-              <EmojiPicker
-                open={emojiToggle}
-                emojiStyle="native"
-                onEmojiClick={handleEmoji}
-                theme="dark"
-                height={400}
-                width={400}
-              />
-            </div>
-          )} */}
-
-              {/* Input */}
-              <input
-                id="send-message__input"
-                placeholder="Type a message..."
-                type="text"
-                ref={inputRef}
-                value={text}
-                onChange={handleInputChange}
-                onKeyDown={handleKeyPress}
-                className="w-full rounded-full px-4 py-2 bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-violet-400"
-              />
-
-              {/* Send button */}
-              <button
-                id="send-button"
-                onClick={sendMessage}
-                className="pb-1 flex items-center text-violet-400 hover:text-violet-500 transition-colors"
-              >
-                <SendIcon className="rotate-[-30deg]" />
-              </button>
-            </div>
           </div>
-        </div>
+          <div className="fixed h-20 bottom-0 left-0  w-full bg-neutral-950 flex flex-row justify-center items-center gap-3 px-2 pb-2">
+            {/* Emoji button */}
+            <button
+              className="hidden sm:flex text-gray-400 hover:text-violet-400 transition-colors"
+              onClick={emojiToggleHandler}
+            >
+              <EmojiEmotionsOutlinedIcon />
+            </button>
+
+            {/* Emoji Picker */}
+            {emojiToggle && (
+              <div className="absolute bottom-20 left-3 z-50">
+                <EmojiPicker
+                  open={emojiToggle}
+                  emojiStyle="native"
+                  onEmojiClick={handleEmoji}
+                  theme="dark"
+                  height={400}
+                  width={400}
+                />
+              </div>
+            )}
+
+            {/* Input */}
+            <input
+              id="send-message__input"
+              placeholder="Type a message..."
+              type="text"
+              ref={inputRef}
+              value={text}
+              onChange={handleInputChange}
+              onKeyDown={handleKeyPress}
+              className="w-full rounded-full px-4 py-2 bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-violet-400"
+            />
+
+            {/* Send button */}
+            <button
+              id="send-button"
+              onClick={sendMessage}
+              className="pb-1 flex items-center text-violet-400 hover:text-violet-500 transition-colors"
+            >
+              <SendIcon className="rotate-[-30deg]" />
+            </button>
+          </div>
+        </>
       )}
     </>
   );

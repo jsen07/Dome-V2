@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useStateValue } from "./contexts/StateProvider";
 import { useAuth } from "./contexts/AuthContext";
 import { ref, child, get, getDatabase, onValue } from "firebase/database";
 
-const ActiveNotifications = () => {
-  const [{ user }] = useStateValue();
+const ActiveNotifications = ({ getNotification }) => {
   const { currentUser } = useAuth();
   const [requestNotifs, setRequestNotifs] = useState("");
   const [messageNotifs, setMessageNotifs] = useState("");
@@ -12,18 +10,20 @@ const ActiveNotifications = () => {
   const [combinedList, setCombinedList] = useState(0);
 
   useEffect(() => {
-    const friendsRef = ref(getDatabase(), `friendRequests/${user.uid}`);
+    const friendsRef = ref(getDatabase(), `friendRequests/${currentUser.uid}`);
     onValue(friendsRef, (snapshot) => {
-      if (snapshot.exists()) {
-        const data = Object.values(snapshot.val());
-        setRequestNotifs(data.length);
-      } else {
-        setRequestNotifs(0);
-      }
+      const count = snapshot.exists()
+        ? Object.values(snapshot.val()).length
+        : 0;
+      setRequestNotifs(count);
+      if (getNotification) getNotification(count + messageNotifs + postNotifs);
     });
   }, [currentUser]);
   useEffect(() => {
-    const chatListRef = ref(getDatabase(), `notifications/chat/${user.uid}`);
+    const chatListRef = ref(
+      getDatabase(),
+      `notifications/chat/${currentUser.uid}`
+    );
     onValue(chatListRef, (snapshot) => {
       if (snapshot.exists()) {
         const data = Object.values(snapshot.val());
@@ -43,27 +43,30 @@ const ActiveNotifications = () => {
 
     let newCommentsLength = 0;
     onValue(postRef, async (snapshot) => {
-      if (snapshot.exists()) {
-        const data = Object.values(snapshot.val());
-
-        for (const comment of data) {
-          const newComment = Object.values(comment);
-          for (const nestedComment of newComment) {
-            const commentData = Object.values(nestedComment);
-
-            const userPromises = commentData.map(async (data) => {
-              const snap = await get(child(dbRef, `users/${data.uid}`));
-              if (snap.exists()) {
-                // console.log(snap.val());
-                newCommentsLength += 1;
-              }
-            });
-            await Promise.all(userPromises);
-          }
-        }
+      if (!snapshot.exists()) {
+        setPostNotifs(0);
+        if (getNotification) getNotification(requestNotifs + messageNotifs + 0);
+        return;
       }
-      setPostNotifs(newCommentsLength);
-      newCommentsLength = 0;
+
+      const data = Object.values(snapshot.val());
+      let count = 0;
+
+      const promises = data.flatMap((comment) =>
+        Object.values(comment).flatMap((nested) =>
+          Object.values(nested).map(async (c) => {
+            const snap = await get(child(dbRef, `users/${c.uid}`));
+            if (snap.exists()) count += 1;
+          })
+        )
+      );
+
+      await Promise.all(promises);
+      setPostNotifs(count);
+
+      // Notify parent after async work is done
+      if (getNotification)
+        getNotification(requestNotifs + messageNotifs + count);
     });
   }, [currentUser]);
 
@@ -72,12 +75,16 @@ const ActiveNotifications = () => {
       let combinedLength = requestNotifs + messageNotifs + postNotifs;
 
       setCombinedList(combinedLength);
+      if (getNotification) getNotification(combinedLength);
     }
+    console.log(requestNotifs);
   }, [requestNotifs, messageNotifs, postNotifs]);
+
+  console.log(combinedList);
   return (
     <>
       {combinedList > 0 && (
-        <span className="border-4 p-2 border-neutral-900 text-white rounded-full w-4 h-4 bg-violet-600 text-xs flex items-center justify-center absolute bottom-3 left-3">
+        <span className="z-10 border-4 p-2 border-neutral-900 text-white rounded-full w-4 h-4 bg-violet-600 text-xs flex items-center justify-center absolute right-5 top-2">
           {combinedList}
         </span>
       )}

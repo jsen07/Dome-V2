@@ -23,19 +23,25 @@ const ChatMessage = ({ data }) => {
       }`}
       onClick={() => setShowTimestamp((prev) => !prev)}
     >
+      {/* Tail at bottom */}
+      {/* <div
+        className={`absolute w-3 h-3  rotate-45 ${
+          isUserMessage
+            ? "bottom-0 right-0 translate-x-[6px] translate-y-[-19px] rotate-90 bg-violet-500 rounded-tl-full"
+            : "bottom-0 left-0 -translate-x-1/2 translate-y-1/2 bg-neutral-800 rounded-tr-lg"
+        }`}
+      ></div> */}
+
       <p className="max-w-[230px]">
         {data.message}
 
         {showTimestamp && (
           <span
-            className={`absolute text-[10px] flex text-gray-200 w-12
-            ${
+            className={`absolute text-[10px] flex text-gray-200 w-12 ${
               isUserMessage
                 ? "bottom-[-20px] right-1 justify-end"
                 : "bottom-[-20px] left-1"
-            }
-            animate-timestamp-in
-          `}
+            } animate-timestamp-in`}
           >
             {formatTimestamp(data.sentAt)}
           </span>

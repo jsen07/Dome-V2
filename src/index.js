@@ -5,12 +5,16 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { StateProvider } from "./components/contexts/StateProvider";
 import reducer, { initialState } from "./reducers/userReducer";
+import { Provider } from "react-redux";
+import store from "./components/store/index";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <StateProvider initialState={initialState} reducer={reducer}>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </StateProvider>
   </React.StrictMode>
 );

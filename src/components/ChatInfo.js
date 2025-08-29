@@ -8,12 +8,10 @@ import {
 } from "firebase/storage";
 import { useStateValue } from "./contexts/StateProvider";
 import { useParams } from "react-router-dom";
-import ArrowDownIcon from "./svg/arrow-down.svg";
 import Placeholder from "./images/profile-placeholder-2.jpg";
 import EditIcon from "@mui/icons-material/Edit";
 import GroupIcon from "@mui/icons-material/Group";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
-import Button from "@mui/material/Button";
 import Fade from "@mui/material/Fade";
 
 const ChatInfo = ({ groupChat }) => {
@@ -265,7 +263,7 @@ const ChatInfo = ({ groupChat }) => {
     }
   };
   return (
-    <div className="chat-info__container">
+    <div className="border">
       {!editChat ? (
         <div className="main__chat-info">
           <div className="close__container">
@@ -317,7 +315,7 @@ const ChatInfo = ({ groupChat }) => {
                     {member.uid !== user.uid && (
                       <div className="menu">
                         <img
-                          src={ArrowDownIcon}
+                          src={""}
                           className={isDropDownActive ? "active" : ""}
                           alt="drop-down-menu"
                           onClick={(e) => toggleDropDown(e, member.uid)}
@@ -415,14 +413,14 @@ const ChatInfo = ({ groupChat }) => {
               type="text"
               defaultValue={groupchat?.name}
             />
-            <Button
+            <button
               className="button"
               variant="outlined"
               onClick={saveGroupChatName}
             >
               {" "}
               Save{" "}
-            </Button>
+            </button>
             <p>Description</p>
             <textarea
               id="edit-discription"
@@ -430,14 +428,14 @@ const ChatInfo = ({ groupChat }) => {
               defaultValue={groupchat?.description || ""}
             ></textarea>
 
-            <Button
+            <button
               className="button"
               variant="outlined"
               onClick={saveGroupChatDescription}
             >
               {" "}
               Save{" "}
-            </Button>
+            </button>
           </div>
         </div>
       )}

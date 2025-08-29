@@ -8,6 +8,7 @@ import {
   remove,
 } from "firebase/database";
 import { useStateValue } from "./contexts/StateProvider";
+import { useSelector } from "react-redux";
 import Placeholder from "./images/profile-placeholder-2.jpg";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
@@ -17,7 +18,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 const ChatList = () => {
   const [chatList, setChatList] = useState([]);
   const [AllChatList, setAllChatList] = useState([]);
-  const [{ user }] = useStateValue();
+  const user = useSelector((state) => state.user.activeUser);
   const navigate = useNavigate();
   const [onlineUsersCount, setOnlineUsersCount] = useState(0);
   const [onlineUsers, setOnlineUsers] = useState(new Set());
@@ -61,8 +62,6 @@ const ChatList = () => {
           }
         });
         setGroupchats(groupChatArray);
-      } else {
-        console.log("No data found");
       }
     });
 
@@ -365,24 +364,26 @@ const ChatList = () => {
       {groupChatToggle && (
         <CreateGroupChat createGroupChatToggle={createGroupChatToggle} />
       )}
-
-      {combinedChats && combinedChats?.length > 0 && (
-        <div className="grow flex text-white flex-col pb-20 w-full">
-          <h1 className="text-3xl font-extrabold px-2 my-3">Messages </h1>
-          <div className="flex flex-row w-full items-center gap-2 mb-6">
-            <div className="relative w-full px-1">
-              <input
-                className="w-full bg-neutral-900 h-10 pl-12 pr-4 rounded-full  outline-none"
-                placeholder="Search"
-              />
-              <SearchRoundedIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500" />
-            </div>
+      <h1 className="text-3xl font-extrabold px-2 py-5 text-white">
+        Messages{" "}
+      </h1>
+      <div className="flex text-white flex-col pb-20 w-full">
+        {/* <h1 className="text-3xl font-extrabold px-2 my-3">Messages </h1> */}
+        <div className="flex flex-row items-center gap-2 mb-6">
+          <div className="relative w-full px-1">
+            <input
+              className="w-full bg-neutral-900 h-10 pl-12 pr-4 rounded-full  outline-none"
+              placeholder="Search"
+            />
+            <SearchRoundedIcon className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-500" />
           </div>
-          {combinedChats.map((chat, key) => (
+        </div>
+        {combinedChats?.length > 0 &&
+          combinedChats.map((chat, key) => (
             <div
-              className={`group flex flex-row w-full border-b border-neutral-900 px-4 py-3 text-sm transition-all duration-100
+              className={`group flex flex-row border-b border-neutral-900 px-4 py-3 text-sm transition-all duration-100
       active:bg-neutral-900
-      md:hover:bg-neutral-800
+      md:hover:opacity-70
       hover:cursor-pointer
       ${
         Object.keys(chat?.messages || {}).length > 0
@@ -399,8 +400,8 @@ const ChatList = () => {
                 )
               }
             >
-              <div className="flex flex-row w-full gap-2">
-                <div className="flex flex-col relative grow">
+              <div className="flex flex-row w-full  gap-2">
+                <div className="flex flex-col relative">
                   <img
                     alt="user-avatar"
                     src={chat.photoUrl || Placeholder}
@@ -413,7 +414,7 @@ const ChatList = () => {
                     ></div>
                   )}
                 </div>
-                <div className="flex flex-col w-full space-y-1">
+                <div className="flex flex-col space-y-1 w-full">
                   <div className="flex flex-row justify-between">
                     <h1 className="text-sm font-bold text-violet-400">
                       {chat.displayName}
@@ -423,11 +424,11 @@ const ChatList = () => {
                     </span>
                   </div>
 
-                  <div className="flex justify-between">
+                  <div className="flex justify-between w-72 sm:w-full">
                     {typingStatus[chat.chatId]?.filter(
                       (userId) => userId !== currentUser.uid
                     ).length > 0 ? (
-                      <span className="typing-indicator text-xs">
+                      <span className="text-xs">
                         {typingStatus[chat.chatId]
                           .filter((userId) => userId !== currentUser.uid)
                           .map((userId) => {
@@ -442,7 +443,7 @@ const ChatList = () => {
                         is typing...
                       </span>
                     ) : (
-                      <span className="text-xs">
+                      <span className="text-xs truncate flex-1 min-w-0">
                         {chat?.lastMessage || "No messages yet."}
                       </span>
                     )}
@@ -458,8 +459,11 @@ const ChatList = () => {
             </div>
           ))}
 
-          {/* <GroupList /> */}
-        </div>
+        {/* <GroupList /> */}
+      </div>
+
+      {combinedChats !== null && combinedChats.length === 0 && (
+        <h1 className="text-white text-3xl"> No Messages.</h1>
       )}
     </>
   );

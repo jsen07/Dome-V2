@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function Chatbot() {
-  const [message, setMessage] = useState('');
-  const [response, setResponse] = useState('');
+  const [message, setMessage] = useState("");
+  const [response, setResponse] = useState("");
 
   const sendMessage = async () => {
-    const res = await fetch('http://localhost:8000/api/chatbot/', {
-      method: 'POST',
+    const res = await fetch("http://localhost:8000/api/chatbot/", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ message: message }),
     });

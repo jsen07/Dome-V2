@@ -8,8 +8,11 @@
 
 html, body {
   height: 100%;
-  overflow: auto; 
+  overflow: auto;
    overscroll-behavior: none;
+   scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
+    scrollbar-color: #0a0a0a;
 }
-
 /*  */

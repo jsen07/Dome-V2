@@ -1,289 +1,202 @@
-import React, { useEffect, useState } from 'react';
-import { useAuth } from './contexts/AuthContext';
-import { ref, set, child, get, getDatabase, onValue } from 'firebase/database';
-import { ref as sRef, getDownloadURL, getStorage, uploadBytes } from 'firebase/storage';
-import { db } from '../firebase';
-import { updateProfile } from 'firebase/auth';
-import { useStateValue } from './contexts/StateProvider';
-import { actionTypes } from '../reducers/userReducer';
-import ImageCropper from './ImageCropper';
-import Placeholder from './images/profile-placeholder-2.jpg';
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
-import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import { styled } from '@mui/material/styles';
-import Fade from '@mui/material/Fade';
+import React, { useState } from "react";
+import { useAuth } from "./contexts/AuthContext";
+import { ref, set } from "firebase/database";
+import {
+  ref as sRef,
+  getDownloadURL,
+  getStorage,
+  uploadBytes,
+} from "firebase/storage";
+import { db } from "../firebase";
+import { updateProfile } from "firebase/auth";
+import { actionTypes } from "../reducers/userReducer";
+import Placeholder from "./images/profile-placeholder-2.jpg";
+import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
+import { setActiveUser } from "./store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
 
+const EditProfile = ({ userDetails, isCurrentUser, closebutton }) => {
+  const { currentUser } = useAuth();
+  const activeUser = useSelector((state) => state.user.activeUser);
+  const storage = getStorage();
+  const dispatch = useDispatch();
 
-const EditProfile = ( { userDetails, isCurrentUser, closeButton  } ) => {
-
-    const { currentUser } = useAuth();
-    const storage = getStorage();
-    
   const [loading, setLoading] = useState(false);
-  const [active, setActive] = useState(false);
-  const [characters, setCharacters] = useState(250);
-  const [remaining, setRemaining] = useState();
-    const [{ user }, dispatch] = useStateValue();
-    const [changeAvatarToggled, setChangeAvatarToggled] = useState(false);
+  const [characters] = useState(250);
 
-useEffect(()=> {
-  setActive(true);
-  setRemaining(characters - userDetails?.Bio.length);
-},[])
-    const handleBackgroundChange = (e) => {
-        if (e.target.files[0]) {
-          handleBackgroundFile(e.target.files[0]);
-        }
-      };
+  const [displayName, setDisplayName] = useState(activeUser?.displayName || "");
+  const [fullName, setFullName] = useState(activeUser?.fullName || "");
+  const [gender, setGender] = useState(
+    activeUser?.Gender || "Prefer not to say"
+  );
+  const [bio, setBio] = useState(activeUser?.Bio || "");
+  const [remaining, setRemaining] = useState(
+    characters - (activeUser?.Bio?.length || 0)
+  );
+  const [newPhoto, setNewPhoto] = useState(null);
+  const [previewPhoto, setPreviewPhoto] = useState(null);
 
-      const removeProfilePicture = async () => {
-        try {
-          await updateProfile(currentUser, { photoURL: '' });
-          await set(ref(db, `users/${currentUser.uid}`), {
-            ...userDetails,
-            photoUrl: '',
-          });
-          setChangeAvatarToggled(false)
-        } catch (error) {
-          console.error("Error removing profile picture:", error);
-        }
-      };
-    
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      const file = e.target.files[0];
+      setNewPhoto(file);
+      setPreviewPhoto(URL.createObjectURL(file));
+    }
+  };
 
-      const saveChanges = () => {
-        const newDisplayName = document.getElementById("edit-display-name__box").value;
-        const newBio = document.getElementById("edit-bio").value;
-        const newGender = document.getElementById("edit-gender").value;
-    
-        updateProfile(currentUser, { displayName: newDisplayName }).then(() => {
-          set(ref(db, `users/${currentUser.uid}`), {
-            ...userDetails,
-            Bio: newBio,
-            displayName: newDisplayName,
-            Gender: newGender,
-          })
-            .then(() => {
-              closeButton();
-            })
-            .catch((error) => {
-              console.error("Error saving changes:", error);
-            });
-        });
-      };
+  const removeProfilePicture = () => {
+    setNewPhoto(null);
+    setPreviewPhoto(null);
+  };
 
-      const handleFileChange = (e) => {
-        if (e.target.files[0]) {
-          // setUploadPhoto(e.target.files[0]);
-          handleFileUpload(e.target.files[0]);
-        }
-      };
-    
-      const handleFileUpload = async (photo) => {
-        setLoading(true);
+  const saveChanges = async () => {
+    setLoading(true);
+
+    try {
+      let photoLink = activeUser?.photoUrl || "";
+
+      if (newPhoto) {
         const fileRef = sRef(storage, `${currentUser.uid}.png`);
-    
-        try {
-          await uploadBytes(fileRef, photo);
-          const photoLink = await getDownloadURL(fileRef);
-          dispatch({
-            type: actionTypes.SET_PROFILE,
-            ...user,
-            PhotoURL: photoLink,
-          });
-    
-          await set(ref(db, `users/${currentUser.uid}`), {
-            ...userDetails,
-            photoUrl: photoLink,
-          });
-    
-          updateProfile(currentUser, { photoURL: photoLink });
-     
-          setChangeAvatarToggled(false)
-          setLoading(false);
-    
-        } catch (error) {
-          console.error("Error uploading file:", error);
-          setLoading(false);
-        }
-      };
-
-      const handleBackgroundFile = async (backgroundImage) => {
-
-        setLoading(true);
-        const fileRef = sRef(storage, `${currentUser.uid}-backgroundImage.png`);
-    
-        try {
-          await uploadBytes(fileRef, backgroundImage);
-          const photoLink = await getDownloadURL(fileRef);
-    
-          await set(ref(db, `users/${currentUser.uid}/background`), {
-            profileBackground: photoLink
-          });
-          setLoading(false);
-    
-        } catch (error) {
-          console.error("Error uploading file:", error);
-          setLoading(false);
-        }
+        await uploadBytes(fileRef, newPhoto);
+        photoLink = await getDownloadURL(fileRef);
       }
 
-      const VisuallyHiddenInput = styled('input')({
-        clip: 'rect(0 0 0 0)',
-        clipPath: 'inset(50%)',
-        height: 1,
-        overflow: 'hidden',
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        whiteSpace: 'nowrap',
-        width: 1,
+      await updateProfile(currentUser, {
+        displayName,
+        photoURL: photoLink,
       });
 
+      const updatedUser = {
+        ...userDetails,
+        Bio: bio,
+        displayName,
+        fullName,
+        Gender: gender,
+        photoUrl: photoLink,
+      };
+
+      await set(ref(db, `users/${currentUser.uid}`), updatedUser);
+
+      dispatch(setActiveUser(updatedUser));
+
+      closebutton();
+    } catch (error) {
+      console.error("Error saving changes:", error);
+    }
+
+    setLoading(false);
+  };
+
   return (
-    <Fade in={active}>
-    <div className="edit-profile__view">
-    <div className="edit__header">
-    <h2> Edit Profile</h2>
-      <Button variant="contained" className='close' onClick={closeButton} endIcon={<CloseRoundedIcon />}>
-        Close
-      </Button>
-    </div>
-
-    <div className='edit__container'>
-
-      <div className='edit_section-1'>
-
-    <div className="edit-avatar">
-      <div className="avatar-container">
-        <img alt="avatar" src={userDetails?.photoUrl || Placeholder} className="profile__icon" />
-      </div>
-      <div className='upload-profile'>
-      {/* <Button className='upload' variant="outlined" onClick={() => setChangeAvatarToggled(!changeAvatarToggled)}>Upload new photo</Button> */}
-
-      {isCurrentUser && userDetails?.photoUrl && (
-              <Button variant="outlined" className='upload' onClick={removeProfilePicture}>
-                Remove current Photo
-              </Button>
-            )}
-            
-      {isCurrentUser && !userDetails?.photoUrl &&(
-        <>
-        {/* <input type="file" disabled={!isCurrentUser}onChange={handleFileChange} /> */}
-        <Button
-        component="label"
-        className='upload-button'
-        role={undefined}
-        variant="contained"
-        tabIndex={-1}
-        startIcon={<CloudUploadIcon />}
-      >
-        Upload profile
-        <VisuallyHiddenInput
-          type="file"
-          disabled={!isCurrentUser}
-          onChange={handleFileChange}
-          multiple
-        />
-      </Button>
-      </>
-        )}
-
-      <h3>Profile pictures use the aspect ratio of 1:1</h3>
-      <h3> At least 400 x 400 pixels is recommended for the best results</h3>
-      </div>
-    </div>
-
-    <div className="user-profile__details">
-      {/* <p>Unique ID: {currentUser.uid}</p> */}
-      {/* <h4>E-mail: {userDetails?.email}</h4> */}
-
-      
-      <h5>Display name:</h5>
-      <input
-        id="edit-display-name__box"
-        type="text"
-        defaultValue={userDetails?.displayName}
-        disabled={!isCurrentUser}
-      />
-      <h5>Full name:</h5>
-      <input
-        id="edit-display-name__box"
-        type="text"
-        defaultValue={userDetails?.fullName}
-        disabled={!isCurrentUser}
-      />
- 
-      <h5>Gender:</h5>
-      <select
-        id="edit-gender"
-        name="gender"
-        defaultValue={userDetails?.Gender}
-        disabled={!isCurrentUser}
-      >
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-        <option value="Prefer not to say">Prefer not to say</option>
-      </select>
-      
-    </div>
-
-    </div>
-
-    <div className='edit_section-1'>
-
-
-    <div className='bio-group'>
-    <h5>Biography</h5>
-      <textarea
-        id="edit-bio"
-        rows="4"
-        defaultValue={userDetails?.Bio}
-        disabled={!isCurrentUser}
-        // onChange={characterHandler}
-        onChange={(e)=> { setRemaining(characters - e.target.value.length)}}
-        maxLength={characters}>
-      </textarea>
-      <h4>{remaining} characters remaining</h4>
+    <div className="w-full max-w-lg mx-auto pt-4 pb-2 px-4 bg-neutral-950 rounded-2xl shadow-md">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-semibold text-neutral-100">
+          Edit Profile
+        </h2>
+        <button
+          onClick={closebutton}
+          className="flex items-center gap-1 bg-neutral-800 text-white px-3 py-1 rounded-lg hover:bg-neutral-700 transition"
+        >
+          Close <CloseRoundedIcon fontSize="small" />
+        </button>
       </div>
 
-    {isCurrentUser && (
-      <>
-      <div className="edit-buttons__container">
-        <button onClick={saveChanges}>Save changes</button>
-      </div>
-            {/* <p> change profile background </p>
-            <ImageCropper handleBackgroundChange={handleBackgroundChange
-            }/> */}
-            </>
-    )}
-    </div>
-
-    {changeAvatarToggled && (
-      <div className="avatar-home">
-        <div className="avatar__container">
-          <div className="upload-avatar__container">
-          {isCurrentUser && userDetails?.photoUrl && (
-              <button onClick={removeProfilePicture}>
-                Remove current Photo
-              </button>
-            )}
-          </div>
+      <div className="flex flex-col items-center mb-6">
+        <div className="relative w-24 h-24 mb-3">
+          <img
+            alt="avatar"
+            src={previewPhoto || userDetails?.photoUrl || Placeholder}
+            className="w-full h-full object-cover rounded-full aspect-square border border-neutral-700"
+          />
         </div>
-
-        <div className="default-avatar__container">
-        {isCurrentUser && !userDetails?.photoUrl &&(
- 
-              <input type="file" disabled={!isCurrentUser}onChange={handleFileChange} />
-    
+        <div className="flex flex-col items-center text-sm text-neutral-500">
+          {isCurrentUser && !previewPhoto && (
+            <label className="px-4 py-1 rounded-2xl bg-neutral-800 hover:bg-neutral-700 transition text-white cursor-pointer">
+              Change Photo
+              <input
+                type="file"
+                disabled={!isCurrentUser}
+                onChange={handleFileChange}
+                className="hidden"
+              />
+            </label>
+          )}
+          {previewPhoto && (
+            <button
+              onClick={removeProfilePicture}
+              className="px-4 py-1 rounded-2xl bg-red-600 hover:bg-red-500 transition text-white"
+            >
+              Remove New Photo
+            </button>
           )}
         </div>
       </div>
-    )}
-    </div>
-  </div>
-  </Fade>
-  )
-}
+      <div className="flex flex-col gap-4 mb-6">
+        <div className="flex flex-col">
+          <label className="text-sm text-neutral-400 mb-1">Display Name</label>
+          <input
+            type="text"
+            value={displayName}
+            onChange={(e) => setDisplayName(e.target.value)}
+            disabled={!isCurrentUser}
+            className="h-10 w-full p-3 rounded-lg border border-neutral-700 bg-neutral-800 text-neutral-100 text-sm focus:ring-1 focus:ring-violet-400 focus:outline-none"
+          />
+        </div>
+        <div className="flex flex-col">
+          <label className="text-sm text-neutral-400 mb-1">Full Name</label>
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            disabled={!isCurrentUser}
+            className="h-10 w-full p-3 rounded-lg border border-neutral-700 bg-neutral-800 text-neutral-100 text-sm focus:ring-1 focus:ring-violet-400 focus:outline-none"
+          />
+        </div>
 
-export default EditProfile
+        <div className="flex flex-col">
+          <label className="text-sm text-neutral-400 mb-1">Gender</label>
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value)}
+            disabled={!isCurrentUser}
+            className="w-full h-12 rounded-lg border border-neutral-700 bg-neutral-800 text-neutral-100 text-sm focus:ring-1 focus:ring-violet-400 focus:outline-none"
+          >
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+      </div>
+
+      <div className="flex flex-col mb-6">
+        <label className="text-sm text-neutral-400 mb-1">Biography</label>
+        <textarea
+          rows="4"
+          value={bio}
+          onChange={(e) => {
+            setBio(e.target.value);
+            setRemaining(characters - e.target.value.length);
+          }}
+          disabled={!isCurrentUser}
+          maxLength={characters}
+          className="w-full p-3 rounded-lg border border-neutral-700 bg-neutral-800 text-neutral-100 text-sm focus:ring-1 focus:ring-violet-400 focus:outline-none resize-none"
+        />
+        <span className="text-xs text-neutral-500 mt-1">
+          {remaining} characters remaining
+        </span>
+      </div>
+
+      {isCurrentUser && (
+        <button
+          onClick={saveChanges}
+          disabled={loading}
+          className="w-full py-2 bg-violet-600 hover:bg-violet-500 text-white font-semibold rounded-lg shadow-lg transition disabled:opacity-50"
+        >
+          {loading ? "Saving..." : "Save Changes"}
+        </button>
+      )}
+    </div>
+  );
+};
+
+export default EditProfile;

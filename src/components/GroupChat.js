@@ -21,9 +21,10 @@ import SendIcon from "@mui/icons-material/Send";
 import ChatInfo from "./ChatInfo";
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const GroupChat = () => {
-  const [{ user }] = useStateValue();
+  const user = useSelector((state) => state.user.activeUser);
   const [text, setText] = useState("");
   const [reciever, setReceiver] = useState();
   const [chat, setChat] = useState([]);
@@ -546,102 +547,86 @@ const GroupChat = () => {
   };
 
   return (
-    <div
-      className={`h-screen w-full absolute top-0 left-0 flex flex-col 
-        bg-neutral-950 ${isComponentActive ? "active" : ""}`}
-    >
-      {/* <button onClick={closeChat}> Close Chat</button> */}
-      <div className="fixed bg-neutral-950 top-0 text-white border-neutral-900 px-4 py-2 h-20 flex flex-row items-center gap-2 text-base z-20 w-full border-b">
-        <ArrowBackIosNewRoundedIcon
-          onClick={() => navigate(-1)}
-          className="cursor-pointer hover:opacity-80"
-        />
-        <div className="relative pl-2" onClick={chatInfoToggleHnadler}>
-          <img
-            alt="user-avatar"
-            src={groupChat?.photoUrl || Placeholder}
-            className="w-12 aspect-square rounded-full object-cover"
+    <>
+      <div className={`flex flex-col w-full relative pt-20 bg-neutral-950`}>
+        {/* Header */}
+        <div className="fixed bg-neutral-950 top-0 text-white border-neutral-900 px-4 py-2 h-20 flex flex-row items-center gap-2 text-base z-20 w-full border-b">
+          <ArrowBackIosNewRoundedIcon
+            onClick={() => navigate(-1)}
+            className="cursor-pointer hover:opacity-80"
           />
+          <div className="relative pl-2" onClick={chatInfoToggleHnadler}>
+            <img
+              alt="group-avatar"
+              className="w-12 aspect-square rounded-full object-cover"
+              src={groupChat?.photoUrl || Placeholder}
+            />
+          </div>
+          <div className="flex flex-row justify-between grow items-center">
+            <h1 className="text-base font-extrabold">{groupChat?.name}</h1>
+            <p>{groupChat?.allowedUsers.length} members</p>
+          </div>
         </div>
 
-        <div className="flex flex-row justify-between grow items-center">
-          <h1 className="text-base font-extrabold"> {groupChat?.name}</h1>
-          <p> {groupChat?.allowedUsers.length} members </p>
-        </div>
-      </div>
-
-      <div className="py-20 flex flex-col h-screen w-full relative">
-        {loading && <div className="loading"></div>}
-
+        {/* Messages container */}
         <div
-          className="flex flex-col h-screen py-20"
           ref={messagesContainerRef}
+          className="flex flex-col-reverse overflow-y-auto px-1"
+          style={{ height: "calc(100vh - 5rem - 5rem)" }} // 5rem header + 5rem footer
         >
-          <div className="flex-1 flex flex-col-reverse overflow-y-auto">
-            <div className="flex flex-col text-white text-sm h-6 px-4 font-bold">
-              <div className="bg-neutral-950 h-6 w-full">
-                {Object.keys(typingUsers).length > 0 &&
-                  Object.keys(typingUsers).map((userId, index) => {
-                    return (
-                      <p key={index}>{typingUsers[userId]} is typing...</p>
-                    );
-                  })}
-              </div>
+          <style>
+            {`
+      ::-webkit-scrollbar {
+        display: none;
+      }
+    `}
+          </style>
+          <div className="flex-1 flex flex-col-reverse overflow-y-auto grow px-1">
+            {/* Typing users */}
+            <div className="flex flex-row font-bold text-white text-xs bg-neutral-950 h-6 px-2 mb-2 w-full justify-end">
+              {Object.keys(typingUsers).length > 0 ? (
+                <span className="flex w-full self-start">
+                  {Object.keys(typingUsers).map((uid, index) => (
+                    <p key={index}>{typingUsers[uid]} is typing...</p>
+                  ))}
+                </span>
+              ) : (
+                <span className="w-full">&nbsp;</span>
+              )}
 
               {seen && Object.keys(typingUsers).length === 0 && (
-                <span
-                  className="w-full flex justify-end text-xs py-2"
-                  ref={seenEndRef}
-                >
-                  {" "}
-                  Seen{" "}
-                </span>
+                <span ref={seenEndRef}> Seen </span>
               )}
             </div>
+
+            {/* Messages */}
             {generateMessages()}
-            {/* {chat.length === 0 && <p>No messages</p>} */}
           </div>
           <div ref={messagesEndRef} />
         </div>
-        <div className="fixed h-20 bottom-0 left-0 border-t border-neutral-900 w-full bg-neutral-950 pt-2 pb-7 px-3 flex items-center gap-3">
-          {/* <EmojiEmotionsOutlinedIcon
-            className="emoji-button"
-            onClick={emojiToggleHandler}
-          />
-          <div className="emoji-picker__container">
-            <EmojiPicker
-              open={emojiToggle}
-              emojiStyle="native"
-              onEmojiClick={handleEmoji}
-              theme="dark"
-              height={400}
-              width={400}
-            />
-          </div> */}
-          <input
-            id="send-message__input"
-            placeholder="Type a message..."
-            type="text"
-            ref={inputRef}
-            value={text}
-            onChange={handleInputChange}
-            onKeyDown={handleKeyPress}
-            className="w-full rounded-full px-4 py-2 bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-violet-400"
-          />
-          <button
-            id="send-button"
-            onClick={sendMessage}
-            className="pb-1 flex items-center text-violet-400 hover:text-violet-500 transition-colors"
-          >
-            <SendIcon className="rotate-[-30deg]" />
-          </button>
-        </div>
       </div>
 
-      {/* <div className={`chat-info ${chatInfoToggle ? "active" : ""}`}>
-        {chatInfoToggle && <ChatInfo groupChat={groupChat} />}
-      </div> */}
-    </div>
+      {/* Footer / Input */}
+      <div className="fixed h-20 bottom-0 left-0 w-full bg-neutral-950 flex flex-row justify-center items-center gap-3 px-2 pb-2">
+        <input
+          id="send-message__input"
+          placeholder="Type a message..."
+          type="text"
+          ref={inputRef}
+          value={text}
+          onChange={handleInputChange}
+          onKeyDown={handleKeyPress}
+          className="w-full rounded-full px-4 py-2 bg-neutral-800 text-white border border-neutral-700 focus:outline-none focus:border-violet-400"
+        />
+        <button
+          id="send-button"
+          onClick={sendMessage}
+          className="pb-1 flex items-center text-violet-400 hover:text-violet-500 transition-colors"
+        >
+          <SendIcon className="rotate-[-30deg]" />
+        </button>
+      </div>
+    </>
   );
 };
 

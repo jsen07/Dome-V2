@@ -41,6 +41,32 @@ module.exports = {
           "60%": { transform: "scale(1)", opacity: "1" },
           "100%": { transform: "scale(0.8)", opacity: "0" },
         },
+        "bg-gradient": {
+          "0%, 100%": { backgroundColor: "#0a0a0a" },
+          "50%": { backgroundColor: "#101010" },
+        },
+        logoBounce: {
+          "0%": { opacity: "0", transform: "scale(0.8) translateY(-20px)" },
+          "50%": { opacity: "1", transform: "scale(1.05) translateY(0)" },
+          "100%": { transform: "scale(1)" },
+        },
+        inputSlide: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        buttonPress: {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(0.95)" },
+          "100%": { transform: "scale(1)" },
+        },
+        footerRise: {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        fadeSwitch: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
       },
       animation: {
         "timestamp-in": "timestampIn 0.2s ease-out forwards",
@@ -48,8 +74,25 @@ module.exports = {
         "slide-in-bottom": "slideInBottom 0.3s ease-out forwards",
         "slide-out-bottom": "slideOutBottom 0.3s ease-in forwards",
         heartPop: "heartPop 0.8s ease-out forwards",
+        "bg-gradient": "bg-gradient 4s ease-in-out infinite",
+        logoBounce: "logoBounce 0.8s ease-out forwards",
+        inputSlide: "inputSlide 0.4s ease-out forwards",
+        buttonPress: "buttonPress 0.2s ease-in-out",
+        footerRise: "footerRise 0.6s ease-out forwards",
+        fadeSwitch: "fadeSwitch 0.3s ease-in",
+      },
+      touchAction: {
+        "pan-x": "pan-x",
+        "pan-y": "pan-y",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        ".touch-pan-x": { touchAction: "pan-x" },
+        ".touch-pan-y": { touchAction: "pan-y" },
+      });
+    },
+  ],
 };

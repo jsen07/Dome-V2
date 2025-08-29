@@ -9,97 +9,38 @@ import {
   serverTimestamp,
   push,
 } from "firebase/database";
-import { useStateValue } from "./contexts/StateProvider";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
-import Button from "@mui/material/Button";
-import EmailIcon from "@mui/icons-material/Email";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import useCheckFriendship from "./hooks/useCheckFriendship";
 
 const ProfileActionButtons = ({ userDetails }) => {
-  const [{ user }] = useStateValue();
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const [hasSent, setHasSent] = useState(false);
-  const [isFriends, setIsFriends] = useState(false);
+
+  const { isFriends } = useCheckFriendship(currentUser?.uid, userDetails?.uid);
 
   const createChat = async () => {
     const db = getDatabase();
-    const chatId = generateChatId(user.uid, userDetails.uid);
+    const chatId = generateChatId(currentUser.uid, userDetails.uid);
 
     try {
       const chatSnapshot = await get(child(ref(db), `chat/${chatId}`));
-      const chatListRef = ref(db, "chatList");
-      const newChatListRef = push(chatListRef);
-      const chatListId = newChatListRef.key;
 
-      // Check if chat already exists
       if (!chatSnapshot.exists()) {
         const chatData = {
           createdAt: serverTimestamp(),
           messages: {},
-          allowedUsers: [user.uid, userDetails.uid],
+          allowedUsers: [currentUser.uid, userDetails.uid],
         };
 
-        //create a new chat if a chat doesnt exist
         await set(ref(db, `chat/${chatId}`), chatData);
-
-        // Update chat lists for both users
-        await Promise.all([
-          set(
-            child(ref(db), `chatList/${userDetails.uid}/${currentUser.uid}`),
-            {
-              chatId: chatId,
-              displayName: user.displayName,
-              lastMessage: "",
-              receiverId: user.uid,
-              updatedAt: serverTimestamp(),
-              isSeen: false,
-              id: chatListId,
-            }
-          ),
-          set(
-            child(ref(db), `chatList/${currentUser.uid}/${userDetails.uid}`),
-            {
-              chatId: chatId,
-              displayName: userDetails.displayName,
-              lastMessage: "",
-              receiverId: userDetails.uid,
-              updatedAt: serverTimestamp(),
-              isSeen: false,
-              id: chatListId,
-            }
-          ),
-          //set notification
-          set(
-            child(
-              ref(db),
-              `chatList/${currentUser.uid}/notifications/${userDetails.uid}`
-            ),
-            {
-              messages: {},
-            }
-          ),
-          set(
-            child(
-              ref(db),
-              `chatList/${userDetails.uid}/notifications/${currentUser.uid}`
-            ),
-            {
-              messages: {},
-            }
-          ),
-        ]);
-        // navigate to the new chat
-        console.log("Chat created successfully!");
-        navigate(`/chats/${chatId}`);
-      } else {
-        console.log("Chat already exists.");
-        navigate(`/chats/${chatId}`);
       }
+
+      navigate(`/chats/${chatId}`);
     } catch (error) {
       console.error("Error creating chat:", error);
-      alert("Failed to create chat. Please try again.");
+      toast.error("Failed to create chat. Please try again.");
     }
   };
 
@@ -108,10 +49,9 @@ const ProfileActionButtons = ({ userDetails }) => {
   };
 
   const handleFriendRequest = async () => {
-    if (!user) return;
-
+    if (!currentUser) return;
+    // done rely on hardcoded displayname as it can change if the user updates profile
     const friendRequest = {
-      displayName: currentUser.displayName,
       uid: currentUser.uid,
       photoUrl: currentUser.photoURL,
       timestamp: serverTimestamp(),
@@ -155,30 +95,28 @@ const ProfileActionButtons = ({ userDetails }) => {
     }
   };
 
-  const friendsCheck = async () => {
-    try {
-      const friendsRef = ref(getDatabase());
-      const snapshot = await get(
-        child(friendsRef, `friendsList/${userDetails?.uid}/${currentUser.uid}`)
-      );
+  // const friendsCheck = async () => {
+  //   try {
+  //     const friendsRef = ref(getDatabase());
+  //     const snapshot = await get(
+  //       child(friendsRef, `friendsList/${userDetails?.uid}/${currentUser.uid}`)
+  //     );
 
-      if (snapshot.exists()) {
-        setIsFriends(true);
-        return true;
-      } else {
-        setIsFriends(false);
-        return false;
-      }
-    } catch (error) {
-      console.error("Error checking friendship status:", error);
-    }
-  };
+  //     if (snapshot.exists()) {
+  //       setIsFriends(true);
+  //       return true;
+  //     } else {
+  //       setIsFriends(false);
+  //       return false;
+  //     }
+  //   } catch (error) {
+  //     console.error("Error checking friendship status:", error);
+  //   }
+  // };
   useEffect(() => {
     if (!currentUser || !userDetails) return;
     const checkFriends = async () => {
       try {
-        const isFriends = await friendsCheck();
-
         if (!isFriends) {
           await getFriendRequests();
         }
@@ -190,34 +128,49 @@ const ProfileActionButtons = ({ userDetails }) => {
     checkFriends();
   }, [currentUser, userDetails]);
 
-  return (
-    <div className="profile__action-buttons z-40">
-      <Button
-        className="send-message-button"
-        variant="outlined"
-        startIcon={<EmailIcon />}
-        onClick={createChat}
-      >
-        Message
-      </Button>
+  if (!currentUser || !userDetails) return null;
 
+  return (
+    <div className="absolute top-2 right-2 flex flex-row items-center gap-1  text-sm">
       {isFriends ? (
-        <p>Friends {<HowToRegIcon className="isFriend" />}</p>
+        <button
+          className="border bg-neutral-900 border-neutral-800 font-bold text-sm px-3 py-1 text-white rounded-2xl shadow-md flex flex-row items-center gap-1"
+          onClick={createChat}
+        >
+          {" "}
+          Message
+        </button>
       ) : (
         <>
           {hasSent ? (
-            <p>Friend request has been sent.</p>
+            <p className="border bg-neutral-900 border-neutral-800 font-bold text-xs px-3 py-2 text-white rounded-2xl shadow-md flex flex-row items-center justify-center">
+              Friend request sent.
+            </p>
           ) : (
             // <button onClick={handleFriendRequest}>Send friend request</button>
-            <Button
-              className="send-message-button"
-              variant="outlined"
-              startIcon={<PersonAddIcon />}
-              onClick={handleFriendRequest}
-            >
-              Send friend request
-            </Button>
+            <>
+              <button
+                className="border bg-neutral-900 border-neutral-800 font-bold text-xs px-3 py-2 text-white rounded-2xl shadow-md flex flex-row items-center justify-center"
+                onClick={handleFriendRequest}
+              >
+                Send friend request
+              </button>
+              {/* <button
+                className="border bg-neutral-900 border-neutral-800 font-bold text-xs px-3 py-2 text-white rounded-2xl shadow-md flex flex-row items-center"
+                onClick={createChat}
+              >
+                {" "}
+                Message
+              </button> */}
+            </>
           )}
+          <button
+            className="border bg-neutral-900 border-neutral-800 font-bold text-sm px-3 py-1 text-white rounded-2xl shadow-md flex flex-row items-center gap-1"
+            onClick={createChat}
+          >
+            {" "}
+            Message
+          </button>
         </>
       )}
     </div>

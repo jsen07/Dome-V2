@@ -30,7 +30,7 @@ const HomeNav = () => {
     if (location.pathname.startsWith("/home")) return "home";
     if (location.pathname.startsWith("/chats")) return "chats";
     if (location.pathname.startsWith("/profile")) return "profile";
-    if (location.pathname === "/post") return "post";
+    if (location.pathname.startsWith("/post-upload")) return "post";
     return "";
   };
 
@@ -53,7 +53,7 @@ const HomeNav = () => {
       id: "post",
       icon: AddBoxRoundedIcon,
       outlinedIcon: AddBoxOutlinedIcon,
-      onClick: () => navigate("/post"),
+      onClick: () => navigate(`/post-upload?userId=${currentUser.uid}`),
     },
     {
       id: "chats",
@@ -64,14 +64,14 @@ const HomeNav = () => {
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 w-full bg-neutral-950 h-20 z-10 py-5 border-t border-neutral-900">
+    <nav className="fixed bottom-0 left-0 w-full bg-neutral-950 h-20 z-10 py-3 border-t border-neutral-900">
       <div className="flex justify-evenly items-center">
         {navItems.map(
           ({ id, icon: ActiveIcon, outlinedIcon: InactiveIcon, onClick }) => (
             <button
               key={id}
               onClick={onClick}
-              className="flex flex-col items-center text-2xl text-neutral-600"
+              className="flex flex-col items-center text-2xl text-neutral-600 size-10 justify-center"
             >
               {activeLink === id ? (
                 <ActiveIcon
@@ -87,7 +87,7 @@ const HomeNav = () => {
 
         <button
           onClick={handleLogout}
-          className="flex flex-col items-center text-2xl text-neutral-600"
+          className="flex flex-col items-center text-2xl text-neutral-600 size-10 justify-center"
           aria-label="Logout"
         >
           <ExitToAppIcon style={{ fontSize: "inherit" }} />

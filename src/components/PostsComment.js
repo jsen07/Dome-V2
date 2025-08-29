@@ -4,12 +4,21 @@ import { useAuth } from "./contexts/AuthContext";
 import SendIcon from "@mui/icons-material/Send";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
-const PostsComment = ({ postKey, type, uid, onClose }) => {
+const PostsComment = ({ postKey, caption, image, uid, onClose }) => {
   const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
   const [closing, setClosing] = useState(false);
 
   const { currentUser } = useAuth();
+
+  useEffect(() => {
+    const originalStyle = window.getComputedStyle(document.body).overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = originalStyle;
+    };
+  }, []);
 
   const handleClose = () => setClosing(true);
 
@@ -57,8 +66,6 @@ const PostsComment = ({ postKey, type, uid, onClose }) => {
     if (!text.trim()) return;
 
     const comment = {
-      displayName: currentUser.displayName,
-      photoUrl: currentUser.photoURL,
       uid: currentUser.uid,
       comment: text,
       timestamp: Date.now(),
@@ -66,10 +73,7 @@ const PostsComment = ({ postKey, type, uid, onClose }) => {
     };
 
     try {
-      const commentRef = ref(
-        getDatabase(),
-        `${type}Posts/${uid}/${postKey}/comments`
-      );
+      const commentRef = ref(getDatabase(), `Posts/${postKey}/comments`);
       const notifPostRef = ref(
         getDatabase(),
         `notifications/posts/${uid}/${postKey}/comments/${currentUser.uid}`
@@ -83,7 +87,8 @@ const PostsComment = ({ postKey, type, uid, onClose }) => {
           uid: currentUser.uid,
           comment: text,
           postId: postKey,
-          type,
+          caption: caption,
+          image: image,
           timestamp: Date.now(),
         });
       }
@@ -101,10 +106,7 @@ const PostsComment = ({ postKey, type, uid, onClose }) => {
 
     const fetchComments = async () => {
       try {
-        const commentsRef = ref(
-          getDatabase(),
-          `${type}Posts/${uid}/${postKey}/comments`
-        );
+        const commentsRef = ref(getDatabase(), `Posts/${postKey}/comments`);
         const snapshot = await get(commentsRef);
 
         if (snapshot.exists()) {
@@ -135,32 +137,33 @@ const PostsComment = ({ postKey, type, uid, onClose }) => {
   return (
     <>
       <div
-        className="fixed inset-0 bg-black bg-opacity-50 z-40"
+        className="fixed bottom-0 left-0 h-screen inset-0 bg-black/50 z-40"
         onClick={handleClose}
       />
 
       <div
-        className={`fixed bottom-0 left-0 w-full z-50 flex items-center flex-col ${
+        className={`fixed bottom-0 left-0 w-full z-40 flex items-center flex-col ${
           closing ? "animate-slide-out-bottom" : "animate-slide-in-bottom"
         }`}
         onAnimationEnd={() => closing && onClose()}
       >
-        <div className="md:max-w-3xl mx-auto h-[70vh] rounded-t-3xl px-3 py-4 w-full bg-neutral-950 flex flex-col justify-between">
-          <div className="text-xl mx-auto my-4 font-bold border-b py-3 mx-3 w-full flex flex-row justify-between">
+        <div className="md:max-w-3xl mx-auto h-[70vh] rounded-t-3xl px-3 py-4 w-full bg-neutral-950 flex flex-col justify-between text-white">
+          <div className="text-xl mx-auto my-4 font-bold py-3 mx-3 w-full flex flex-row justify-between">
             <h1>Comments</h1>
             <CloseOutlinedIcon
               onClick={handleClose}
               className="cursor-pointer"
             />
           </div>
+          <p className="w-full text-center">I'm still working on this 😔</p>
 
           {/* Comments List */}
           <div className="grow flex flex-col gap-2 overflow-y-auto">
             {comments.length > 0 ? (
-              comments.map((comment) => (
+              comments.map((comment, key) => (
                 <div
-                  key={comment.id}
-                  className="flex flex-col p-2 gap-2 text-sm border-b border-neutral-800"
+                  key={`${key}-${comment.id}`}
+                  className="flex flex-col p-2 gap-2 text-sm"
                 >
                   <div className="flex flex-row justify-between">
                     <h4 className="font-bold text-violet-400">
@@ -184,9 +187,9 @@ const PostsComment = ({ postKey, type, uid, onClose }) => {
           </div>
 
           {/* Input */}
-          <div className="flex items-center justify-between gap-2 mt-2">
+          <div className="flex items-center justify-between gap-2 pb-2">
             <textarea
-              className="grow h-8 text-black rounded-2xl px-4 py-1 resize-none border border-gray-300 focus:outline-none"
+              className="h-9 w-full text-black rounded-2xl px-4 py-1 resize-none border border-gray-300 focus:outline-none"
               value={text}
               onChange={handleTextChange}
               placeholder="Write a comment..."
@@ -194,7 +197,8 @@ const PostsComment = ({ postKey, type, uid, onClose }) => {
             />
             <SendIcon
               onClick={postComment}
-              className="cursor-pointer mx-2 rotate-[-30deg] text-violet-500 hover:text-violet-700 transition-colors"
+              fontSize="medium"
+              className="cursor-pointer mx-2 mb-2 rotate-[-30deg] text-violet-500 hover:text-violet-700 transition-colors"
             />
           </div>
         </div>
