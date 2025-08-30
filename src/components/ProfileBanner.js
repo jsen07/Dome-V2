@@ -1,48 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import ProfileActionButtons from "./ProfileActionButtons";
-import Placeholder from "./images/profile-placeholder-2.jpg";
+
 import ArrowBackIosNewRoundedIcon from "@mui/icons-material/ArrowBackIosNewRounded";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { useProfilePreloader } from "./hooks/useProfilePreloader";
 
 const ProfileBanner = ({
-  background,
   isCurrentUser,
   userDetails,
   toggleProfileEdit,
+  profileImageSrc,
+  backgroundSrc,
 }) => {
   const navigate = useNavigate();
-  const activeUser = useSelector((state) => state.user.activeUser);
-
-  const profileImageSrc = isCurrentUser
-    ? activeUser?.photoUrl || userDetails?.photoUrl || Placeholder
-    : userDetails?.photoUrl || Placeholder;
-
-  const backgroundSrc = isCurrentUser
-    ? activeUser?.background?.profileBackground ||
-      userDetails?.background?.profileBackground ||
-      background
-    : userDetails?.background?.profileBackground || background;
-
-  // Preload images
-  const profileLoaded = useProfilePreloader(profileImageSrc);
-  const backgroundLoaded = useProfilePreloader(backgroundSrc);
-
-  // Wait until images are loaded
-  if (!profileLoaded || !userDetails || (background && !backgroundLoaded))
-    return null;
 
   return (
     <div className="text-white relative w-full flex flex-col">
       <div className="aspect-[16/5] relative overflow-hidden bg-violet-950">
-        {background && (
-          <img
-            alt="banner"
-            src={backgroundSrc}
-            className="w-full h-full object-cover object-center"
-          />
-        )}
+        <img
+          alt="banner"
+          src={backgroundSrc}
+          className="w-full h-full object-cover object-center"
+        />
       </div>
 
       <div className="text-2xl w-full flex justify-start relative">

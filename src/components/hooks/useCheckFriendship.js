@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { getDatabase, ref, get } from "firebase/database";
 
 const useCheckFriendship = (currentUser, userId) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingFriendshipCheck, setIsLoading] = useState(true);
   const [isFriends, setIsFriends] = useState(false);
 
   const checkFriendship = useCallback(async () => {
@@ -33,7 +33,7 @@ const useCheckFriendship = (currentUser, userId) => {
     checkFriendship();
   }, [checkFriendship]);
 
-  return { isFriends, setIsFriends, isLoading, checkFriendship };
+  return { isFriends, setIsFriends, isLoadingFriendshipCheck, checkFriendship };
 };
 
 export default useCheckFriendship;

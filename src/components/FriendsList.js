@@ -4,61 +4,9 @@ import { ref, child, get, getDatabase } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 import Placeholder from "../components/images/profile-placeholder-2.jpg";
 
-const FriendsList = ({
-  user,
-  setFriendsLength,
-  showFriends,
-  hideFriendsList,
-}) => {
-  const { currentUser } = useAuth();
+const FriendsList = ({ friends, showFriends, hideFriendsList }) => {
   const navigate = useNavigate();
-  const [friends, setFriends] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  const fetchFriends = async () => {
-    if (!currentUser) return;
-    setLoading(true);
-
-    try {
-      const friendsRef = ref(getDatabase());
-      const snapshot = await get(
-        child(friendsRef, `friendsList/${user}/friends`)
-      );
-
-      if (snapshot.exists()) {
-        const friendsArr = [];
-
-        const promises = [];
-
-        snapshot.forEach((childSnapshot) => {
-          const friendIds = childSnapshot.val();
-          const userRef = ref(getDatabase(), `users/${friendIds}`);
-          promises.push(
-            get(userRef).then((userSnapshot) => {
-              if (userSnapshot.exists()) {
-                friendsArr.push(userSnapshot.val());
-              }
-            })
-          );
-        });
-
-        await Promise.all(promises);
-        setFriends(friendsArr);
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchFriends();
-  }, [user]);
-
-  useEffect(() => {
-    setFriendsLength(friends.length);
-  }, [friends, setFriendsLength]);
   return (
     <>
       {showFriends && (

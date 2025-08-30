@@ -77,10 +77,8 @@ const ActiveNotifications = ({ getNotification }) => {
       setCombinedList(combinedLength);
       if (getNotification) getNotification(combinedLength);
     }
-    console.log(requestNotifs);
   }, [requestNotifs, messageNotifs, postNotifs]);
 
-  console.log(combinedList);
   return (
     <>
       {combinedList > 0 && (

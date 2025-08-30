@@ -11,9 +11,6 @@ export default function Header() {
   const sentinelRef = useRef(null);
   const [opacity, setOpacity] = useState(1);
   const [notificationLength, setNotificationLength] = useState(0);
-
-  console.log(notificationLength);
-
   const getNotification = (length) => {
     setNotificationLength((prev) => length);
   };

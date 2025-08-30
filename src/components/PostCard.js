@@ -18,9 +18,9 @@ const PostCard = ({
   likedBySetter,
   likedByToggleSetter,
   heartAnimation,
-  isLikedListLoading,
   displayName,
   photoUrl,
+  likedProfiles,
 }) => {
   const userLiked = post.likes?.includes(currentUser.uid) ? true : false;
   const navigate = useNavigate();
@@ -129,10 +129,7 @@ const PostCard = ({
               likedByToggleSetter((prev) => !prev);
             }}
           >
-            <LikeProfilesList
-              postLikes={post.likes}
-              isLikedListLoading={isLikedListLoading}
-            />
+            <LikeProfilesList postLikes={likedProfiles} />
           </div>
         )}
 

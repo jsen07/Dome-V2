@@ -4,26 +4,43 @@ export function useImagePreloader(posts) {
   const [imagesLoaded, setImagesLoaded] = useState(false);
 
   useEffect(() => {
-    if (!posts.length) return;
+    if (!posts || posts.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
 
     let isCancelled = false;
     setImagesLoaded(false);
-    const promises = posts
-      .filter((post) => post.imageUrl || post.imageUrls?.length)
-      .map((post) => {
-        const urls = post.imageUrls || [post.imageUrl];
-        return Promise.all(
-          urls.map(
-            (url) =>
-              new Promise((resolve) => {
-                const img = new Image();
-                img.src = url;
-                img.onload = resolve;
-                img.onerror = resolve;
-              })
-          )
-        );
-      });
+
+    const urls = posts.flatMap((post) => {
+      if (post.imageUrls && post.imageUrls.length) return post.imageUrls;
+      if (post.imageUrl) return [post.imageUrl];
+      if (post.photoUrl) return [post.photoUrl];
+      return [];
+    });
+
+    // console.log(urls);
+
+    if (urls.length === 0) {
+      setImagesLoaded(true);
+      return;
+    }
+
+    const promises = urls.map(
+      (url) =>
+        new Promise((resolve) => {
+          const img = new Image();
+          img.src = url;
+          img.onload = () => {
+            if (img.decode) {
+              img.decode().then(resolve).catch(resolve);
+            } else {
+              resolve();
+            }
+          };
+          img.onerror = resolve;
+        })
+    );
 
     Promise.all(promises).then(() => {
       if (!isCancelled) setImagesLoaded(true);
@@ -32,7 +49,7 @@ export function useImagePreloader(posts) {
     return () => {
       isCancelled = true;
     };
-  }, [posts.length]);
+  }, []);
 
   return imagesLoaded;
 }

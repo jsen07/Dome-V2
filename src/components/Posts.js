@@ -13,18 +13,20 @@ import useDelayedLoading from "./hooks/delayedLoading";
 import PostsSkeleton from "./loaders/Skeletons/PostsSkeleton";
 import useFetchFeed from "./hooks/useFetchFeed";
 import { useImagePreloader } from "./hooks/useImagePreloader";
+import { useLikesPreloader } from "./hooks/useLikesPreloader";
 
 // Posts
 const Posts = () => {
   const { currentUser } = useAuth();
   const loadMoreRef = useRef(null);
   const { posts, setPosts, isLoading, fetchPosts } = useFetchFeed(currentUser);
+  const { profilesLoaded, profileDataMap } = useLikesPreloader(posts);
   const imagesLoaded = useImagePreloader(posts);
   const [heartAnimations, setHeartAnimations] = useState({});
   const [likedBy, setLikedBy] = useState([]);
   const [isLikedBy, setLikedByComponent] = useState(false);
   const [toggleComment, setToggleComment] = useState({});
-  const [likedListLoading, setLikedListLoading] = useState();
+  const [likedListLoading, setLikedListLoading] = useState(false);
 
   const onLike = async (type, uid, postId) => {
     const postRef = ref(getDatabase(), `Posts/${postId}/likes`);
@@ -70,8 +72,12 @@ const Posts = () => {
     setLikedListLoading(loading);
   };
 
-  const loading = isLoading || !imagesLoaded || !isLikedListLoading;
-  const delayedLoading = useDelayedLoading(loading, 300);
+  const allReady = !isLoading && imagesLoaded && profilesLoaded;
+  const delayedLoading = useDelayedLoading(!allReady, 300);
+
+  if (delayedLoading) {
+    return <PostsSkeleton />;
+  }
 
   if (delayedLoading) {
     return <PostsSkeleton />;
@@ -176,7 +182,7 @@ const Posts = () => {
                 heartAnimation={heartAnimations[post.postKey]}
                 likedBySetter={setLikedBy}
                 likedByToggleSetter={setLikedByComponent}
-                isLikedListLoading={isLikedListLoading}
+                likedProfiles={profileDataMap[post.postKey] || []}
               />
             ))}
           </div>

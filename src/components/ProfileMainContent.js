@@ -23,6 +23,7 @@ import { useImagePreloader } from "./hooks/useImagePreloader";
 import PostsSkeleton from "./loaders/Skeletons/PostsSkeleton";
 const ProfileMainContent = ({
   userDetails,
+  friends,
   handleClick,
   handlePostClick,
   setPostFullscreen,
@@ -107,7 +108,7 @@ const ProfileMainContent = ({
     const date = new Date(timestamp);
     return date.toLocaleString("en-US", { month: "long", year: "numeric" });
   };
-  if (!userDetails) return null;
+  if (!userDetails || !imagesLoaded) return null;
   return (
     <>
       <div className="flex flex-col text-white gap-4 grow">
@@ -134,9 +135,9 @@ const ProfileMainContent = ({
                 Joined {formatJoinedDate(userDetails?.joined)}
               </span>
 
-              {numberOfFriends > 0 && (
+              {friends.length > 0 && (
                 <span className="pl-1" onClick={() => setShowFriends(true)}>
-                  {numberOfFriends} Friends
+                  {friends.length} Friends
                 </span>
               )}
             </div>
@@ -149,7 +150,7 @@ const ProfileMainContent = ({
           )}
 
           <FriendsList
-            user={userDetails?.uid}
+            friends={friends}
             setFriendsLength={setFriendsLength}
             showFriends={showFriends}
             hideFriendsList={hideFriendsList}

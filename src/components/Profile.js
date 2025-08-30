@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "./contexts/AuthContext";
+import Placeholder from "./images/profile-placeholder-2.jpg";
 import { ref, set, child, get, getDatabase, onValue } from "firebase/database";
 import {
   ref as sRef,
@@ -9,9 +10,12 @@ import {
 } from "firebase/storage";
 import { db } from "../firebase";
 
-import { useStateValue } from "./contexts/StateProvider";
 import { useUserStatus } from "./hooks/useUserStatus";
 import { useUserProfile } from "./hooks/useUserProfile";
+import { useFetchUserFriends } from "./hooks/useFetchUserFriends";
+import { useProfilePreloader } from "./hooks/useProfilePreloader";
+
+import { useSelector } from "react-redux";
 
 import { useLocation } from "react-router-dom";
 import ProfileComments from "./ProfileComments";
@@ -23,22 +27,13 @@ import EditProfile from "./EditProfile";
 import FullscreenPost from "./FullscreenPost";
 
 const Profile = () => {
-  const [isComponentActive, setIsComponentActive] = useState(false);
-  const [activeLink, setActiveLink] = useState("Posts");
-  // const [userDetails, setUserDetails] = useState(null);
   const [editProfileToggled, setEditProfileToggled] = useState(false);
-  const [changeAvatarToggled, setChangeAvatarToggled] = useState(false);
-  const [photosToggle, setPhotosToggle] = useState(false);
   const [background, setBackground] = useState();
   const [activeSection, setActiveSection] = useState("Posts");
   const [toggleFullscreen, setToggleFullscreen] = useState(false);
   const [clickTimeout, setClickTimeout] = useState(null);
   const [selectedPost, setSelectedPost] = useState();
   const [postFs, setPostFs] = useState();
-
-  const [loading, setLoading] = useState(false);
-
-  // const [status, setStatus] = useState("Offline");
   const [isCurrentUser, setCurrentUser] = useState();
 
   const { currentUser } = useAuth();
@@ -46,8 +41,22 @@ const Profile = () => {
   const queryParams = new URLSearchParams(location.search);
 
   const userId = queryParams.get("userId");
-  const status = useUserStatus(userId);
-  const { userDetails, error } = useUserProfile(userId);
+  const activeUser = useSelector((state) => state.user.activeUser);
+
+  const { userDetails, UserProfileLoading } = useUserProfile(userId);
+  const { friends, loadingFriends } = useFetchUserFriends(userId);
+
+  const profileImageSrc =
+    (isCurrentUser ? activeUser?.photoUrl : userDetails?.photoUrl) ||
+    Placeholder;
+
+  const backgroundSrc =
+    (isCurrentUser
+      ? activeUser?.background?.profileBackground ||
+        userDetails?.background?.profileBackground
+      : userDetails?.background?.profileBackground) || Placeholder;
+
+  const imageLoaded = useProfilePreloader([profileImageSrc, backgroundSrc]);
 
   useEffect(() => {
     if (editProfileToggled && !isCurrentUser) {
@@ -55,52 +64,12 @@ const Profile = () => {
     }
   }, [isCurrentUser]);
 
-  function fetchUserBackground(userId) {
-    return new Promise((resolve, reject) => {
-      setLoading(true);
-      const db_ref = db.ref();
-      get(child(db_ref, `users/${userId}/background`))
-        .then((snapshot) => {
-          if (snapshot.exists()) {
-            const userData = snapshot.val();
-            setBackground(userData.profileBackground);
-            resolve(userData);
-            setLoading(false);
-          } else {
-            setBackground("");
-            setLoading(false);
-          }
-        })
-        .catch((error) => {
-          console.log("Error fetching user background:", error);
-
-          reject(error);
-          setLoading(false);
-        });
-    });
-  }
-
   useEffect(() => {
-    userId === currentUser?.uid ? setCurrentUser(true) : setCurrentUser(false);
-    fetchUserBackground(userId);
-  }, [userId, currentUser?.uid]);
-
-  // useEffect(() => {
-  //   setIsComponentActive(true);
-  //   const backgroundRef = ref(getDatabase(), `users/${userId}/background`);
-  //   onValue(backgroundRef, (snapshot) => {
-  //     if (snapshot.exists()) {
-  //       const background = snapshot.val();
-  //       setBackground(background.profileBackground);
-  //     } else {
-  //       setBackground("");
-  //     }
-  //   });
-  // }, [userId]);
+    userId === currentUser.uid ? setCurrentUser(true) : setCurrentUser(false);
+  }, [userId, currentUser.uid]);
 
   const closebutton = () => {
     setEditProfileToggled(false);
-    setChangeAvatarToggled(false);
   };
   const toggleProfileEdit = () => {
     setEditProfileToggled(true);
@@ -124,62 +93,29 @@ const Profile = () => {
     setPostFs(post);
   };
 
-  if (!userDetails) return null;
+  if (!userDetails || UserProfileLoading || loadingFriends || !imageLoaded)
+    return null;
   return (
     <>
       <div className="w-full flex-col flex grow">
         {/* Profile View */}
-        {!editProfileToggled && !loading && (
+        {!editProfileToggled && (
           <>
             <ProfileBanner
               background={background}
-              status={status}
               isCurrentUser={isCurrentUser}
               userDetails={userDetails}
               toggleProfileEdit={toggleProfileEdit}
+              profileImageSrc={profileImageSrc}
+              backgroundSrc={backgroundSrc}
             />
-            {/* <div className="text-white flex flex-row w-full justify-evenly border">
-              <p
-                onClick={() => {
-                  handleSectionToggle("Posts");
-                }}
-                className={`links ${activeSection === "Posts" ? "active" : ""}`}
-              >
-                Profile
-              </p>
-              <p
-                onClick={() => {
-                  handleSectionToggle("About");
-                }}
-                className={`links ${activeSection === "About" ? "active" : ""}`}
-              >
-                About
-              </p>
-              <p
-                onClick={() => {
-                  handleSectionToggle("Friends");
-                }}
-                className={`links ${
-                  activeSection === "Friends" ? "active" : ""
-                }`}
-              >
-                Friends
-              </p>
-              <p
-                onClick={() => handleSectionToggle("Photos")}
-                className={`links ${
-                  activeSection === "Photos" ? "active" : ""
-                }`}
-              >
-                Photos
-              </p>
-            </div> */}
             {activeSection === "Posts" && (
               <ProfileMainContent
                 userDetails={userDetails}
                 handleClick={handleClick}
                 handlePostClick={handlePostClick}
                 setPostFullscreen={setPostFullscreen}
+                friends={friends}
               />
             )}
             {activeSection === "Photos" && <Photos userId={userId} />}

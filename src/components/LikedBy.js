@@ -12,6 +12,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "./contexts/AuthContext";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import { useProfilePreloader } from "./hooks/useProfilePreloader";
 
 const LikedBy = ({ postLikes, isLikedBy, setLikedByComponent }) => {
   const [profileData, setProfileData] = useState([]);
@@ -20,6 +21,9 @@ const LikedBy = ({ postLikes, isLikedBy, setLikedByComponent }) => {
   const { currentUser } = useAuth();
   const navigate = useNavigate();
   const likedByRef = useRef();
+
+  const profileImages = profileData.map((user) => user.photoUrl || Placeholder);
+  const imagesLoaded = useProfilePreloader(profileImages);
 
   const fetchUserProfile = async () => {
     try {
@@ -34,7 +38,6 @@ const LikedBy = ({ postLikes, isLikedBy, setLikedByComponent }) => {
           );
           const data = friendsSnapshot.val();
           let isFriend = data?.friends.includes(userId);
-          console.log(isFriend);
           users.push({
             displayName: user.displayName,
             photoUrl: user.photoUrl || "",
@@ -88,6 +91,8 @@ const LikedBy = ({ postLikes, isLikedBy, setLikedByComponent }) => {
     }
   }, [isLikedBy]);
 
+  if (!imagesLoaded) return null;
+
   return (
     <>
       <div className="fixed inset-0 bg-black/50 w-full" />
@@ -104,7 +109,7 @@ const LikedBy = ({ postLikes, isLikedBy, setLikedByComponent }) => {
         </div>
 
         <div className="flex flex-col gap-2 min-h-[30vh] max-h-[70vh]">
-          {profileData.length > 0 ? (
+          {profileData.length > 0 &&
             profileData.map((user) => (
               <div
                 key={user.uid}
@@ -138,10 +143,7 @@ const LikedBy = ({ postLikes, isLikedBy, setLikedByComponent }) => {
                   )}
                 </div>
               </div>
-            ))
-          ) : (
-            <p>No liked posts</p>
-          )}
+            ))}
         </div>
       </div>
     </>
