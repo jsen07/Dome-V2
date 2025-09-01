@@ -44,14 +44,14 @@ const PostImageSlider = ({ imageUrls, post, likePost }) => {
     const dx = e.touches[0].clientX - touchStartX.current;
     const dy = e.touches[0].clientY - touchStartY.current;
 
-    // Decide swipe direction once movement passes threshold
+    // decide swipe direction once movement passes threshold
     if (directionLock.current === null) {
       if (Math.abs(dx) > 20 || Math.abs(dy) > 20) {
         directionLock.current = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
       }
     }
 
-    // If swipe is horizontal, prevent vertical scroll
+    // if swipe is horizontal, prevent vertical scroll
     if (directionLock.current === "x") {
       e.preventDefault();
       touchEndX.current = e.touches[0].clientX;

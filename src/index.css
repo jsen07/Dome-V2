@@ -15,4 +15,12 @@ html, body {
     scrollbar-width: none; 
     scrollbar-color: #0a0a0a;
 }
-/*  */
+
+/* global.css or tailwind.css */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari */
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE/Edge */
+  scrollbar-width: none;     /* Firefox */
+}

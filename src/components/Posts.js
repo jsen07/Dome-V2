@@ -68,10 +68,6 @@ const Posts = () => {
     setToggleComment((prev) => ({ ...prev, [postKey]: !prev[postKey] }));
   };
 
-  const isLikedListLoading = (loading) => {
-    setLikedListLoading(loading);
-  };
-
   const allReady = !isLoading && imagesLoaded && profilesLoaded;
   const delayedLoading = useDelayedLoading(!allReady, 300);
 
@@ -79,9 +75,6 @@ const Posts = () => {
     return <PostsSkeleton />;
   }
 
-  if (delayedLoading) {
-    return <PostsSkeleton />;
-  }
   return (
     <>
       <div id="scrollableDiv">
@@ -193,8 +186,7 @@ const Posts = () => {
         if (!isOpen) return null;
 
         const post = posts.find((p) => p.postKey === postKey);
-        if (!post) return null; // safety check
-        console.log(post);
+        if (!post) return null;
 
         return (
           <PostsComment

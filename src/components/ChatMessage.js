@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useStateValue } from "./contexts/StateProvider";
+import { useSelector } from "react-redux";
 
 const ChatMessage = ({ data }) => {
-  const [{ user }] = useStateValue();
   const [showTimestamp, setShowTimestamp] = useState(false);
+  const user = useSelector((state) => state.user.activeUser);
 
   function formatTimestamp(timestamp) {
     const date = new Date(timestamp);

@@ -13,10 +13,13 @@ const useFetchUserFeed = (currentUser, userId) => {
   const [posts, setPosts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { isFriends } = useCheckFriendship(currentUser, userId);
+  const { isFriends, isLoadingFriendshipCheck } = useCheckFriendship(
+    currentUser,
+    userId
+  );
 
   const fetchPosts = useCallback(async () => {
-    if (!userId) return;
+    if (!userId || !isLoadingFriendshipCheck) return;
     setIsLoading(true);
 
     const db = getDatabase();

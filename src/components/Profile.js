@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "./contexts/AuthContext";
 import Placeholder from "./images/profile-placeholder-2.jpg";
-import { ref, set, child, get, getDatabase, onValue } from "firebase/database";
-import {
-  ref as sRef,
-  getDownloadURL,
-  getStorage,
-  uploadBytes,
-} from "firebase/storage";
-import { db } from "../firebase";
+import BgPlaceholder from "./images/logo-transparent-cropped-png.png";
 
-import { useUserStatus } from "./hooks/useUserStatus";
 import { useUserProfile } from "./hooks/useUserProfile";
 import { useFetchUserFriends } from "./hooks/useFetchUserFriends";
 import { useProfilePreloader } from "./hooks/useProfilePreloader";
@@ -54,7 +46,7 @@ const Profile = () => {
     (isCurrentUser
       ? activeUser?.background?.profileBackground ||
         userDetails?.background?.profileBackground
-      : userDetails?.background?.profileBackground) || Placeholder;
+      : userDetails?.background?.profileBackground) || BgPlaceholder;
 
   const imageLoaded = useProfilePreloader([profileImageSrc, backgroundSrc]);
 
@@ -112,6 +104,7 @@ const Profile = () => {
             {activeSection === "Posts" && (
               <ProfileMainContent
                 userDetails={userDetails}
+                activeUser={activeUser}
                 handleClick={handleClick}
                 handlePostClick={handlePostClick}
                 setPostFullscreen={setPostFullscreen}

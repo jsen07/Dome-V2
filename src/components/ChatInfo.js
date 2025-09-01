@@ -6,20 +6,20 @@ import {
   getStorage,
   uploadBytes,
 } from "firebase/storage";
-import { useStateValue } from "./contexts/StateProvider";
 import { useParams } from "react-router-dom";
 import Placeholder from "./images/profile-placeholder-2.jpg";
 import EditIcon from "@mui/icons-material/Edit";
 import GroupIcon from "@mui/icons-material/Group";
 import CloseRoundedIcon from "@mui/icons-material/CloseRounded";
 import Fade from "@mui/material/Fade";
+import { useSelector } from "react-redux";
 
 const ChatInfo = ({ groupChat }) => {
   const [editChat, setEditChat] = useState(false);
   const [groupchat, setGroupChat] = useState(groupChat);
   const [loading, setLoading] = useState(false);
   const [members, setMembers] = useState([]);
-  const [{ user }] = useStateValue();
+  const user = useSelector((state) => state.user.activeUser);
   const { chatId } = useParams();
   const storage = getStorage();
   const [openDropDown, setOpenDropDown] = useState(null);

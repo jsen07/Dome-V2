@@ -3,11 +3,13 @@ import { getDatabase, ref, get, set, push } from "firebase/database";
 import { useAuth } from "./contexts/AuthContext";
 import SendIcon from "@mui/icons-material/Send";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
+import useFetchPostComments from "./hooks/useFetchPostComments";
 
 const PostsComment = ({ postKey, caption, image, uid, onClose }) => {
-  const [comments, setComments] = useState([]);
   const [text, setText] = useState("");
   const [closing, setClosing] = useState(false);
+  const { comments, setComments, commentsLoading } =
+    useFetchPostComments(postKey);
 
   const { currentUser } = useAuth();
 
@@ -22,7 +24,6 @@ const PostsComment = ({ postKey, caption, image, uid, onClose }) => {
 
   const handleClose = () => setClosing(true);
 
-  // Format timestamp for comments
   const formatTimestamp = (timestamp) => {
     const timestampDate = new Date(timestamp);
     let hours = timestampDate.getHours();
@@ -94,46 +95,16 @@ const PostsComment = ({ postKey, caption, image, uid, onClose }) => {
       }
 
       setText("");
-      setComments((prev) => [...prev, comment]);
+      setComments((prev) => [
+        ...prev,
+        { ...comment, displayName: currentUser.displayName },
+      ]);
     } catch (error) {
       console.log(error);
     }
   };
 
-  // Fetch comments
-  useEffect(() => {
-    if (!currentUser) return;
-
-    const fetchComments = async () => {
-      try {
-        const commentsRef = ref(getDatabase(), `Posts/${postKey}/comments`);
-        const snapshot = await get(commentsRef);
-
-        if (snapshot.exists()) {
-          const commentData = snapshot.val();
-          const commentsArray = Object.keys(commentData).map((key) => ({
-            id: key,
-            ...commentData[key],
-          }));
-          setComments(commentsArray);
-        } else {
-          setComments([]);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    fetchComments();
-  }, [postKey, currentUser]);
-
-  useEffect(() => {
-    const preventTouch = (e) => e.preventDefault();
-    document.addEventListener("touchmove", preventTouch, { passive: false });
-
-    return () => document.removeEventListener("touchmove", preventTouch);
-  }, []);
-
+  if (commentsLoading) return null;
   return (
     <>
       <div
@@ -147,19 +118,18 @@ const PostsComment = ({ postKey, caption, image, uid, onClose }) => {
         }`}
         onAnimationEnd={() => closing && onClose()}
       >
-        <div className="md:max-w-3xl mx-auto h-[70vh] rounded-t-3xl px-3 py-4 w-full bg-neutral-950 flex flex-col justify-between text-white">
-          <div className="text-xl mx-auto my-4 font-bold py-3 mx-3 w-full flex flex-row justify-between">
+        <div className="md:max-w-3xl mx-auto h-[70vh] rounded-t-2xl px-3 py-4 w-full bg-neutral-950 flex flex-col justify-between text-white">
+          <div className="text-xl mx-auto font-bold p-2 w-full flex flex-row justify-between">
             <h1>Comments</h1>
             <CloseOutlinedIcon
               onClick={handleClose}
               className="cursor-pointer"
             />
           </div>
-          <p className="w-full text-center">I'm still working on this 😔</p>
 
           {/* Comments List */}
-          <div className="grow flex flex-col gap-2 overflow-y-auto">
-            {comments.length > 0 ? (
+          <div className="grow flex flex-col gap-2 overflow-y-auto scrollbar-hide pb-4 ">
+            {!commentsLoading && comments.length > 0 ? (
               comments.map((comment, key) => (
                 <div
                   key={`${key}-${comment.id}`}
@@ -169,7 +139,7 @@ const PostsComment = ({ postKey, caption, image, uid, onClose }) => {
                     <h4 className="font-bold text-violet-400">
                       {comment.displayName}
                     </h4>
-                    <span className="text-xs text-neutral-400">
+                    <span className="text-xxs text-neutral-400">
                       {formatTimestamp(comment.timestamp)}
                     </span>
                   </div>

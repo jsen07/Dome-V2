@@ -78,7 +78,6 @@ const useFetchFeed = (currentUser) => {
   useEffect(() => {
     const combinedPosts = [...friendPosts, ...publicPosts];
 
-    // Remove duplicates by postKey
     const uniquePostsMap = {};
     combinedPosts.forEach((post) => {
       uniquePostsMap[post.postKey] = post;

@@ -8,8 +8,9 @@ import {
   set,
   serverTimestamp,
 } from "firebase/database";
-import { useStateValue } from "./contexts/StateProvider";
-import Placeholder from "./images/avatar_placeholder.png";
+import { useSelector } from "react-redux";
+
+import Placeholder from "./images/profile-placeholder-2.jpg";
 import { useNavigate } from "react-router-dom";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 
@@ -19,7 +20,7 @@ const CreateGroupChat = ({ createGroupChatToggle }) => {
   const [error, setError] = useState();
   const navigate = useNavigate();
 
-  const [{ user }] = useStateValue();
+  const user = useSelector((state) => state.user.activeUser);
 
   const searchUserByID = async () => {
     const dbRef = ref(getDatabase(), `users`);

@@ -1,7 +1,5 @@
 import React, { useContext, useEffect, useState, useCallback } from "react";
 import { auth } from "../../firebase";
-import { actionTypes } from "../../reducers/userReducer";
-import { useStateValue } from "./StateProvider";
 import { db } from "../../firebase";
 import { serverTimestamp } from "firebase/database";
 import { toast } from "react-toastify";
@@ -171,11 +169,7 @@ export function AuthProvider({ children }) {
         setOnlineStatus(user.uid, true);
       } else {
         setCurrentUser(null);
-        dispatch({
-          type: actionTypes.SET_USER,
-          user: null,
-          isLoading: false,
-        });
+        // dispatch(setActiveUser(currentUser));
       }
       setLoading(false);
     });

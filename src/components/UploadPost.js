@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Placeholder from "./images/profile-placeholder-2.jpg";
 import { useAuth } from "./contexts/AuthContext";
 import {
   ref as sRef,
@@ -8,7 +7,6 @@ import {
   uploadBytes,
 } from "firebase/storage";
 import { getDatabase, ref, set, push } from "firebase/database";
-import { useStateValue } from "./contexts/StateProvider";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
 import ClearIcon from "@mui/icons-material/Clear";
 import { toast } from "react-toastify";

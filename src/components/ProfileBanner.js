@@ -15,11 +15,11 @@ const ProfileBanner = ({
 
   return (
     <div className="text-white relative w-full flex flex-col">
-      <div className="aspect-[16/5] relative overflow-hidden bg-violet-950">
+      <div className="aspect-[16/5] relative overflow-hidden bg-neutral-900">
         <img
           alt="banner"
           src={backgroundSrc}
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-contain object-center"
         />
       </div>
 
@@ -43,6 +43,7 @@ const ProfileBanner = ({
       <div className="absolute top-0 text-white px-4 py-2 h-20 flex flex-row items-center gap-2 text-base z-20 w-full">
         <ArrowBackIosNewRoundedIcon
           onClick={() => navigate(-1)}
+          aria-label="Go back"
           className="cursor-pointer hover:opacity-80"
         />
       </div>

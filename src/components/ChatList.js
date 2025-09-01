@@ -7,7 +7,6 @@ import {
   onValue,
   remove,
 } from "firebase/database";
-import { useStateValue } from "./contexts/StateProvider";
 import { useSelector } from "react-redux";
 import Placeholder from "./images/profile-placeholder-2.jpg";
 import { useNavigate } from "react-router-dom";
@@ -294,15 +293,6 @@ const ChatList = () => {
     setOnlineUserList(onlineUsers.size > 0 ? onlineChats : AllChatList);
   }, [onlineUsers, chatList]);
 
-  // const handleOnlineFilter = () => {
-  //   setNotificationToggle(false);
-  //   setOnlineToggle(true);
-  //   const onlineChats = AllChatList.filter((chat) =>
-  //     onlineUsers.has(chat.receiverId)
-  //   );
-  //   setOnlineUserList(onlineUsers.size > 0 ? onlineChats : AllChatList);
-  // };
-
   useEffect(() => {
     const chatsWithNotifications = AllChatList.filter(
       (chat) => chat.messages && Object.keys(chat.messages).length > 0
@@ -423,30 +413,31 @@ const ChatList = () => {
                       {formatTimestamp(chat?.sentAt)}
                     </span>
                   </div>
-
-                  <div className="flex justify-between w-72 sm:w-full">
-                    {typingStatus[chat.chatId]?.filter(
-                      (userId) => userId !== currentUser.uid
-                    ).length > 0 ? (
-                      <span className="text-xs">
-                        {typingStatus[chat.chatId]
-                          .filter((userId) => userId !== currentUser.uid)
-                          .map((userId) => {
-                            const user = combinedChats.find(
-                              (c) =>
-                                c.receiverId === userId ||
-                                c.admin?.includes(userId)
-                            );
-                            return user?.displayName || "Someone";
-                          })
-                          .join(", ")}{" "}
-                        is typing...
-                      </span>
-                    ) : (
-                      <span className="text-xs truncate flex-1 min-w-0">
-                        {chat?.lastMessage || "No messages yet."}
-                      </span>
-                    )}
+                  <div className="grow flex flex-row justify-between">
+                    <div className="flex justify-between w-72">
+                      {typingStatus[chat.chatId]?.filter(
+                        (userId) => userId !== currentUser.uid
+                      ).length > 0 ? (
+                        <span className="text-xs">
+                          {typingStatus[chat.chatId]
+                            .filter((userId) => userId !== currentUser.uid)
+                            .map((userId) => {
+                              const user = combinedChats.find(
+                                (c) =>
+                                  c.receiverId === userId ||
+                                  c.admin?.includes(userId)
+                              );
+                              return user?.displayName || "Someone";
+                            })
+                            .join(", ")}{" "}
+                          is typing...
+                        </span>
+                      ) : (
+                        <span className="text-xs truncate flex-1 min-w-0">
+                          {chat?.lastMessage || "No messages yet."}
+                        </span>
+                      )}
+                    </div>
 
                     {Object.keys(chat?.messages || {}).length > 0 && (
                       <span className="rounded-full bg-violet-600 flex items-center justify-center w-4 h-4 text-xxs">

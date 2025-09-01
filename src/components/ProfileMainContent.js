@@ -24,12 +24,12 @@ import PostsSkeleton from "./loaders/Skeletons/PostsSkeleton";
 const ProfileMainContent = ({
   userDetails,
   friends,
+  activeUser,
   handleClick,
   handlePostClick,
   setPostFullscreen,
 }) => {
   const { currentUser } = useAuth();
-  const activeUser = useSelector((state) => state.user.activeUser);
   const [numberOfFriends, setNumberOfFriends] = useState(null);
   const [showFriends, setShowFriends] = useState(false);
   const [heartAnimations, setHeartAnimations] = useState({});
@@ -126,7 +126,7 @@ const ProfileMainContent = ({
             <div className="text-neutral-500 font-medium mt-4 flex flex-col gap-1">
               <span className="flex flex-row items-center gap-1">
                 <TransgenderIcon style={{ fontSize: "15px" }} />
-                {userDetails?.Gender}
+                {isCurrentUser ? activeUser?.Gender : userDetails?.Gender}
               </span>
 
               {}

@@ -10,7 +10,7 @@ import { ToastContainer } from "react-toastify";
 
 import { AuthProvider, useAuth } from "./components/contexts/AuthContext";
 import { useUserProfile } from "./components/hooks/useUserProfile";
-import { setActiveUser } from "./components/store/userSlice";
+import { clearActiveUser, setActiveUser } from "./components/store/userSlice";
 import { useDispatch } from "react-redux";
 
 import PrivateRoute from "./components/PrivateRoute";
@@ -31,6 +31,7 @@ import Header from "./components/Header";
 import HomeNav from "./components/HomeNav";
 import Notifications from "./components/Notifications";
 import OnMountAnimation from "./components/OnMountAnimation";
+import { clearNotifications } from "./components/store/notificationSlice";
 
 function AppContent() {
   const { currentUser } = useAuth();
@@ -52,6 +53,11 @@ function AppContent() {
         if (localStorage.getItem("userSlice")) return;
         dispatch(setActiveUser(userDetails));
       }
+    }
+
+    if (!currentUser) {
+      dispatch(clearActiveUser());
+      dispatch(clearNotifications());
     }
   }, [currentUser, userDetails]);
 
@@ -76,6 +82,14 @@ function AppContent() {
         theme="dark"
         limit={1}
       />
+      {/* <div className="fixed top-0 left-0 z-50 bg-black text-white text-base px-10 py-1 rounded-br">
+        <div className="block sm:hidden">XS</div>
+        <div className="hidden sm:block md:hidden">SM</div>
+        <div className="hidden md:block lg:hidden">MD</div>
+        <div className="hidden lg:block xl:hidden">LG</div>
+        <div className="hidden xl:block 2xl:hidden">XL</div>
+        <div className="hidden 2xl:block">2XL</div>
+      </div> */}
       <div className="w-full flex flex-col pb-20 min-h-screen sm:max-w-xl">
         <Routes>
           <Route
