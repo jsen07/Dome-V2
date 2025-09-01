@@ -103,15 +103,14 @@ export const useNotifications = () => {
     setMergedAndSortedList(sortedNotifications);
   }, [requestList, postList, messagesList, loading, dispatch]);
 
-  useEffect(() => {
-    if (
-      !notifications ||
-      notifications.length !== mergedAndSortedList.length ||
-      !notifications.every((n, i) => n.id === mergedAndSortedList[i].id)
-    ) {
-      dispatch(setNotifications(mergedAndSortedList));
-    }
-  }, [mergedAndSortedList, notifications, dispatch]);
+  // useEffect(() => {
+  //   if (
+  //     notifications.length !== mergedAndSortedList.length ||
+  //     !notifications.every((n, i) => n.id === mergedAndSortedList[i].id)
+  //   ) {
+  //     dispatch(setNotifications(mergedAndSortedList));
+  //   }
+  // }, [mergedAndSortedList, notifications, dispatch]);
 
   return {
     requestList,

@@ -20,8 +20,13 @@ const Notifications = () => {
   // const [loading, setLoading] = useState(false);
   // const [mergedAndSortedList, setMergedAndSortedList] = useState([]);
 
-  const { requestList, notifications, loading, setRequestList } =
-    useNotifications();
+  const {
+    requestList,
+    notifications,
+    mergedAndSortedList,
+    loading,
+    setRequestList,
+  } = useNotifications();
 
   const handleReject = async (userId) => {
     try {
@@ -281,12 +286,12 @@ const Notifications = () => {
       <p className="w-full text-center pb-4">I'm still working on this 😔</p>
 
       <div className="flex flex-col">
-        {notifications.length === 0 && !loading ? (
+        {mergedAndSortedList.length === 0 && !loading ? (
           <p className="text-neutral-400 text-center py-4">
             You're up to date 🌝
           </p>
         ) : (
-          notifications.map((item) => {
+          mergedAndSortedList.map((item) => {
             switch (item.type) {
               case "request":
                 return (
